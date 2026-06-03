@@ -297,6 +297,10 @@
                     <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)]">🧠 BRAIN STATS</span>
                     <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">ANALYTICS</span>
                 </button>
+                <button onclick="Router.navigate('active')" id="nav-active" class="sl-btn w-full text-left p-3 rounded-sm flex justify-between items-center group">
+    <span class="sys-font text-sm font-black text-white group-hover:text-slate-300">⚔️ ACTIVE ENGAGEMENTS</span>
+    <span class="sys-font text-[10px] text-slate-500">WITHOUT COMPLETE</span>
+</button>
                 <button onclick="window.location.href='monarch-ai.html'" class="sl-btn w-full text-left p-3 rounded-sm flex justify-between items-center group">
                     <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-cyan)]">🤖 AI ADVISOR</span>
                     <span class="sys-font text-[10px] bg-cyan-950 text-[var(--sys-cyan)] px-2 py-0.5 border border-cyan-500">ONLINE</span>
@@ -305,6 +309,7 @@
                     <span class="sys-font text-sm font-black text-white group-hover:text-slate-300">📂 SYSTEM LOGS</span>
                     <span class="sys-font text-[10px] text-slate-500">ARCHIVE</span>
                 </button>
+                
             </nav>
         </div>
     </aside>
@@ -372,9 +377,14 @@
             </section>
 
             <div class="sl-panel p-4 flex-grow">
-                <h4 class="font-black text-sm text-[var(--sys-cyan)] tracking-wide mb-4 uppercase sys-font border-b border-slate-800 pb-2">⚔️ Active Directives Log</h4>
-                <div id="taskContainer" class="space-y-2 min-h-[250px] overflow-y-auto pr-2"></div>
-            </div>
+    <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
+        <h4 id="taskListTitle" class="font-black text-sm text-[var(--sys-cyan)] tracking-wide uppercase sys-font">⚔️ Active Directives Log</h4>
+        <button onclick="Router.navigate('all')" id="backToAllBtn" class="hidden sys-font text-[10px] font-bold text-[var(--sys-purple)] hover:text-white transition-colors tracking-widest uppercase border border-[var(--sys-purple)] px-3 py-1 hover:bg-[var(--sys-purple)]">
+            ← ALL DIRECTIVES
+        </button>
+    </div>
+    <div id="taskContainer" class="space-y-2 min-h-[250px] overflow-y-auto pr-2"></div>
+</div>
         </div>
     </main>
 </div>
@@ -1021,9 +1031,14 @@ const PlayerState = {
 // ==========================================
 const QuestSystem = {
     tasks: [],
+    filter: 'all', // 'all' | 'active'
     init() {
         const saved = localStorage.getItem('SL_QUESTS');
         this.tasks = saved ? JSON.parse(saved) : [];
+        this.render();
+    },
+    setFilter(mode) {
+        this.filter = mode;
         this.render();
     },
     addTask() {
@@ -1080,15 +1095,38 @@ const QuestSystem = {
         this.render();
     },
     render() {
-        const container = document.getElementById('taskContainer');
-        if(!container) return;
-        container.innerHTML = '';
-        let activeCount = 0; let completedCount = 0;
-        if (this.tasks.length === 0) {
-            container.innerHTML = `<div class="text-center py-10 opacity-30 sys-font"><p>[NO ACTIVE QUESTS DETECTED]</p></div>`;
-            this.updateStatsUI(0, 0, 0);
-            return;
-        }
+    const container = document.getElementById('taskContainer');
+    const titleEl = document.getElementById('taskListTitle');
+    const backBtn = document.getElementById('backToAllBtn');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    // Update title and back button based on filter
+    if (titleEl) {
+        titleEl.textContent = this.filter === 'active' ? '⚔️ ACTIVE ENGAGEMENTS (Incomplete)' : '⚔️ Active Directives Log';
+        titleEl.className = this.filter === 'active' 
+            ? 'font-black text-sm text-amber-400 tracking-wide uppercase sys-font' 
+            : 'font-black text-sm text-[var(--sys-cyan)] tracking-wide uppercase sys-font';
+    }
+    if (backBtn) {
+        backBtn.classList.toggle('hidden', this.filter !== 'active');
+    }
+    
+    let activeCount = 0; let completedCount = 0;
+    
+    // Filter tasks
+    const displayTasks = this.filter === 'active' 
+        ? this.tasks.filter(t => !t.completed) 
+        : this.tasks;
+    
+    if (displayTasks.length === 0) {
+        const emptyMsg = this.filter === 'active' 
+            ? '<p>[NO INCOMPLETE ENGAGEMENTS DETECTED]</p><p class="text-[10px] mt-2">All directives have been cleared.</p>'
+            : '<p>[NO ACTIVE QUESTS DETECTED]</p>';
+        container.innerHTML = `<div class="text-center py-10 opacity-30 sys-font">${emptyMsg}</div>`;
+        this.updateStatsUI(0, 0, 0);
+        return;
+    }
         const statColors = { 'int': 'text-[var(--sys-cyan)]', 'str': 'text-rose-500', 'vit': 'text-emerald-500', 'agi': 'text-sky-400', 'sen': 'text-[var(--sys-purple)]' };
         this.tasks.forEach(task => {
             task.completed ? completedCount++ : activeCount++;
@@ -1805,7 +1843,35 @@ const SovereignMetrics = {
         if(document.getElementById('sysHumidity')) document.getElementById('sysHumidity').textContent = `45% Hum`;
     }
 };
-
+// ==========================================
+// ROUTER SYSTEM
+// ==========================================
+const Router = {
+    currentView: 'all',
+    navigate(view) {
+        this.currentView = view;
+        
+        // Update nav button states
+        document.querySelectorAll('#nav-active').forEach(btn => {
+            if (view === 'active') {
+                btn.classList.add('border-amber-500');
+                btn.querySelector('span:first-child')?.classList.add('text-amber-400');
+            } else {
+                btn.classList.remove('border-amber-500');
+                btn.querySelector('span:first-child')?.classList.remove('text-amber-400');
+            }
+        });
+        
+        if (view === 'active') {
+            if (window.SoundEffects) SoundEffects.playSystemClick();
+            if (window.QuestSystem) QuestSystem.setFilter('active');
+            if (window.Toast) Toast.show('عرض المهام النشطة فقط', 'info');
+        } else {
+            if (window.SoundEffects) SoundEffects.playSystemClick();
+            if (window.QuestSystem) QuestSystem.setFilter('all');
+        }
+    }
+};
 // ==========================================
 // SYSTEM INITIALIZATION
 // ==========================================
@@ -1834,9 +1900,10 @@ window.SovereignEngine = SovereignEngine;
 window.SovereignSchedules = SovereignSchedules;
 window.SovereignMetrics = SovereignMetrics;
 window.DirectiveTimer = DirectiveTimer;
-
+window.Router = Router;
 </script>
 </body>
 </html>
+
 
 
