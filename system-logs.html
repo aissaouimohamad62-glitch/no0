@@ -642,7 +642,7 @@ week1: {
         blocks: [
           { time: '02:45-05:00', title: 'Night Prayer and Suhoor / صلاة العشاء والسحور', desc: 'Night Prayer + Protein-Rich Suhoor + Remembrance of Allah + Quick Mental Review / صلاة العشاء + سحور غني بالبروتين + ذكر الله + مراجعة ذهنية سريعة' },
           { time: '05:00-06:30', title: 'Quran Session / جلسة قرآنية', desc: 'Recitation and Memorization of the Holy Quran (1.5 Hours) / تلاوة وحفظ القرآن الكريم (ساعة ونصف)' },
-          { time: '06:30-09:30', title:" 'Religious Studies / دراسات دينية', desc: 'Riyadh as-Salihin + Al-Bidayah wa'n-Nihayah + 40 Nawawi (3 Hours) / رياض الصالحين + البداية والنهاية + الأربعين نووية (٣ ساعات)"},
+          { time: '06:30-09:30', title: 'Religious Studies / دراسات دينية', desc: "'Riyadh as-Salihin + Al-Bidayah wa'n-Nihayah + 40 Nawawi (3 Hours) / رياض الصالحين + البداية والنهاية + الأربعين نووية (٣ ساعات)' "},
           { time: '09:30-11:30', title: 'Study Marathon / ماراثون دراسي', desc: 'History, Geography, and French using Mind Maps / التاريخ والجغرافيا والفرنسية باستخدام الخرائط الذهنية' },
           { time: '11:30-13:30', title: 'Language Skills / مهارات لغوية', desc: 'Reviewing English Terminology and Grammar as Software Logic / مراجعة المصطلحات الإنجليزية وفهم قواعد اللغة كجزء من منطق البرمجيات' },
           { time: '13:30-15:00', title: 'Website Development / تطوير مواقع الويب', desc: 'Developing and Monetizing Websites / تطوير مواقع الويب وتحقيق الربح منها' },
@@ -1475,24 +1475,29 @@ const LogManager = {
     },
 
     addLog(type, message) {
+        if (!message || typeof message !== 'string') {
+            console.warn('LogManager: Attempted to add log with invalid message');
+            return;
+        }
         const logs = this.getLogs();
-        logs.unshift({
-            id: 'log_' + Date.now(),
+        const newLog = {
+            id: 'log_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
             timestamp: new Date().toLocaleTimeString('ar-EG'),
-            type: type,
+            type: type || 'system',
             message: message
-        });
+        };
+        logs.unshift(newLog);
         localStorage.setItem('sovereign_system_logs', JSON.stringify(logs.slice(0, 200)));
         this.updateStats();
         this.render();
     },
 
     updateStats() {
-        const logs = this.getLogs();
+        const logs = this.getLogs().filter(l => l && l.message); // Only count valid logs
         const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
         set('stat-total', logs.length);
         set('stat-quests', logs.filter(l => l.type === 'quest').length);
-        set('stat-system', logs.filter(l => l.type === 'system').length);
+        set('stat-system', logs.filter(l => !l.type || l.type === 'system').length);
         set('stat-errors', logs.filter(l => l.type === 'error').length);
     },
 
@@ -1531,6 +1536,14 @@ const LogManager = {
         const container = document.getElementById('logsContainer');
         let logs = this.getLogs();
 
+        // Clean and validate logs - remove entries with no message or fix undefined fields
+        logs = logs.filter(log => log && log.message).map(log => ({
+            id: log.id || ('log_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5)),
+            timestamp: log.timestamp || new Date().toLocaleTimeString('ar-EG'),
+            type: log.type || 'system',
+            message: log.message
+        }));
+
         if (this.currentFilter !== 'all') {
             logs = logs.filter(log => log.type === this.currentFilter);
         }
@@ -1543,15 +1556,15 @@ const LogManager = {
             return;
         }
 
-        container.innerHTML = logs.map(log => `
-            <div class="log-item ${this.getColorClass(log.type)} bg-slate-900/40 rounded-lg p-3 flex gap-3 items-start">
+        container.innerHTML = logs.map((log, index) => `
+            <div class="log-item ${this.getColorClass(log.type)} bg-slate-900/40 rounded-lg p-3 flex gap-3 items-start" style="animation-delay: ${index * 0.03}s;">
                 <div class="flex-shrink-0 text-lg bg-slate-950 p-1.5 rounded border border-slate-800 w-10 h-10 flex items-center justify-center">
                     ${this.getIcon(log.type)}
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex justify-between items-center mb-1">
-                        <span class="text-[10px] font-mono text-slate-400 bg-black/50 px-2 py-0.5 rounded">${log.timestamp || '00:00'}</span>
-                        <span class="text-[9px] uppercase tracking-wider text-slate-600 sys-font">${log.id || '#SYS'}</span>
+                        <span class="text-[10px] font-mono text-slate-400 bg-black/50 px-2 py-0.5 rounded">${log.timestamp}</span>
+                        <span class="text-[9px] uppercase tracking-wider text-slate-600 sys-font">${log.id}</span>
                     </div>
                     <p class="text-sm text-slate-200 leading-relaxed font-semibold break-words">${log.message}</p>
                 </div>
