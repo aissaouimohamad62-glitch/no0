@@ -289,21 +289,43 @@
             <span class="text-[10px] text-slate-500 sys-font">ACTIVE DIRECTIVE</span>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <button onclick="ProgramManager.switch('week1')" id="btn-week1" class="sl-btn w-full text-left p-3 rounded flex justify-between items-center group">
+            <button onclick="Charter.switch('week1')" id="btn-week1" class="sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
                 <div>
-                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-cyan)] block">📜 CHARTER v1.0 — Foundation</span>
-                    <span class="text-[10px] text-slate-400">الميثاق التشغيلي المتكامل (المستويات 1-450)</span>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-cyan)] block uppercase">📜 Mind Games Protocol Active SYSTEM v8.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">Integrated Operations Charter (Levels 1-450)</span>
                 </div>
-                <span class="sys-font text-[10px] bg-cyan-950 text-[var(--sys-cyan)] px-2 py-0.5 border border-[var(--sys-cyan)]">WEEK 1</span>
+                <span class="sys-font text-[10px] bg-cyan-950 text-[var(--sys-cyan)] px-2 py-0.5 border border-[var(--sys-cyan)]">CORE</span>
             </button>
-            <button onclick="ProgramManager.switch('week2')" id="btn-week2" class="sl-btn-purple sl-btn w-full text-left p-3 rounded flex justify-between items-center group">
+            <button onclick="Charter.switch('week2')" id="btn-week2" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
                 <div>
-                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block">🌌 SYSTEM v8.0 — Infinity</span>
-                    <span class="text-[10px] text-slate-400">تحديث النظام النسخة 8.0 (المستويات 450→∞)</span>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">🌌 SYSTEM v9.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 450→600)</span>
                 </div>
-                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">WEEK 2</span>
+                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
+            </button>
+            <button onclick="Charter.switch('week3')" id="btn-week3" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
+                <div>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">🌩️​ SYSTEM v10.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 600→800)</span>
+                </div>
+                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
+            </button>
+            <button onclick="Charter.switch('week4')" id="btn-week4" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
+                <div>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">😈​⚠️​​​ SYSTEM v11.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 800→1000)</span>
+                </div>
+                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
+            </button>
+            <button onclick="Charter.switch('week5')" id="btn-week5" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
+                <div>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">☠️​‼️​🌪️​​ SYSTEM v1000.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 1000→∞)</span>
+                </div>
+                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
             </button>
         </div>
+        
         <div id="infinity-message" class="hidden mt-3 p-3 bg-cyan-950/40 border border-[var(--sys-cyan)] rounded animate-pulse text-center">
             <span class="text-[var(--sys-cyan)] font-bold sys-font text-xs block mb-1">[SYSTEM: SOVEREIGN AUTONOMY ACTIVATED]</span>
             <span class="text-white text-sm font-bold">الآن يمكنك تدبر أمورك بنفسك وقراراتك الآن. هذا هو التحسين الأخير للنظام.</span>
@@ -1260,34 +1282,62 @@ const ProgramManager = {
 // ==========================================
 // SOVEREIGN AI CHAT ENGINE — REAL + FALLBACK
 // ==========================================
+// CORRECTED VERSION — Synced with operational-charter.html v9.0
+// Changes made:
+// 1. Fixed time parsing: "HH:MM" now converts correctly to decimal (e.g. 02:45 → 2.75, not 2.45)
+// 2. Added Monday (day 1) special blocks support for week1 (Fasting Protocol)
+// 3. Merged Monday special blocks with standard schedule (matches Charter.renderToday logic)
+// 4. Added full support for week3, week4, week5 in all response generators
+// 5. Added safe fallback for ProgramManager / Charter active program ID
+// 6. Updated getDevelopmentAdvice with level ranges: 450-599, 600-799, 800-999, 1000+
+// 7. Updated getProgramInfo to display correct badges for all 5 protocols
+// ==========================================
+
 const SovereignAI = {
     conversationHistory: [],
     maxHistory: 10,
+
+    // Helper: convert "HH:MM" string to correct decimal time
+    parseTimeStr(timeStr) {
+        const [h, m] = timeStr.split(':').map(Number);
+        return h + (m / 60);
+    },
+
+    // Safe active program ID resolver (supports both ProgramManager and Charter)
+    getActiveProgramId() {
+        if (typeof ProgramManager !== 'undefined' && ProgramManager.activeProgramId) {
+            return ProgramManager.activeProgramId;
+        }
+        if (typeof Charter !== 'undefined' && Charter.activeProgramId) {
+            return Charter.activeProgramId;
+        }
+        return 'week1';
+    },
 
     sendMessage() {
         const input = document.getElementById('chatInput');
         const text = input.value.trim();
         if (!text) return;
-        
+
         this.addMessage(text, 'user');
         input.value = '';
-        
+
         // Show typing indicator
         this.showTyping();
-        
+
         // Try real AI first, fallback to local
         this.processMessage(text);
     },
 
     async processMessage(text) {
         const ctx = this.buildContext();
-        
+
         // Try real AI if connected
-        if (AIConnection.isConnected) {
+        if (typeof AIConnection !== 'undefined' && AIConnection.isConnected) {
             try {
                 const response = await AIConnection.sendToAI(text, ctx);
                 this.hideTyping();
-                
+
                 if (response && !response.error) {
                     this.addMessage(response.text, 'ai', true);
                     this.addToHistory('user', text);
@@ -1298,7 +1348,7 @@ const SovereignAI = {
                 console.error('Real AI failed, using fallback:', e);
             }
         }
-        
+
         // Fallback to local simulation
         setTimeout(() => {
             this.hideTyping();
@@ -1313,25 +1363,53 @@ const SovereignAI = {
         const now = new Date();
         const day = now.getDay();
         const currentTime = Utils.getCurrentDecimalTime();
-        const prog = PROGRAM_DATA[ProgramManager.activeProgramId];
-        
-        // Find current block
-        let currentBlock = null;
-        let blocks = [];
-        if ([4,5,6].includes(day) && prog.special[day]) {
-            blocks = prog.special[day].blocks;
-        } else {
-            blocks = prog.schedule.map(s => ({ ...s, timeStr: `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}` }));
+        const progId = this.getActiveProgramId();
+        const prog = PROGRAM_DATA[progId];
+
+        if (!prog) {
+            console.error('[SovereignAI] Program not found:', progId);
+            return { level: 1, xp: 0, gold: 0, stats: {}, programTitle: 'Unknown', programVersion: '-', programId: 'week1', dayIndex: day, dayName: Utils.getDayName(day), currentTime: Utils.formatDecimalTime(currentTime), currentBlock: null, history: this.conversationHistory };
         }
+
+        // Find current block — supports ALL special days (including Monday day 1 for week1)
+        let blocks = [];
+        if (prog.special && prog.special[day]) {
+            blocks = prog.special[day].blocks.map(b => ({
+                start: this.parseTimeStr(b.time.split('-')[0]),
+                end: this.parseTimeStr(b.time.split('-')[1]),
+                title: b.title,
+                desc: b.desc,
+                timeStr: b.time
+            }));
+            // Monday (day 1) in week1 merges special blocks with standard schedule
+            if (day === 1 && prog.id === 'week1') {
+                const standardBlocks = prog.schedule.map(s => ({
+                    start: s.start,
+                    end: s.end,
+                    title: s.title,
+                    desc: s.desc,
+                    timeStr: `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}`
+                }));
+                blocks = blocks.concat(standardBlocks);
+            }
+        } else {
+            blocks = prog.schedule.map(s => ({
+                start: s.start,
+                end: s.end,
+                title: s.title,
+                desc: s.desc,
+                timeStr: `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}`
+            }));
+        }
+
+        let currentBlock = null;
         for (let block of blocks) {
-            const start = block.start || parseFloat(block.time.split('-')[0].replace(':','.'));
-            const end = block.end || parseFloat(block.time.split('-')[1].replace(':','.'));
-            if (currentTime >= start && currentTime < end) {
+            if (currentTime >= block.start && currentTime < block.end) {
                 currentBlock = block.title;
                 break;
             }
         }
-        
+
         return {
             level: PlayerSync.data.level,
             xp: PlayerSync.data.xp,
@@ -1339,7 +1417,7 @@ const SovereignAI = {
             stats: PlayerSync.data.stats,
             programTitle: prog.title,
             programVersion: prog.version,
-            programId: ProgramManager.activeProgramId,
+            programId: progId,
             dayIndex: day,
             dayName: Utils.getDayName(day),
             currentTime: Utils.formatDecimalTime(currentTime),
@@ -1357,6 +1435,7 @@ const SovereignAI = {
 
     showTyping() {
         const screen = document.getElementById('chatScreen');
+        if (!screen) return;
         const typingDiv = document.createElement('div');
         typingDiv.id = 'typing-indicator';
         typingDiv.className = 'flex gap-3 message-enter';
@@ -1370,34 +1449,46 @@ const SovereignAI = {
         `;
         screen.appendChild(typingDiv);
         screen.scrollTop = screen.scrollHeight;
-        
+
         // Update status
-        document.getElementById('ai-status-dot').className = 'w-2 h-2 rounded-full bg-[var(--sys-cyan)] animate-ping';
-        document.getElementById('ai-status-text').textContent = 'PROCESSING';
-        document.getElementById('ai-status-text').className = 'text-[10px] text-[var(--sys-cyan)] sys-font font-bold uppercase';
+        const statusDot = document.getElementById('ai-status-dot');
+        const statusText = document.getElementById('ai-status-text');
+        if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-[var(--sys-cyan)] animate-ping';
+        if (statusText) {
+            statusText.textContent = 'PROCESSING';
+            statusText.className = 'text-[10px] text-[var(--sys-cyan)] sys-font font-bold uppercase';
+        }
     },
 
     hideTyping() {
         const indicator = document.getElementById('typing-indicator');
         if (indicator) indicator.remove();
-        
-        document.getElementById('ai-status-dot').className = 'w-2 h-2 rounded-full bg-emerald-500';
-        document.getElementById('ai-status-text').textContent = 'ONLINE';
-        document.getElementById('ai-status-text').className = 'text-[10px] text-emerald-400 sys-font font-bold uppercase';
+
+        const statusDot = document.getElementById('ai-status-dot');
+        const statusText = document.getElementById('ai-status-text');
+        if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+        if (statusText) {
+            statusText.textContent = 'ONLINE';
+            statusText.className = 'text-[10px] text-emerald-400 sys-font font-bold uppercase';
+        }
     },
 
     quickAsk(text) {
-        document.getElementById('chatInput').value = text;
-        this.sendMessage();
+        const input = document.getElementById('chatInput');
+        if (input) {
+            input.value = text;
+            this.sendMessage();
+        }
     },
-    
+
     addMessage(text, sender, isRealAI = false) {
         const screen = document.getElementById('chatScreen');
+        if (!screen) return;
         const div = document.createElement('div');
         div.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} message-enter`;
-        
+
         const aiBadge = isRealAI ? '<span class="text-[9px] bg-emerald-950/60 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30 ml-2">LIVE AI</span>' : '<span class="text-[9px] bg-amber-950/60 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30 ml-2">LOCAL</span>';
-        
+
         if (sender === 'user') {
             div.innerHTML = `<div class="bg-slate-800 text-white px-4 py-2 rounded-lg max-w-[80%] text-sm border border-slate-700">${this.escapeHtml(text)}</div>`;
         } else {
@@ -1410,7 +1501,7 @@ const SovereignAI = {
                 </div>
             </div>`;
         }
-        
+
         screen.appendChild(div);
         screen.scrollTop = screen.scrollHeight;
     },
@@ -1421,35 +1512,35 @@ const SovereignAI = {
         return div.innerHTML;
     },
 
-    // LOCAL FALLBACK RESPONSES (Enhanced from original)
+    // LOCAL FALLBACK RESPONSES (Enhanced — supports all 5 protocols)
     generateLocalResponse(input, ctx) {
         const lower = input.toLowerCase();
-        
+
         // Check for specific queries
         if (lower.includes('كتلة') || lower.includes('block') || lower.includes('نشط') || lower.includes('active')) {
             return this.getCurrentBlockAnalysis(ctx);
         }
-        
+
         if (lower.includes('نصيحة') || lower.includes('تطور') || lower.includes('advice') || lower.includes('tip')) {
             return this.getDevelopmentAdvice(ctx.level, ctx.programId);
         }
-        
+
         if (lower.includes('وضع') || lower.includes('حالة') || lower.includes('status') || lower.includes('eval')) {
             return this.getStatusEvaluation(ctx);
         }
-        
+
         if (lower.includes('برمج') || lower.includes('كود') || lower.includes('تقني') || lower.includes('tech') || lower.includes('code')) {
             return this.getTechAdvice(ctx.level);
         }
-        
+
         if (lower.includes('رياض') || lower.includes('بدن') || lower.includes('جري') || lower.includes('fitness') || lower.includes('sport')) {
             return this.getFitnessAdvice(ctx.level);
         }
-        
+
         if (lower.includes('روح') || lower.includes('قرآن') || lower.includes('شرع') || lower.includes('spiritual') || lower.includes('deen')) {
             return this.getSpiritualAdvice(ctx.level);
         }
-        
+
         if (lower.includes('برنامج') || lower.includes('program') || lower.includes('أسبوع') || lower.includes('week')) {
             return this.getProgramInfo(ctx.programId);
         }
@@ -1474,17 +1565,34 @@ const SovereignAI = {
     },
 
     getCurrentBlockAnalysis(ctx) {
-        const prog = PROGRAM_DATA[ctx.programId];
+        const progId = this.getActiveProgramId();
+        const prog = PROGRAM_DATA[progId];
+        if (!prog) return '<b>[ERROR]</b> Protocol data unavailable.';
+
         let blocks = [];
-        
-        if ([4,5,6].includes(ctx.dayIndex) && prog.special[ctx.dayIndex]) {
-            blocks = prog.special[ctx.dayIndex].blocks.map(b => ({
-                start: parseFloat(b.time.split('-')[0].replace(':','.')),
-                end: parseFloat(b.time.split('-')[1].replace(':','.')),
+        const day = ctx.dayIndex;
+        const currentTime = Utils.getCurrentDecimalTime();
+
+        // Support ALL special days (including Monday day 1 for week1)
+        if (prog.special && prog.special[day]) {
+            blocks = prog.special[day].blocks.map(b => ({
+                start: this.parseTimeStr(b.time.split('-')[0]),
+                end: this.parseTimeStr(b.time.split('-')[1]),
                 title: b.title,
                 desc: b.desc,
                 timeStr: b.time
             }));
+            // Monday (day 1) in week1 merges with standard schedule
+            if (day === 1 && prog.id === 'week1') {
+                const standardBlocks = prog.schedule.map(s => ({
+                    start: s.start,
+                    end: s.end,
+                    title: s.title,
+                    desc: s.desc,
+                    timeStr: `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}`
+                }));
+                blocks = blocks.concat(standardBlocks);
+            }
         } else {
             blocks = prog.schedule.map(s => ({
                 start: s.start,
@@ -1495,7 +1603,6 @@ const SovereignAI = {
             }));
         }
 
-        const currentTime = Utils.getCurrentDecimalTime();
         for (let block of blocks) {
             if (currentTime >= block.start && currentTime < block.end) {
                 return `<b>[الكتلة النشطة — ${ctx.dayName}]</b><br><br>
@@ -1543,14 +1650,38 @@ const SovereignAI = {
             • <b>المحتوى:</b> ابدأ قنوات YouTube (Onyx Apex + ren gaming)<br>
             • <b>المال:</b> أول كتاب رقمي + تطوير مواقع للربح<br><br>
             <span class="text-[var(--sys-gold)]">الهدف: البناء الإمبراطوري المتعدد المصادر.</span>`;
+        } else if (level < 600) {
+            return `<b>[نصيحة التطوير — مرحلة اللانهاية v8.0]</b><br><br>
+            • <b>البرمجة:</b> دمج منطق الشطرنج في AI Agents — بناء عقل مدبر حقيقي<br>
+            • <b>البدن:</b> الجري الانفجاري + قانون وولف مفعل (Handstand/Explosive Pull-ups)<br>
+            • <b>القتال:</b> Muay Thai + BJJ تنافسي + سباحة<br>
+            • <b>المحتوى:</b> صناعة محتوى يومي + حلاقة وألعاب خفة<br><br>
+            <span class="text-[var(--sys-purple)] font-bold">[Infinity Protocol v8.0 — الجري الانفجاري + AI Agents]</span><br>
+            <span class="text-[var(--sys-gold)]">الهدف: كل مجال يغذي الآخر. الشطرنج يُحسّن البرمجة، والجري يُحسّن العقل.</span>`;
+        } else if (level < 800) {
+            return `<b>[نصيحة التطوير — مرحلة التعمق التقني v10.0]</b><br><br>
+            • <b>البرمجة:</b> بناء المظهر الخارجي (Frontend) + العقل المدبر (Backend)<br>
+            • <b>AI:</b> التعلم العميق والشبكات العصبية — Deep Learning + Neural Networks<br>
+            • <b>الفن:</b> تعلم الغيتار والبيانو + FL Studio لإنتاج المحتوى الصوتي<br>
+            • <b>البدن:</b> PPL + Calisthenics + الجمباز + رياضات تنافسية<br><br>
+            <span class="text-[var(--sys-purple)] font-bold">[Deep Learning Protocol v10.0 — Frontend + Backend + Music]</span><br>
+            <span class="text-[var(--sys-gold)]">الهدف: الإتقان المتعدد — التقنية والفن والبدن في توازن تام.</span>`;
+        } else if (level < 1000) {
+            return `<b>[نصيحة التطوير — مرحلة الإتقان v11.0]</b><br><br>
+            • <b>العقيدة:</b> كتاب التوحيد والعقيدة — التركيز على الأساس الروحي<br>
+            • <b>التقنية:</b> المختبر التقني التطبيقي — بناء منتجات حقيقية<br>
+            • <b>اللغات:</b> إتقان الإنجليزية + لغة ثالثة مفيدة<br>
+            • <b>الفن:</b> FL Studio للقرآن الكريم — إنتاج صوتي روحي<br><br>
+            <span class="text-[var(--sys-purple)] font-bold">[Mastery Protocol v11.0 — العقيدة + الإتقان التقني + الفن الروحي]</span><br>
+            <span class="text-[var(--sys-gold)]">الهدف: الإتقان الكامل في كل مجال تلمسه يدك.</span>`;
         } else {
-            return `<b>[نصيحة التطوير — مرحلة اللانهاية]</b><br><br>
+            return `<b>[نصيحة التطوير — مرحلة السيادة المطلقة v1000.0]</b><br><br>
             • <b>السيادة:</b> أنت الآن تدبر أمورك بنفسك — النظام يتبعك لا العكس<br>
-            • <b>البرمجة:</b> قيادة فريق AiMoha، بناء أنظمة ذاتية<br>
-            • <b>البدن:</b> قانون وولف مفعل — الجري الانفجاري + ضغط عظمي<br>
-            • <b>العقل:</b> دمج منطق الشطرنج في خوارزميات AI<br><br>
+            • <b>الحرية:</b> اختر من أي برنامج سابق ما يناسب يومك — لا قيود<br>
+            • <b>البدن:</b> PPL + Calisthenics + رياضات تنافسية حسب رغبتك<br>
+            • <b>العقل:</b> دمج كل ما تعلمته — أنت الآن النظام<br><br>
             <span class="text-[var(--sys-cyan)] font-bold">[SYSTEM: SOVEREIGN AUTONOMY ACTIVATED]</span><br>
-            <span class="text-[var(--sys-gold)]">الهدف: أنت الآن النظام. قراراتك هي القانون.</span>`;
+            <span class="text-[var(--sys-gold)]">الهدف: أنت الآن النظام. قراراتك هي القانون. حرية مطلقة + مسؤولية مطلقة.</span>`;
         }
     },
 
@@ -1558,12 +1689,20 @@ const SovereignAI = {
         const nextLevel = ctx.level + 1;
         const xpNeeded = ctx.level * 100;
         const remaining = xpNeeded - ctx.xp;
-        
+
         let tier = 'ALPHA';
         if (ctx.level > 70) tier = 'BETA';
         if (ctx.level > 130) tier = 'GAMMA';
         if (ctx.level > 250) tier = 'DELTA';
         if (ctx.level > 450) tier = 'INFINITY';
+        if (ctx.level >= 1000) tier = 'SOVEREIGN';
+
+        let rangeText = '';
+        if (ctx.level < 450) rangeText = '1-450';
+        else if (ctx.level < 600) rangeText = '450→600';
+        else if (ctx.level < 800) rangeText = '600→800';
+        else if (ctx.level < 1000) rangeText = '800→1000';
+        else rangeText = '1000→∞';
 
         return `<b>[تقييم الوضع السيادي]</b><br><br>
         <div class="grid grid-cols-2 gap-2 text-[11px] mb-3">
@@ -1585,8 +1724,8 @@ const SovereignAI = {
             </div>
         </div>
         <b>البروتوكول النشط:</b> ${ctx.programTitle} (${ctx.programVersion})<br>
-        <b>نطاق المستوى:</b> ${ctx.programId === 'week1' ? '1-450' : '450→∞'}<br><br>
-        ${ctx.level >= 450 ? '<span class="text-[var(--sys-cyan)] font-bold">[SOVEREIGN AUTONOMY — أنت تتحكم في النظام]</span>' : `<b>الهدف القادم:</b> الوصول للمستوى ${nextLevel} (+${remaining} XP)`}`;
+        <b>نطاق المستوى:</b> ${rangeText}<br><br>
+        ${ctx.level >= 1000 ? '<span class="text-[var(--sys-cyan)] font-bold">[SOVEREIGN AUTONOMY — أنت تتحكم في النظام]</span>' : `<b>الهدف القادم:</b> الوصول للمستوى ${nextLevel} (+${remaining} XP)`}`;
     },
 
     getTechAdvice(level) {
@@ -1605,7 +1744,7 @@ const SovereignAI = {
             • مسائل LeetCode (متوسطة)<br>
             • تعلم أساسيات Machine Learning<br><br>
             <span class="text-[var(--sys-cyan)]">الوقت المقترح: 4-5 ساعات يومياً</span>`;
-        } else {
+        } else if (level < 450) {
             return `<b>[المسار التقني السيادي]</b><br><br>
             • بناء AI Agents ذاتية<br>
             • LLMs + NLP + Hugging Face<br>
@@ -1613,6 +1752,34 @@ const SovereignAI = {
             • مراقبة المشاريع + توثيق<br>
             • تطوير مواقع للربح<br><br>
             <span class="text-[var(--sys-cyan)]">الوقت المقترح: 6-8 ساعات يومياً</span>`;
+        } else if (level < 600) {
+            return `<b>[المسار التقني اللانهاية v8.0]</b><br><br>
+            • دمج منطق الشطرنج في AI Agents (Minimax + Alpha-Beta)<br>
+            • بناء Backend ذكي للنظام السيادي<br>
+            • تعلم LLMs + Prompt Engineering متقدم<br>
+            • تطوير مواقع وتحقيق ربح مستمر<br><br>
+            <span class="text-[var(--sys-cyan)]">الوقت المقترح: 6-8 ساعات يومياً</span>`;
+        } else if (level < 800) {
+            return `<b>[المسار التقني التعمق v10.0]</b><br><br>
+            • بناء Frontend احترافي (React/Vue)<br>
+            • بناء Backend قوي (Node/Python)<br>
+            • Deep Learning + Neural Networks (الأسابيع 7-10)<br>
+            • FL Studio + إنتاج محتوى صوتي<br><br>
+            <span class="text-[var(--sys-cyan)]">الوقت المقترح: 6-8 ساعات يومياً</span>`;
+        } else if (level < 1000) {
+            return `<b>[المسار التقني الإتقان v11.0]</b><br><br>
+            • المختبر التقني التطبيقي — مشاريع حقيقية<br>
+            • إتقان لغة برمجية ثانية<br>
+            • FL Studio للقرآن — إنتاج صوتي روحي<br>
+            • مراجعة وتدقيق كل ما سبق<br><br>
+            <span class="text-[var(--sys-cyan)]">الوقت المقترح: 6-8 ساعات يومياً</span>`;
+        } else {
+            return `<b>[المسار التقني السيادة المطلقة v1000.0]</b><br><br>
+            • أنت مخير — اختر ما يناسبك من المسارات السابقة<br>
+            • قدّر مشاريعك بنفسك وحدد أولوياتك<br>
+            • استمر في بناء AiMoha كمنصة سيادية<br>
+            • شارك علمك مع الآخرين<br><br>
+            <span class="text-[var(--sys-cyan)]">الوقت المقترح: حسب خطتك الشخصية</span>`;
         }
     },
 
@@ -1623,7 +1790,7 @@ const SovereignAI = {
             • جري 30 دقيقة يومياً<br>
             • تركيز على الوضع الصحيح<br>
             • تغذية بروتينية نظيفة<br><br>
-            <span class="text-emerald-400">لا تستعجل الأحمال الثقيلة — البناء أولاً.</span>`;
+            <span class="text-emerald-400">لا تستعجل الأحمال الثقيلة — البناء أولاُ.</span>`;
         } else if (level < 130) {
             return `<b>[المسار البدني المتقدم]</b><br><br>
             • PPL + Calisthenics (عقلة، ضغط، قرفصاء)<br>
@@ -1631,7 +1798,7 @@ const SovereignAI = {
             • إضافة تمارين Core<br>
             • Muay Thai أو BJJ للقتال<br><br>
             <span class="text-emerald-400">الهدف: بناء القاعدة الهوائية والقوة الانفجارية.</span>`;
-        } else {
+        } else if (level < 450) {
             return `<b>[المسار البدني السيادي]</b><br><br>
             • PPL متقدم (Handstand, Explosive Pull-ups)<br>
             • جري 8 ساعات أسبوعياً (قانون وولف)<br>
@@ -1639,6 +1806,34 @@ const SovereignAI = {
             • تمارين طول (تعلق، سباحة، سلة)<br>
             • شوفان + شعير + مغذيات دقيقة<br><br>
             <span class="text-emerald-400">الهدف: الصلابة العظمية + القوة الانفجارية + اللياقة القصوى.</span>`;
+        } else if (level < 600) {
+            return `<b>[المسار البدني اللانهاية v8.0]</b><br><br>
+            • PPL + Calisthenics متقدم (Handstand/Explosive)<br>
+            • جري انفجاري + قانون وولف مفعل<br>
+            • Muay Thai + BJJ + سباحة أسبوعياً<br>
+            • ضغط عظمي + قفز عالي + تعلق<br><br>
+            <span class="text-emerald-400">الهدف: القوة الانفجارية + الصلابة العظمية + اللياقة القصوى.</span>`;
+        } else if (level < 800) {
+            return `<b>[المسار البدني التعمق v10.0]</b><br><br>
+            • PPL + Calisthenics + الجمباز<br>
+            • رياضات متنوعة: سباحة 🏊 / مواي تاي 🥊 / جيو-جيتسو 🥋<br>
+            • جري + كرة سلة 🏀 + كرة قدم ⚽<br>
+            • تغذية دقيقة: كالسيوم + مغنيسيوم + زنك<br><br>
+            <span class="text-emerald-400">الهدف: تنوع رياضي + قوة + مرونة + صلابة.</span>`;
+        } else if (level < 1000) {
+            return `<b>[المسار البدني الإتقان v11.0]</b><br><br>
+            • PPL + Calisthenics — إتقان الحركات<br>
+            • رياضات تنافسية بانتظام<br>
+            • تمارين إطالة وتمدد يومية<br>
+            • النوم العميق كأولوية قصوى<br><br>
+            <span class="text-emerald-400">الهدف: الجسم آلة — صيانة يومية + أداء قصوي.</span>`;
+        } else {
+            return `<b>[المسار البدني السيادة المطلقة v1000.0]</b><br><br>
+            • أنت مخير — اختر من أي برنامج سابق<br>
+            • PPL + Calisthenics + رياضات تنافسية حسب رغبتك<br>
+            • استمع لجسمك ولا تتجاوز حدود الإصابة<br>
+            • التغذية السليمة + النوم العميق = الأساس<br><br>
+            <span class="text-emerald-400">الهدف: حرية مطلقة في التدريب + مسؤولية مطلقة في التغذية والنوم.</span>`;
         }
     },
 
@@ -1654,33 +1849,49 @@ const SovereignAI = {
 
     getProgramInfo(progId) {
         const prog = PROGRAM_DATA[progId];
+        if (!prog) return '<b>[ERROR]</b> Protocol not found in system memory.';
+
+        let badge = '';
+        if (progId === 'week1') {
+            badge = '<span class="text-[var(--sys-cyan)]">[Foundation Protocol — بناء القاعدة الشاملة]</span>';
+        } else if (progId === 'week2') {
+            badge = '<span class="text-[var(--sys-purple)] font-bold">[Infinity Protocol v8.0 — دمج الشطرنج في AI + الجري الانفجاري]</span>';
+        } else if (progId === 'week3') {
+            badge = '<span class="text-[var(--sys-purple)] font-bold">[Deep Learning Protocol v10.0 — Frontend + Backend + Music]</span>';
+        } else if (progId === 'week4') {
+            badge = '<span class="text-[var(--sys-purple)] font-bold">[Mastery Protocol v11.0 — العقيدة + الإتقان التقني + الفن الروحي]</span>';
+        } else if (progId === 'week5') {
+            badge = '<span class="text-[var(--sys-cyan)] font-bold">[Sovereign Autonomy v1000.0 — أنت تتحكم في النظام]</span>';
+        }
+
+        const hasMondaySpecial = prog.special && prog.special[1];
+
         return `<b>[${prog.title}]</b><br><br>
         <span class="text-[var(--sys-cyan)]">${prog.version}</span> | ${prog.range}<br><br>
         ${prog.desc}<br><br>
         <b>الجدول اليومي:</b> ${prog.schedule.length} كتل<br>
-        <b>الأيام الخاصة:</b> خميس إنجاز + جمعة إبداع + سبت إتقان<br><br>
-        ${progId === 'week2' ? '<span class="text-[var(--sys-purple)] font-bold">[Infinity Protocol — دمج الشطرنج في AI + الجري الانفجاري]</span>' : '<span class="text-[var(--sys-cyan)]">[Foundation Protocol — بناء القاعدة الشاملة]</span>'}`;
+        <b>الأيام الخاصة:</b> خميس إنجاز + جمعة إبداع + سبت إتقان${hasMondaySpecial ? ' + إثنين صيام (week1)' : ''}<br><br>
+        ${badge}`;
     },
 
     getWolffLawExplanation() {
-        return `<b>[قانون وولف — Wolff's Law]</b><br><br>
+        return `<b>[قانون وولف — Wolff\'s Law]</b><br><br>
         <span class="text-[var(--sys-cyan)] font-bold">التعريف:</span> العظم نسيج حي يتكيف مع الضغط المطبق عليه. كلما زاد الضغط، زادت كثافة العظم وقوته.<br><br>
-        
+
         <b>التطبيق في نظامك:</b><br>
         • <b>الجري الانفجاري:</b> ضغط متكرر على العظام يحفز إعادة البناء<br>
         • <b>القفز العالي:</b> ضغط قصوي يعطي إشارة للعظم بالنمو<br>
         • <b>تمارين الوزن:</b> ضغط مستمر يزيد من كثافة العظم<br>
         • <b>السباحة:</b> تمدد الغضاريف بين المفاصل<br><br>
-        
+
         <b>النتيجة المتوقعة:</b><br>
         • تصحيح الوضعية: +2-3 سم<br>
         • تأخير إغلاق لوحات النمو: سنوات إضافية<br>
         • زيادة إفراز HGH: ضعف النشاط العادي<br><br>
-        
+
         <span class="text-emerald-400 font-bold">التوجيه القتالي: ركّز على الجري بضغط عالي + القفز + تمارين التعلق.</span>`;
     }
 };
-
 // ==========================================
 // TOAST NOTIFICATIONS
 // ==========================================
