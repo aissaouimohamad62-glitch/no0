@@ -629,13 +629,18 @@ week5: {
 }
 };
 const Utils = {
-   
-    verifyDayConsistency() {
+    formatDecimalTime(dec) {
+        const h = Math.floor(dec);
+        const m = Math.floor((dec - h) * 60);
+        return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    },
+    getCurrentDecimalTime() {
         const now = new Date();
-        const jsDay = now.getDay();
-        const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        console.log(`[DAY VERIFICATION] JS getDay()=${jsDay} => ${dayNames[jsDay]} (${this.getDayName(jsDay)})`);
-        return { jsDay, arabicName: this.getDayName(jsDay), englishName: dayNames[jsDay] };
+        return now.getHours() + now.getMinutes() / 60;
+    },
+    getDayName(idx) {
+        const days = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+        return days[idx];
     }
 };
 
