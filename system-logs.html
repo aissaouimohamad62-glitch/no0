@@ -117,7 +117,110 @@
             box-shadow: 0 0 10px var(--sys-cyan-glow);
             transition: width 0.6s ease;
         }
+
+        /* TASK SYSTEM STYLES */
+        .task-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .task-item::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; width: 0%; height: 100%;
+            transition: width 0.4s ease;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        .task-item:hover::before { width: 100%; }
+        .task-item:hover { transform: translateX(-3px); }
+
+        .task-quest { border-right-color: var(--sys-gold); }
+        .task-quest::before { background: var(--sys-gold); }
+        .task-quest:hover { box-shadow: 0 0 15px rgba(251, 191, 36, 0.15); }
+
+        .task-system { border-right-color: var(--sys-cyan); }
+        .task-system::before { background: var(--sys-cyan); }
+        .task-system:hover { box-shadow: 0 0 15px rgba(0, 240, 255, 0.15); }
+
+        .task-level { border-right-color: var(--sys-purple); }
+        .task-level::before { background: var(--sys-purple); }
+        .task-level:hover { box-shadow: 0 0 15px rgba(157, 78, 221, 0.15); }
+
+        .task-error { border-right-color: var(--sys-red); }
+        .task-error::before { background: var(--sys-red); }
+        .task-error:hover { box-shadow: 0 0 15px rgba(239, 68, 68, 0.15); }
+
+        .task-completed {
+            opacity: 0.5;
+            text-decoration: line-through;
+            border-right-color: var(--sys-green) !important;
+        }
+        .task-completed::before { background: var(--sys-green); }
+
+        @keyframes taskComplete {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 0 30px var(--sys-green); }
+            100% { transform: scale(1); }
+        }
+        .task-complete-anim { animation: taskComplete 0.5s ease; }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .task-enter { animation: slideInRight 0.3s ease forwards; }
+
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        }
+        .confetti-particle {
+            position: fixed;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            animation: confetti 1s ease-out forwards;
+        }
+
+        .task-checkbox {
+            appearance: none;
+            width: 20px; height: 20px;
+            border: 2px solid var(--sys-cyan);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            background: transparent;
+        }
+        .task-checkbox:checked {
+            background: var(--sys-green);
+            border-color: var(--sys-green);
+        }
+        .task-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .task-priority-high { border-left: 2px solid var(--sys-red); }
+        .task-priority-medium { border-left: 2px solid var(--sys-gold); }
+        .task-priority-low { border-left: 2px solid var(--sys-green); }
+
+        .daily-progress-ring {
+            transform: rotate(-90deg);
+        }
+        .daily-progress-ring circle {
+            transition: stroke-dashoffset 0.5s ease;
+        }
     </style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body class="p-2 md:p-6">
@@ -189,7 +292,7 @@
     <!-- PROGRAM SWITCHER & TODAY PROTOCOL -->
     <main class="grid grid-cols-1 xl:grid-cols-12 gap-6">
 
-        <!-- LEFT: Program Control & Today's Blocks -->
+        <!-- LEFT: Program Control, Active Tasks & Today's Blocks -->
         <aside class="xl:col-span-5 space-y-6">
             <!-- Program Switcher -->
             <div class="sl-panel p-5 animate-system-pop" style="animation-delay: 0.2s;">
@@ -238,6 +341,56 @@
 
                 <div id="program-message" class="mt-4 p-3 bg-slate-950/60 border border-slate-800 rounded text-xs text-slate-400 leading-relaxed hidden">
                     <!-- Dynamic system message for level 450+ -->
+                </div>
+            </div>
+
+            <!-- ACTIVE QUESTS PANEL -->
+            <div class="sl-panel p-5 animate-system-pop" style="animation-delay: 0.25s; border-color: rgba(251, 191, 36, 0.4);">
+                <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                    <h2 class="text-sm font-black text-[var(--sys-gold)] sys-font tracking-widest flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-[var(--sys-gold)] animate-pulse"></span>
+                        ACTIVE QUESTS / المهام النشطة
+                    </h2>
+                    <div class="flex items-center gap-3">
+                        <span id="task-count-badge" class="text-[10px] bg-slate-900 text-[var(--sys-gold)] px-2 py-0.5 border border-[var(--sys-gold)] rounded sys-font">0/0</span>
+                        <button onclick="TaskManager.openModal()" class="text-[10px] bg-[var(--sys-gold)]/10 border border-[var(--sys-gold)] text-[var(--sys-gold)] px-3 py-1 rounded hover:bg-[var(--sys-gold)] hover:text-black transition sys-font font-bold">
+                            + NEW QUEST
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Daily Progress -->
+                <div class="flex items-center gap-3 mb-4 p-3 bg-slate-950/60 rounded border border-slate-800">
+                    <div class="relative w-12 h-12 flex-shrink-0">
+                        <svg class="daily-progress-ring w-12 h-12" viewBox="0 0 48 48">
+                            <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="4"/>
+                            <circle id="daily-progress-circle" cx="24" cy="24" r="20" fill="none" stroke="var(--sys-gold)" stroke-width="4" 
+                                stroke-dasharray="125.6" stroke-dashoffset="125.6" stroke-linecap="round"/>
+                        </svg>
+                        <span id="daily-progress-text" class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-[var(--sys-gold)] sys-font">0%</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-[10px] text-slate-400 sys-font uppercase tracking-wider">Daily Protocol Progress</div>
+                        <div class="text-xs text-white font-bold" id="daily-progress-label">No active quests</div>
+                    </div>
+                </div>
+
+                <!-- Task Filters -->
+                <div class="flex flex-wrap gap-1.5 mb-3" id="taskFilterContainer">
+                    <button class="task-filter-btn active px-3 py-1 rounded-full border border-slate-600 text-[10px] font-bold text-slate-300 hover:border-[var(--sys-gold)] transition sys-font" data-filter="all">ALL</button>
+                    <button class="task-filter-btn px-3 py-1 rounded-full border border-slate-600 text-[10px] font-bold text-slate-300 hover:border-[var(--sys-gold)] transition sys-font" data-filter="quest">⚔️ QUESTS</button>
+                    <button class="task-filter-btn px-3 py-1 rounded-full border border-slate-600 text-[10px] font-bold text-slate-300 hover:border-[var(--sys-cyan)] transition sys-font" data-filter="system">⚙️ SYSTEM</button>
+                    <button class="task-filter-btn px-3 py-1 rounded-full border border-slate-600 text-[10px] font-bold text-slate-300 hover:border-[var(--sys-purple)] transition sys-font" data-filter="level">⭐ LEVEL</button>
+                    <button class="task-filter-btn px-3 py-1 rounded-full border border-slate-600 text-[10px] font-bold text-slate-300 hover:border-[var(--sys-red)] transition sys-font" data-filter="error">⚠️ ALERTS</button>
+                </div>
+
+                <!-- Tasks List -->
+                <div id="tasksContainer" class="space-y-2 max-h-[350px] overflow-y-auto pr-1">
+                    <div class="h-full flex flex-col items-center justify-center text-slate-500 space-y-2 py-8">
+                        <div class="text-3xl opacity-30">⚔️</div>
+                        <p class="font-bold tracking-widest uppercase sys-font text-[10px]">NO ACTIVE QUESTS</p>
+                        <p class="text-[10px] text-slate-600">Click "+ NEW QUEST" to initialize a mission</p>
+                    </div>
                 </div>
             </div>
 
@@ -313,6 +466,60 @@
 
 <!-- Toast Container -->
 <div id="toastContainer" class="fixed top-5 right-5 z-[10000] flex flex-col gap-3 pointer-events-none"></div>
+
+<!-- Task Modal -->
+<div id="taskModal" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="sl-panel p-6 w-full max-w-md mx-4 animate-system-pop" style="border-color: var(--sys-gold);">
+        <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+            <h3 class="text-lg font-black text-[var(--sys-gold)] sys-font tracking-widest" id="modalTitle">NEW QUEST</h3>
+            <button onclick="TaskManager.closeModal()" class="text-slate-500 hover:text-white text-xl">&times;</button>
+        </div>
+        <form id="taskForm" onsubmit="TaskManager.saveTask(event)">
+            <input type="hidden" id="taskEditId" value="">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-[10px] text-slate-400 sys-font uppercase tracking-wider mb-1">Quest Title</label>
+                    <input type="text" id="taskTitle" required class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white focus:border-[var(--sys-gold)] focus:outline-none transition" placeholder="Enter quest title...">
+                </div>
+                <div>
+                    <label class="block text-[10px] text-slate-400 sys-font uppercase tracking-wider mb-1">Description</label>
+                    <textarea id="taskDesc" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white focus:border-[var(--sys-gold)] focus:outline-none transition resize-none" placeholder="Quest details..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] text-slate-400 sys-font uppercase tracking-wider mb-1">Type</label>
+                        <select id="taskType" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white focus:border-[var(--sys-gold)] focus:outline-none transition">
+                            <option value="quest">⚔️ Quest</option>
+                            <option value="system">⚙️ System</option>
+                            <option value="level">⭐ Level Up</option>
+                            <option value="error">⚠️ Alert</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-slate-400 sys-font uppercase tracking-wider mb-1">Priority</label>
+                        <select id="taskPriority" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white focus:border-[var(--sys-gold)] focus:outline-none transition">
+                            <option value="high">🔴 High</option>
+                            <option value="medium" selected>🟡 Medium</option>
+                            <option value="low">🟢 Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] text-slate-400 sys-font uppercase tracking-wider mb-1">XP Reward</label>
+                    <input type="number" id="taskXP" value="10" min="1" max="1000" class="w-full bg-slate-950 border border-slate-700 rounded p-2.5 text-sm text-white focus:border-[var(--sys-gold)] focus:outline-none transition">
+                </div>
+            </div>
+            <div class="flex gap-2 mt-5">
+                <button type="submit" class="flex-1 bg-[var(--sys-gold)] text-black font-bold py-2.5 rounded text-xs sys-font tracking-wider hover:brightness-110 transition">
+                    INITIALIZE QUEST
+                </button>
+                <button type="button" onclick="TaskManager.closeModal()" class="px-4 py-2.5 border border-slate-600 text-slate-400 rounded text-xs sys-font hover:border-slate-400 hover:text-white transition">
+                    CANCEL
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script>
 // ==========================================
@@ -429,13 +636,13 @@ week1: {
       5: { sport: '🚶 Calm Walk (Recovery) / 🏃 راحة واستشفاء وجري لمدة ساعة', ppl: 'Push (Handstand) / تمارين الدفع الصدر (الداخلية/الحوض/السفلي/البطن الست)', cognitive: 'Dual N-Back + Digital Book Check / تمارين الظهر المزدوجة + مراجعة كتاب', academic: 'Science Review / مراجعة العلوم' },
       6: { sport: '⚽ Football (Match) / رياضة سباحة 🏊 أو كرة القدم ⚽ أو مواي تاي 🥊', ppl: 'Abs (Six-pack) & Triceps / تمارين للبطن (عضلات البطن الست) والعضلة ثلاثية الرؤوس', cognitive: 'Ethical Hacking + Calibration / Dual N-Back + تقييم أسبوعي "ياسين تيا"', academic: 'Physics Review / مراجعة الفيزياء' }
     },
-    special: { // Infinity mode relies mostly on the dynamic schedule logic - Integrated with Advanced Pillars
+    special: {
       4: {
         title: 'Achievement Thursday (Fasting and Diligence) / خميس الإنجاز (الصيام والاجتهاد)',
         blocks: [
           { time: '02:45-05:00', title: 'Night Prayer and Suhoor / صلاة العشاء والسحور', desc: 'Night Prayer + Protein-Rich Suhoor + Remembrance of Allah + Quick Mental Review / صلاة العشاء + سحور غني بالبروتين + ذكر الله + مراجعة ذهنية سريعة' },
           { time: '05:00-06:30', title: 'Quran Session / جلسة قرآنية', desc: 'Recitation and Memorization of the Holy Quran (1.5 Hours) / تلاوة وحفظ القرآن الكريم (ساعة ونصف)' },
-          { time: '06:30-09:30', title: 'Religious Studies / دراسات دينية', desc: 'Riyadh as-Salihin + Al-Bidayah wa\'n-Nihayah + 40 Nawawi (3 Hours) / رياض الصالحين + البداية والنهاية + الأربعين نووية (٣ ساعات)' },
+          { time: '06:30-09:30', title:" 'Religious Studies / دراسات دينية', desc: 'Riyadh as-Salihin + Al-Bidayah wa'n-Nihayah + 40 Nawawi (3 Hours) / رياض الصالحين + البداية والنهاية + الأربعين نووية (٣ ساعات)"},
           { time: '09:30-11:30', title: 'Study Marathon / ماراثون دراسي', desc: 'History, Geography, and French using Mind Maps / التاريخ والجغرافيا والفرنسية باستخدام الخرائط الذهنية' },
           { time: '11:30-13:30', title: 'Language Skills / مهارات لغوية', desc: 'Reviewing English Terminology and Grammar as Software Logic / مراجعة المصطلحات الإنجليزية وفهم قواعد اللغة كجزء من منطق البرمجيات' },
           { time: '13:30-15:00', title: 'Website Development / تطوير مواقع الويب', desc: 'Developing and Monetizing Websites / تطوير مواقع الويب وتحقيق الربح منها' },
@@ -733,7 +940,8 @@ const Toast = {
             success: 'border-emerald-500 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]',
             error: 'border-rose-500 text-rose-400 shadow-[0_0_15px_rgba(225,29,72,0.3)]',
             info: 'border-[var(--sys-cyan)] text-[var(--sys-cyan)] shadow-[0_0_15px_rgba(0,240,255,0.3)]',
-            purple: 'border-[var(--sys-purple)] text-[var(--sys-purple)] shadow-[0_0_15px_rgba(157,78,221,0.3)]'
+            purple: 'border-[var(--sys-purple)] text-[var(--sys-purple)] shadow-[0_0_15px_rgba(157,78,221,0.3)]',
+            gold: 'border-[var(--sys-gold)] text-[var(--sys-gold)] shadow-[0_0_15px_rgba(251,191,36,0.3)]'
         };
         toast.className = `pointer-events-auto px-5 py-3 bg-[#02040a]/95 border backdrop-blur-md text-sm font-bold sys-font tracking-wide animate-system-pop ${colors[type] || colors.info}`;
         toast.textContent = message;
@@ -773,8 +981,352 @@ const PlayerSync = {
             const pct = Math.min((this.data.xp / needed) * 100, 100);
             barEl.style.width = `${pct}%`;
         }
+    },
+    addXP(amount) {
+        this.data.xp += amount;
+        const needed = this.data.level * 100;
+        if (this.data.xp >= needed) {
+            this.data.xp -= needed;
+            this.data.level++;
+            this.data.gold += 50;
+            Toast.show(`🆙 LEVEL UP! You are now Level ${this.data.level}`, 'purple');
+            LogManager.addLog('level', `System Level Up: Sovereign reached Level ${this.data.level}`);
+        }
+        this.save();
+        this.updateUI();
+    },
+    addGold(amount) {
+        this.data.gold += amount;
+        this.save();
+        this.updateUI();
+    },
+    save() {
+        localStorage.setItem('monarch_system_data', JSON.stringify(this.data));
     }
 };
+
+// ==========================================
+// TASK MANAGER (Active Quests System)
+// ==========================================
+const TaskManager = {
+    currentFilter: 'all',
+    tasks: [],
+
+    init() {
+        this.loadTasks();
+        this.render();
+        this.setupFilters();
+        this.updateDailyProgress();
+
+        // Listen for storage changes
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'sovereign_active_tasks') { this.loadTasks(); this.render(); }
+        });
+    },
+
+    loadTasks() {
+        try {
+            const saved = localStorage.getItem('sovereign_active_tasks');
+            this.tasks = saved ? JSON.parse(saved) : [];
+        } catch(e) { this.tasks = []; }
+    },
+
+    saveTasks() {
+        localStorage.setItem('sovereign_active_tasks', JSON.stringify(this.tasks));
+    },
+
+    getTasks() {
+        return this.tasks;
+    },
+
+    getTaskIcon(type) {
+        switch(type) {
+            case 'quest': return '⚔️';
+            case 'system': return '⚙️';
+            case 'level': return '⭐';
+            case 'error': return '⚠️';
+            default: return '📋';
+        }
+    },
+
+    getTaskColor(type) {
+        switch(type) {
+            case 'quest': return 'var(--sys-gold)';
+            case 'system': return 'var(--sys-cyan)';
+            case 'level': return 'var(--sys-purple)';
+            case 'error': return 'var(--sys-red)';
+            default: return '#94a3b8';
+        }
+    },
+
+    getPriorityColor(priority) {
+        switch(priority) {
+            case 'high': return 'var(--sys-red)';
+            case 'medium': return 'var(--sys-gold)';
+            case 'low': return 'var(--sys-green)';
+            default: return '#94a3b8';
+        }
+    },
+
+    openModal(editId = null) {
+        const modal = document.getElementById('taskModal');
+        const form = document.getElementById('taskForm');
+        const titleEl = document.getElementById('modalTitle');
+
+        if (editId) {
+            const task = this.tasks.find(t => t.id === editId);
+            if (!task) return;
+            titleEl.textContent = 'EDIT QUEST';
+            document.getElementById('taskEditId').value = editId;
+            document.getElementById('taskTitle').value = task.title;
+            document.getElementById('taskDesc').value = task.description || '';
+            document.getElementById('taskType').value = task.type;
+            document.getElementById('taskPriority').value = task.priority;
+            document.getElementById('taskXP').value = task.xp || 10;
+        } else {
+            titleEl.textContent = 'NEW QUEST';
+            form.reset();
+            document.getElementById('taskEditId').value = '';
+            document.getElementById('taskXP').value = 10;
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    },
+
+    closeModal() {
+        const modal = document.getElementById('taskModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    },
+
+    saveTask(e) {
+        e.preventDefault();
+        const editId = document.getElementById('taskEditId').value;
+        const title = document.getElementById('taskTitle').value.trim();
+        const description = document.getElementById('taskDesc').value.trim();
+        const type = document.getElementById('taskType').value;
+        const priority = document.getElementById('taskPriority').value;
+        const xp = parseInt(document.getElementById('taskXP').value) || 10;
+
+        if (!title) {
+            Toast.show('Quest title is required!', 'error');
+            return;
+        }
+
+        if (editId) {
+            const task = this.tasks.find(t => t.id === editId);
+            if (task) {
+                task.title = title;
+                task.description = description;
+                task.type = type;
+                task.priority = priority;
+                task.xp = xp;
+                Toast.show('Quest updated successfully!', 'info');
+                LogManager.addLog('system', `Quest Updated: "${title}" [${type.toUpperCase()}]`);
+            }
+        } else {
+            const newTask = {
+                id: 'task_' + Date.now(),
+                title: title,
+                description: description,
+                type: type,
+                priority: priority,
+                xp: xp,
+                completed: false,
+                createdAt: new Date().toISOString(),
+                completedAt: null
+            };
+            this.tasks.push(newTask);
+            Toast.show(`New ${type.toUpperCase()} quest initialized!`, 'gold');
+            LogManager.addLog(type, `New Quest Initialized: "${title}" [${priority.toUpperCase()}] (+${xp} XP)`);
+        }
+
+        this.saveTasks();
+        this.render();
+        this.updateDailyProgress();
+        this.closeModal();
+    },
+
+    toggleComplete(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) return;
+
+        task.completed = !task.completed;
+
+        if (task.completed) {
+            task.completedAt = new Date().toISOString();
+
+            // Visual effects
+            const el = document.querySelector(`[data-task-id="${taskId}"]`);
+            if (el) {
+                el.classList.add('task-complete-anim');
+                this.spawnConfetti(el);
+            }
+
+            // Rewards
+            PlayerSync.addXP(task.xp);
+            PlayerSync.addGold(Math.floor(task.xp / 2));
+
+            Toast.show(`⚔️ QUEST COMPLETE! +${task.xp} XP | +${Math.floor(task.xp/2)} Gold`, 'success');
+            LogManager.addLog(task.type, `Quest Completed: "${task.title}" — Reward: +${task.xp} XP, +${Math.floor(task.xp/2)} Gold`);
+
+            setTimeout(() => {
+                this.saveTasks();
+                this.render();
+                this.updateDailyProgress();
+            }, 600);
+        } else {
+            task.completedAt = null;
+            Toast.show('Quest reactivated!', 'info');
+            LogManager.addLog('system', `Quest Reactivated: "${task.title}"`);
+            this.saveTasks();
+            this.render();
+            this.updateDailyProgress();
+        }
+    },
+
+    spawnConfetti(element) {
+        const rect = element.getBoundingClientRect();
+        const colors = ['#00f0ff', '#fbbf24', '#9d4edd', '#10b981', '#ef4444'];
+        for (let i = 0; i < 12; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'confetti-particle';
+            particle.style.left = (rect.left + rect.width / 2) + 'px';
+            particle.style.top = (rect.top + rect.height / 2) + 'px';
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.transform = `translate(${(Math.random() - 0.5) * 100}px, ${(Math.random() - 0.5) * 100}px)`;
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 1000);
+        }
+    },
+
+    deleteTask(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) return;
+
+        if (confirm(`Delete quest "${task.title}"? This action cannot be undone.`)) {
+            this.tasks = this.tasks.filter(t => t.id !== taskId);
+            this.saveTasks();
+            this.render();
+            this.updateDailyProgress();
+            Toast.show('Quest deleted!', 'error');
+            LogManager.addLog('system', `Quest Deleted: "${task.title}"`);
+        }
+    },
+
+    editTask(taskId) {
+        this.openModal(taskId);
+    },
+
+    setupFilters() {
+        document.querySelectorAll('.task-filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.task-filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.currentFilter = e.target.dataset.filter;
+                this.render();
+            });
+        });
+    },
+
+    updateDailyProgress() {
+        const total = this.tasks.length;
+        const completed = this.tasks.filter(t => t.completed).length;
+        const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+        const circle = document.getElementById('daily-progress-circle');
+        const text = document.getElementById('daily-progress-text');
+        const label = document.getElementById('daily-progress-label');
+
+        if (circle) {
+            const circumference = 2 * Math.PI * 20;
+            const offset = circumference - (pct / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }
+        if (text) text.textContent = pct + '%';
+        if (label) {
+            if (total === 0) label.textContent = 'No active quests';
+            else if (pct === 100) label.textContent = 'All quests completed! 🎉';
+            else label.textContent = `${completed}/${total} quests completed`;
+        }
+
+        const badge = document.getElementById('task-count-badge');
+        if (badge) badge.textContent = `${completed}/${total}`;
+    },
+
+    render() {
+        const container = document.getElementById('tasksContainer');
+        let tasks = this.tasks;
+
+        if (this.currentFilter !== 'all') {
+            tasks = tasks.filter(t => t.type === this.currentFilter);
+        }
+
+        // Sort: incomplete first, then by priority
+        const priorityOrder = { high: 0, medium: 1, low: 2 };
+        tasks = [...tasks].sort((a, b) => {
+            if (a.completed !== b.completed) return a.completed ? 1 : -1;
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+        });
+
+        if (tasks.length === 0) {
+            container.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-slate-500 space-y-2 py-8">
+                <div class="text-3xl opacity-30">⚔️</div>
+                <p class="font-bold tracking-widest uppercase sys-font text-[10px]">NO ACTIVE QUESTS</p>
+                <p class="text-[10px] text-slate-600">Click "+ NEW QUEST" to initialize a mission</p>
+            </div>`;
+            this.updateDailyProgress();
+            return;
+        }
+
+        container.innerHTML = tasks.map((task, index) => {
+            const typeColor = this.getTaskColor(task.type);
+            const priorityColor = this.getPriorityColor(task.priority);
+            const isCompleted = task.completed;
+
+            return `
+            <div data-task-id="${task.id}" class="task-item task-${task.type} ${isCompleted ? 'task-completed' : ''} ${task.priority === 'high' ? 'task-priority-high' : task.priority === 'medium' ? 'task-priority-medium' : 'task-priority-low'} bg-slate-900/60 rounded-lg p-3 task-enter" style="animation-delay: ${index * 0.05}s;">
+                <div class="flex gap-3 items-start relative z-10">
+                    <div class="flex-shrink-0 pt-0.5">
+                        <input type="checkbox" class="task-checkbox" ${isCompleted ? 'checked' : ''} onchange="TaskManager.toggleComplete('${task.id}')">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start mb-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="text-lg">${this.getTaskIcon(task.type)}</span>
+                                <span class="text-sm font-bold text-white ${isCompleted ? 'line-through opacity-50' : ''}">${task.title}</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded border font-bold sys-font" style="border-color: ${typeColor}; color: ${typeColor}; background: ${typeColor}15;">${task.type.toUpperCase()}</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded font-bold sys-font" style="background: ${priorityColor}20; color: ${priorityColor};">${task.priority.toUpperCase()}</span>
+                            </div>
+                            <div class="flex gap-1">
+                                <button onclick="TaskManager.editTask('${task.id}')" class="text-slate-500 hover:text-[var(--sys-cyan)] transition p-1" title="Edit">
+                                    ✏️
+                                </button>
+                                <button onclick="TaskManager.deleteTask('${task.id}')" class="text-slate-500 hover:text-[var(--sys-red)] transition p-1" title="Delete">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                        ${task.description ? `<p class="text-[11px] text-slate-400 leading-relaxed mb-2 ${isCompleted ? 'line-through opacity-40' : ''}">${task.description}</p>` : ''}
+                        <div class="flex items-center gap-3 text-[10px] text-slate-500 sys-font">
+                            <span>💎 +${task.xp} XP</span>
+                            <span>🪙 +${Math.floor(task.xp/2)} Gold</span>
+                            ${isCompleted ? `<span class="text-emerald-400">✓ Completed</span>` : `<span class="text-[var(--sys-gold)]">⏳ Active</span>`}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        }).join('');
+
+        this.updateDailyProgress();
+    }
+};
+
+// ==========================================
+// PROGRAM MANAGER
+// ==========================================
 const ProgramManager = {
     activeProgramId: 'week1',
 
@@ -796,36 +1348,112 @@ const ProgramManager = {
     },
 
     switch(weekId) {
-        // ... existing ...
-        // إضافة دعم week3-week5
+        this.activeProgramId = weekId;
+        localStorage.setItem('sovereign_active_program', weekId);
+        this.renderButtons();
+        this.renderProgramInfo();
+        this.renderTodaySchedule();
+        Toast.show(`Protocol switched to ${PROGRAM_DATA[weekId].title}`, 'info');
+        LogManager.addLog('system', `Protocol Switched: ${PROGRAM_DATA[weekId].title}`);
     },
 
     renderButtons() {
-        // إضافة أزرار week3-week5
-        const btn3 = document.getElementById('btn-week3');
-        const btn4 = document.getElementById('btn-week4');
-        const btn5 = document.getElementById('btn-week5');
-        // ... toggle logic ...
+        ['week1','week2','week3','week4','week5'].forEach(id => {
+            const btn = document.getElementById('btn-' + id);
+            if (btn) {
+                if (this.activeProgramId === id) {
+                    btn.classList.add('active');
+                    if (id === 'week1') {
+                        btn.style.background = 'var(--sys-cyan)';
+                        btn.style.color = 'black';
+                    } else {
+                        btn.style.background = 'var(--sys-purple)';
+                        btn.style.color = 'white';
+                    }
+                } else {
+                    btn.classList.remove('active');
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }
+            }
+        });
+        const badge = document.getElementById('active-program-badge');
+        if (badge) badge.textContent = this.activeProgramId.replace('week', 'WEEK ').toUpperCase();
+    },
+
+    renderProgramInfo() {
+        const msg = document.getElementById('program-message');
+        const prog = PROGRAM_DATA[this.activeProgramId];
+        if (msg && prog) {
+            msg.textContent = prog.desc;
+            msg.classList.remove('hidden');
+        }
     },
 
     renderTodaySchedule() {
+        const container = document.getElementById('today-schedule-container');
+        const dayLabel = document.getElementById('current-day-label');
+        if (!container) return;
+
+        const now = new Date();
         const day = now.getDay();
-        // ... تعديل الشرط ليدعم يوم 1:
-        if (([1, 4, 5, 6].includes(day)) && prog.special[day]) {
-            // ...
+        const prog = PROGRAM_DATA[this.activeProgramId];
+        if (!prog) return;
+
+        if (dayLabel) dayLabel.textContent = Utils.getDayName(day);
+
+        const currentTime = Utils.getCurrentDecimalTime();
+        let html = '';
+
+        // Check special day
+        if (prog.special && prog.special[day]) {
+            const special = prog.special[day];
+            html += `<div class="p-3 bg-[var(--sys-purple)]/10 border border-[var(--sys-purple)]/30 rounded mb-3">
+                <div class="text-[var(--sys-purple)] font-bold text-xs sys-font mb-1">${special.title}</div>
+            </div>`;
+            special.blocks.forEach(block => {
+                html += `<div class="p-3 bg-slate-900/40 rounded border border-slate-800 mb-2">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[var(--sys-cyan)] font-bold text-xs sys-font">${block.time}</span>
+                    </div>
+                    <div class="text-white text-sm font-bold mb-1">${block.title}</div>
+                    <div class="text-[11px] text-slate-400">${block.desc}</div>
+                </div>`;
+            });
+        } else {
+            // Regular schedule
+            const dayData = prog.days[day];
+            if (dayData) {
+                html += `<div class="p-3 bg-emerald-950/20 border border-emerald-500/30 rounded mb-3">
+                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                        <div><span class="text-slate-500">رياضة:</span> <span class="text-white">${dayData.sport}</span></div>
+                        <div><span class="text-slate-500">PPL:</span> <span class="text-white">${dayData.ppl}</span></div>
+                        <div><span class="text-slate-500">ذهني:</span> <span class="text-white">${dayData.cognitive}</span></div>
+                        <div><span class="text-slate-500">أكاديمي:</span> <span class="text-emerald-400">${dayData.academic}</span></div>
+                    </div>
+                </div>`;
+            }
+
+            prog.schedule.forEach(block => {
+                const isActive = currentTime >= block.start && currentTime < block.end;
+                const startStr = Utils.formatDecimalTime(block.start);
+                const endStr = Utils.formatDecimalTime(block.end);
+
+                html += `<div class="p-3 rounded border mb-2 transition-all ${isActive ? 'block-active bg-[var(--sys-cyan)]/5' : 'bg-slate-900/40 border-slate-800'}">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="${isActive ? 'text-[var(--sys-cyan)]' : 'text-slate-500'} font-bold text-xs sys-font">${startStr} - ${endStr}</span>
+                        ${isActive ? '<span class="text-[10px] bg-[var(--sys-cyan)]/20 text-[var(--sys-cyan)] px-2 py-0.5 rounded sys-font animate-pulse">ACTIVE NOW</span>' : ''}
+                    </div>
+                    <div class="text-white text-sm font-bold mb-1">${block.title}</div>
+                    <div class="text-[11px] text-slate-400">${block.desc}</div>
+                </div>`;
+            });
         }
-        
-        // إضافة academic إلى عرض اليوم:
-        html += `
-            <div class="grid grid-cols-2 gap-2 text-[11px]">
-                <div><span class="text-slate-500">رياضة:</span> <span class="text-white">${dayData.sport}</span></div>
-                <div><span class="text-slate-500">PPL:</span> <span class="text-white">${dayData.ppl}</span></div>
-                <div><span class="text-slate-500">ذهني:</span> <span class="text-white">${dayData.cognitive}</span></div>
-                <div><span class="text-slate-500">أكاديمي:</span> <span class="text-emerald-400">${dayData.academic}</span></div> <!-- إضافة -->
-            </div>
-        `;
+
+        container.innerHTML = html;
     }
 };
+
 // ==========================================
 // LOG MANAGER (Archive Engine)
 // ==========================================
@@ -974,12 +1602,15 @@ document.addEventListener('DOMContentLoaded', () => {
     PlayerSync.init();
     ProgramManager.init();
     LogManager.init();
+    TaskManager.init();
 });
 
 // Global exposure
 window.ProgramManager = ProgramManager;
 window.LogManager = LogManager;
+window.TaskManager = TaskManager;
 window.Toast = Toast;
+window.PlayerSync = PlayerSync;
 </script>
 </body>
 </html>
