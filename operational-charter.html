@@ -879,6 +879,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Refresh active block every minute
     setInterval(() => Charter.renderToday(), 60000);
 });
+    // ==========================================
+// INITIALIZATION
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    PlayerSync.init();
+    Charter.init();
+    // Refresh active block every minute
+    setInterval(() => Charter.renderToday(), 60000);
+});
+document.addEventListener('DOMContentLoaded', () => {
+    // === أضف هذا السطر هنا لحفظ الجداول في الذاكرة المشتركة فوراً ===
+    localStorage.setItem('sovereign_program_data', JSON.stringify(PROGRAM_DATA));
+    
+    TimeSync.init();
+    PlayerSync.init();
+    CharterRender.init();
+});
 </script>
 </body>
 </html>
