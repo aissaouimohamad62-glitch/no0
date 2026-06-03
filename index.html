@@ -741,14 +741,14 @@ const AnimePopup = {
         }
     },
 
-    completeQuest() {
+  completeQuest() {
         let quest = this.currentQuest || (window.SovereignEngine ? SovereignEngine.state.activeQuest : null);
         if (!quest) {
             try { quest = JSON.parse(localStorage.getItem('sovereign_active_quest')); } catch(e){}
         }
         if (!quest) {
             document.getElementById('activeDirectiveBar').classList.add('hidden');
-            DirectiveTimer.stop();
+            if (window.DirectiveTimer) DirectiveTimer.stop();
             return;
         }
 
@@ -770,20 +770,51 @@ const AnimePopup = {
         }
 
         if(window.SovereignEngine) {
-            SovereignEngine.logToSystem('quest', `إنجاز مهمة: [${quest.title}] | النوع: ${questType} | الوقت: ${elapsedMinutes}د | مكافأة: +${totalXP} XP | ذهب: +${goldReward}`);
+            SovereignEngine.logToSystem('quest', `تصفية مهمة: [${quest.title}] | +${totalXP} XP`);
         }
 
+    
         document.getElementById('activeDirectiveBar').classList.add('hidden');
-        DirectiveTimer.stop();
+        if (window.DirectiveTimer) DirectiveTimer.stop();
         localStorage.removeItem('sovereign_active_quest');
         localStorage.removeItem('directive_start_time');
         if(window.SovereignEngine) SovereignEngine.state.activeQuest = null;
         this.currentQuest = null;
 
+  
         if (typeof confetti === 'function') {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.9 }, colors: ['#00f0ff', '#9d4edd'] });
+            
+            confetti({
+                particleCount: 140,
+                spread: 80,
+                origin: { y: 0.5 },
+                colors: ['#00f0ff', '#7000ff', '#120024'], 
+                scalar: 0.5,     
+                gravity: 0.8,     
+                startVelocity: 45, 
+                ticks: 80
+            });
+
+            // النبضة الثانية: هالة ذهبية ناعمة تطفو بعد ربع ثانية (ترمز للمكافأة العاهلية)
+            setTimeout(() => {
+                confetti({
+                    particleCount: 40,
+                    spread: 360,
+                    origin: { y: 0.45 },
+                    colors: ['#ffb700', '#ffffff'], // ذهبي ملكي وأبيض ناصع
+                    scalar: 0.4,
+                    gravity: 0.2,       // جاذبية خفيفة جداً تجعل الذهب يطفو كالغبار السحري
+                    startVelocity: 15,  // حركة هادئة
+                    ticks: 120
+                });
+            }, 250);
         }
-        if(window.Toast) Toast.show(`✅ تم إنجاز المهمة! +${totalXP} XP | +${goldReward} 🪙`, 'success');
+
+        // إشعار النظام الصارم (System Notification)
+        if(window.Toast) {
+        
+            Toast.show(systemMessage, 'success');
+        }
     },
 
     cancelQuest() {
@@ -1178,12 +1209,25 @@ const SovereignSchedules = {
     xpRules: { coding_ai: 30, sports: 20, languages_books: 10, dungeons: 10 }
 };
 
-// --- استبدال SovereignEngine بالكامل ---
+// --- استبدال SovereignEngine بالكامل ليطابق ميثاق العمليات المتكاملة ---
 const SovereignEngine = {
     state: {
-        get playerLevel() { return PlayerState.data.level || 1; },
-        get playerXP() { return PlayerState.data.xp || 0; },
-        get playerGold() { return PlayerState.data.gold || 0; },
+        // فحص مرن لجلب الرتب والبيانات الحية بالتوافق مع PlayerSync (الملفات الجديدة) أو PlayerState
+        get playerLevel() { 
+            if (window.PlayerSync && PlayerSync.data) return PlayerSync.data.level || 1;
+            if (window.PlayerState && PlayerState.data) return PlayerState.data.level || 1;
+            return 1;
+        },
+        get playerXP() { 
+            if (window.PlayerSync && PlayerSync.data) return PlayerSync.data.xp || 0;
+            if (window.PlayerState && PlayerState.data) return PlayerState.data.xp || 0;
+            return 0;
+        },
+        get playerGold() { 
+            if (window.PlayerSync && PlayerSync.data) return PlayerSync.data.gold || 0;
+            if (window.PlayerState && PlayerState.data) return PlayerState.data.gold || 0;
+            return 0;
+        },
         activeTitle: localStorage.getItem('sovereign_title') || "[مبتدئ الكتل]",
         activeQuest: JSON.parse(localStorage.getItem('sovereign_active_quest')) || null,
         lastDistractionTime: 0
@@ -1197,46 +1241,69 @@ const SovereignEngine = {
     init() {
         this.checkActiveQuestOnLoad();
         this.runTimeScheduleEngine();
+        // إعادة الفحص التلقائي الذكي كل دقيقة
         setInterval(() => this.runTimeScheduleEngine(), 60000);
     },
     
-    // --- التغيير الرئيسي: استخدام PROGRAM_DATA الموحد ---
+    // دالة مساعدة رئيسية لتحويل الوقت النصي (مثل "02:45") إلى رقم عشري حقيقي دقيق جداً (2.75)
+    parseTimeToDecimal(timeStr) {
+        if (!timeStr || !timeStr.includes(':')) return 0;
+        const parts = timeStr.trim().split(':');
+        const hours = parseInt(parts[0], 10) || 0;
+        const minutes = parseInt(parts[1], 10) || 0;
+        return hours + (minutes / 60);
+    },
+
     runTimeScheduleEngine() {
         const now = new Date();
         const day = now.getDay();
-        const hour = now.getHours();
-        const minute = now.getMinutes();
-        const currentTimeDecimal = hour + (minute / 60);
         
-        // تحديد البرنامج النشط
+        // جلب الوقت العشري الحالي من الأدوات المساعدة المتاحة بالملف لضمان التزامن التام
+        const currentTimeDecimal = (window.Utils && typeof Utils.getCurrentDecimalTime === 'function') 
+            ? Utils.getCurrentDecimalTime() 
+            : (now.getHours() + now.getMinutes() / 60);
+        
+        // استدعاء معرف البرنامج النشط الحالي من ذاكرة المتصفح
         const activeProgramId = localStorage.getItem('sovereign_active_program') || 'week1';
-        const prog = PROGRAM_DATA[activeProgramId];
         
+        // التحقق الآمن من وجود كائن البيانات الشامل للميثاق والبرامج
+        if (typeof PROGRAM_DATA === 'undefined') {
+            console.warn('[SovereignEngine Warning]: PROGRAM_DATA غير معرف في هذه الصفحة.');
+            return;
+        }
+        
+        const prog = PROGRAM_DATA[activeProgramId];
         if (!prog) return;
         
         let currentBlock = null;
         let blocks = [];
         
-        // تحديد الكتل (مطابقة للمرجعي)
-        if (([1, 4, 5, 6].includes(day)) && prog.special[day]) {
-            blocks = prog.special[day].blocks.map(b => ({
-                start: parseFloat(b.time.split('-')[0].replace(':','.')),
-                end: parseFloat(b.time.split('-')[1].replace(':','.')),
-                title: b.title,
-                desc: b.desc,
-                timeStr: b.time
-            }));
-        } else {
+        // تحديد الكتل برمجياً وبشكل ديناميكي مرن بالكامل للأيام الخاصة (مثل 1 للإثنين، 4 للخميس، 5 للجمعة)
+        if (prog.special && prog.special[day] && prog.special[day].blocks) {
+            blocks = prog.special[day].blocks.map(b => {
+                const timeParts = b.time.split('-');
+                return {
+                    start: this.parseTimeToDecimal(timeParts[0]),
+                    end: this.parseTimeToDecimal(timeParts[1]),
+                    title: b.title,
+                    desc: b.desc,
+                    timeStr: b.time
+                };
+            });
+        } else if (prog.schedule) {
+            // كتل الأيام الروتينية القياسية تعتمد بالأساس على قيم عشرية جاهزة ومعدة مسبقاً
             blocks = prog.schedule.map(s => ({
                 start: s.start,
                 end: s.end,
                 title: s.title,
                 desc: s.desc,
-                timeStr: `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}`
+                timeStr: (window.Utils && typeof Utils.formatDecimalTime === 'function')
+                    ? `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}`
+                    : `${Math.floor(s.start)}:00 - ${Math.floor(s.end)}:00`
             }));
         }
         
-        // إيجاد الكتلة النشطة
+        // البحث والمطابقة عن الكتلة الزمنية النشطة في الوقت الحالي
         for (let block of blocks) {
             if (currentTimeDecimal >= block.start && currentTimeDecimal < block.end) {
                 currentBlock = block;
@@ -1244,7 +1311,7 @@ const SovereignEngine = {
             }
         }
         
-        // إذا وجدنا كتلة جديدة مختلفة عن النشطة حالياً
+        // إذا التقط الرادار كتلة بروتوكولية جديدة مختلفة عن المهمة الجاري العمل عليها حالياً
         if (currentBlock && (!this.state.activeQuest || this.state.activeQuest.title !== currentBlock.title)) {
             this.triggerQuestPopup({
                 title: currentBlock.title,
@@ -1254,98 +1321,56 @@ const SovereignEngine = {
             });
         }
     },
-    
+
+    // دالة استنتاج الرتبة البرمجية والنوع لربط المهام بالأوزان والمكافآت التلقائية بناءً على الكلمات المفتاحية لميثاقك
     inferQuestType(title) {
+        if (!title) return 'dungeons';
         const t = title.toLowerCase();
-        if (t.match(/برمج|code|هندس|ai|تطوير|برمجية|تقني/)) return 'coding_ai';
-        if (t.match(/رياض|بدني|ppl|جري|تدريب|قتال|سباح|مواي|جوجيتسو/)) return 'sports';
-        if (t.match(/لغة|إنجليز|english|كتاب|قرآن|روح|شرع|تاريخ|جغرافيا/)) return 'languages_books';
-        if (t.match(/ذهن|شطرنج|سودوكو|ذاكرة|dungeon/)) return 'dungeons';
-        return 'coding_ai';
-    },
-    
-    // --- بقية الدوال تبقى كما هي مع تعديلات بسيطة ---
-    triggerQuestPopup(quest) {
-        AnimePopup.show(quest.title, quest.details, quest.timeLimit || "NOW", this.config.weights[quest.type] || 10);
-    },
-    
-    acceptQuest(quest) {
-        if(!quest) return;
-        if(!quest.acceptedAt) quest.acceptedAt = Date.now();
-        quest.active = true;
-        this.state.activeQuest = quest;
-        localStorage.setItem('sovereign_active_quest', JSON.stringify(quest));
-        document.getElementById('activeDirectiveText').textContent = quest.title;
-        document.getElementById('activeDirectiveBar').classList.remove('hidden');
-        const targetEl = document.getElementById('directiveTargetTime');
-        if(targetEl && quest.timeLimit) targetEl.textContent = quest.timeLimit;
-        if(window.DirectiveTimer) DirectiveTimer.start(quest.acceptedAt);
-        this.logToSystem('quest', `تم قبول المهمة: ${quest.title}`);
-    },
- 
-    completeQuest() {
-        if (!this.state.activeQuest) return;
-        const quest = this.state.activeQuest;
-        const questType = quest.type || 'coding_ai';
-        const baseReward = this.config.weights[questType] || 10;
-        const acceptedAt = quest.acceptedAt || Date.now();
-        const elapsedMinutes = Math.floor((Date.now() - acceptedAt) / 60000);
-        let timeBonus = 0;
-        if (elapsedMinutes >= 25) timeBonus = 10;
-        if (elapsedMinutes >= 60) timeBonus = 25;
-        const totalXP = baseReward + timeBonus;
-        const goldReward = totalXP * 2;
-
-        if(window.PlayerState) {
-            PlayerState.addXP(totalXP);
-            PlayerState.addGold(goldReward);
+        
+        if (t.includes('برمجة') || t.includes('programming') || t.includes('html') || t.includes('javascript') || t.includes('ai') || t.includes('ذكاء') || t.includes('lab') || t.includes('مختبر')) {
+            return 'coding_ai';
         }
-
-        this.logToSystem('quest', `إنجاز مهمة: [${quest.title}] | النوع: ${questType} | الوقت: ${elapsedMinutes}د | مكافأة: +${totalXP} XP | ذهب: +${goldReward}`);
-
-        const bar = document.getElementById('activeDirectiveBar');
-        if (bar) bar.classList.add('hidden');
-        this.state.activeQuest = null;
-        localStorage.removeItem('sovereign_active_quest');
-        localStorage.removeItem('directive_start_time');
-        if (typeof confetti === 'function') {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.9 }, colors: ['#00f0ff', '#9d4edd'] });
+        if (t.includes('رياضة') || t.includes('بدني') || t.includes('ppl') || t.includes('sports') || t.includes('قتال') || t.includes('combat') || t.includes('جري') || t.includes('كرة') || t.includes('سحب') || t.includes('ضغط')) {
+            return 'sports';
         }
-        if(window.Toast) Toast.show(`✅ تم إنجاز المهمة! +${totalXP} XP | +${goldReward} 🪙`, 'success');
+        if (t.includes('إنجليزية') || t.includes('english') || t.includes('قراءة') || t.includes('الرسلان') || t.includes('كتاب') || t.includes('book') || t.includes('علوم') || t.includes('science') || t.includes('رياضيات') || t.includes('math') || t.includes('دراسات')) {
+            return 'languages_books';
+        }
+        return 'dungeons';
     },
-    logToSystem(type, message) {
-        let logs = JSON.parse(localStorage.getItem('sovereign_system_logs') || '[]');
-        logs.unshift({ id: Date.now(), time: new Date().toLocaleTimeString('ar-EG'), type, text: message });
-        localStorage.setItem('sovereign_system_logs', JSON.stringify(logs.slice(0, 200)));
+
+    // دالة توثيق حالة المهمة الحالية وإطلاق النافذة الاحترافية الفخمة على الشاشة للقبول والتنفيذ
+    triggerQuestPopup(questData) {
+        this.state.activeQuest = questData;
+        localStorage.setItem('sovereign_active_quest', JSON.stringify(questData));
+        
+        this.logToSystem('quest', `نظام المراقبة رصد بروتوكولاً نشطاً: [${questData.title}]`);
+        
+        // إطلاق الاستدعاء المنبثق ذو الطابع العالي للفخامة والإنمي العاهلي
+        if (window.AnimePopup && typeof AnimePopup.triggerQuestPopup === 'function') {
+            AnimePopup.triggerQuestPopup(questData);
+        } else if (window.QuestSystem && typeof QuestSystem.showQuestDirective === 'function') {
+            // دعم بديل متوافق لضمان عدم توقف العمليات عبر كافة صفحات لوحات التحكم
+            QuestSystem.showQuestDirective(questData);
+        }
     },
-    renderInterface() {
-        const lvlEl = document.getElementById('currentLevel');
-        const ttlEl = document.getElementById('activeTitleDisplay');
-        if (lvlEl) lvlEl.innerText = this.state.playerLevel;
-        if (ttlEl) ttlEl.innerText = `TITLE: ${this.state.activeTitle}`;
-    },
+
     checkActiveQuestOnLoad() {
-        const saved = localStorage.getItem('sovereign_active_quest');
-        const savedStartTime = localStorage.getItem('directive_start_time');
-        if (saved) { 
-            try {
-                const quest = JSON.parse(saved);
-                this.state.activeQuest = quest;
-                document.getElementById('activeDirectiveText').textContent = quest.title || '...';
-                document.getElementById('activeDirectiveBar').classList.remove('hidden');
-                const targetEl = document.getElementById('directiveTargetTime');
-                if(targetEl && quest.timeLimit) targetEl.textContent = quest.timeLimit;
-                if(quest.acceptedAt && window.DirectiveTimer) {
-                    DirectiveTimer.start(quest.acceptedAt);
-                } else if (savedStartTime && window.DirectiveTimer) {
-                    DirectiveTimer.start(parseInt(savedStartTime));
-                }
-            } catch(e) {
-                localStorage.removeItem('sovereign_active_quest');
+        try {
+            const saved = localStorage.getItem('sovereign_active_quest');
+            if (saved) {
+                this.state.activeQuest = JSON.parse(saved);
             }
+        } catch (e) {
+            console.error('[SovereignEngine Error]: فشل استيراد المهمة المخزنة من ذاكرة المتصفح:', e);
         }
+    },
+
+    logToSystem(type, message) {
+        console.log(`[Sovereign Core - ${type.toUpperCase()}]: ${message}`);
     }
 };
+
 
 // ==========================================
 // WEATHER & METRICS
@@ -1425,4 +1450,6 @@ window.DirectiveTimer = DirectiveTimer;
 </script>
 </body>
 </html>
+
+
 
