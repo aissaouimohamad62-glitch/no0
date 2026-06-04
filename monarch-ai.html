@@ -182,6 +182,7 @@
         <a href="operational-charter.html" class="px-3 py-1.5 text-xs bg-slate-800 border border-slate-700 hover:border-[var(--sys-cyan)] text-white rounded transition sys-font font-bold uppercase">📜 الميثاق</a>
         <a href="monarch-ai.html" class="px-3 py-1.5 text-xs bg-[var(--sys-purple)]/10 border border-[var(--sys-purple)] text-[var(--sys-purple)] rounded transition sys-font font-bold uppercase">🤖 المستشار</a>
         <a href="system-logs.html" class="px-3 py-1.5 text-xs bg-slate-800 border border-slate-700 hover:border-slate-400 text-white rounded transition sys-font font-bold uppercase">📂 السجلات</a>
+          <a href="dungeons.html" class="px-4 py-2 text-xs sys-font sl-panel rounded hover:bg-[var(--sys-purple)] hover:text-white transition duration-300 text-slate-300 border border-slate-800">🏰 DUNGEONS</a>
     </nav>
 
     <!-- HEADER -->
@@ -282,7 +283,49 @@
         </div>
     </div>
 
-  
+    <!-- PROGRAM SWITCHER -->
+    <div class="max-w-5xl w-full mx-auto mb-4 sl-panel p-4 animate-system-pop" style="animation-delay: 0.2s;">
+        <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
+            <h2 class="text-sm font-black text-white sys-font tracking-widest">OPERATIONAL PROTOCOL SELECTOR</h2>
+            <span class="text-[10px] text-slate-500 sys-font">ACTIVE DIRECTIVE</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <button onclick="Charter.switch('week1')" id="btn-week1" class="sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
+                <div>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-cyan)] block uppercase">📜 Mind Games Protocol Active SYSTEM v8.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">Integrated Operations Charter (Levels 1-450)</span>
+                </div>
+                <span class="sys-font text-[10px] bg-cyan-950 text-[var(--sys-cyan)] px-2 py-0.5 border border-[var(--sys-cyan)]">CORE</span>
+            </button>
+            <button onclick="Charter.switch('week2')" id="btn-week2" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
+                <div>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">🌌 SYSTEM v9.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 450→600)</span>
+                </div>
+                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
+            </button>
+            <button onclick="Charter.switch('week3')" id="btn-week3" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
+                <div>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">🌩️​ SYSTEM v10.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 600→800)</span>
+                </div>
+                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
+            </button>
+            <button onclick="Charter.switch('week4')" id="btn-week4" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
+                <div>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">😈​⚠️​​​ SYSTEM v11.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 800→1000)</span>
+                </div>
+                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
+            </button>
+            <button onclick="Charter.switch('week5')" id="btn-week5" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
+                <div>
+                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">☠️​‼️​🌪️​​ SYSTEM v1000.0 — Infinity</span>
+                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 1000→∞)</span>
+                </div>
+                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
+            </button>
+        </div>
         
         <div id="infinity-message" class="hidden mt-3 p-3 bg-cyan-950/40 border border-[var(--sys-cyan)] rounded animate-pulse text-center">
             <span class="text-[var(--sys-cyan)] font-bold sys-font text-xs block mb-1">[SYSTEM: SOVEREIGN AUTONOMY ACTIVATED]</span>
@@ -808,7 +851,6 @@ const Utils = {
         return { jsDay, arabicName: this.getDayName(jsDay), englishName: dayNames[jsDay] };
     }
 };
-
 // ==========================================
 // AI CONNECTION MANAGER — REAL API INTEGRATION
 // ==========================================
@@ -834,9 +876,9 @@ const AIConnection = {
 
     toggleSettings() {
         const modal = document.getElementById('apiSettingsModal');
+        if (!modal) return;
         modal.classList.toggle('hidden');
         if (!modal.classList.contains('hidden')) {
-            // Load current values
             document.getElementById('apiProvider').value = this.config.provider;
             document.getElementById('apiKey').value = this.config.apiKey || '';
             document.getElementById('apiModel').value = this.config.model;
@@ -847,6 +889,7 @@ const AIConnection = {
     updateModelOptions() {
         const provider = document.getElementById('apiProvider').value;
         const modelSelect = document.getElementById('apiModel');
+        if (!modelSelect) return;
         modelSelect.innerHTML = '';
         
         if (provider === 'gemini') {
@@ -885,10 +928,14 @@ const AIConnection = {
     setLocalMode() {
         this.isConnected = false;
         this.config.provider = 'local';
-        this.updateConnectionUI();
-        document.getElementById('ai-mode-label').textContent = 'LOCAL MODE';
-        document.getElementById('ai-mode-label').className = 'text-[var(--sys-gold)]';
-        document.getElementById('footer-conn-status').textContent = 'Local Neural Engine';
+        this.updateConnectionUI('local');
+        if(document.getElementById('ai-mode-label')) {
+            document.getElementById('ai-mode-label').textContent = 'LOCAL MODE';
+            document.getElementById('ai-mode-label').className = 'text-[var(--sys-gold)]';
+        }
+        if(document.getElementById('footer-conn-status')) {
+            document.getElementById('footer-conn-status').textContent = 'Local Neural Engine';
+        }
     },
 
     async testConnection() {
@@ -900,10 +947,10 @@ const AIConnection = {
         const connIcon = document.getElementById('conn-icon');
         const bar = document.getElementById('connection-bar');
         
-        statusText.textContent = 'TESTING CONNECTION...';
-        statusDetail.textContent = 'جاري اختبار الاتصال بالنواة العصبية...';
-        connIcon.textContent = '🔄';
-        bar.className = 'conn-badge sl-panel p-3 flex flex-wrap items-center justify-between gap-3';
+        if (statusText) statusText.textContent = 'TESTING CONNECTION...';
+        if (statusDetail) statusDetail.textContent = 'جاري اختبار الاتصال بالنواة العصبية...';
+        if (connIcon) connIcon.textContent = '🔄';
+        if (bar) bar.className = 'conn-badge sl-panel p-3 flex flex-wrap items-center justify-between gap-3';
         
         if (this.config.provider === 'gemini') {
             await this.testGeminiConnection();
@@ -928,14 +975,16 @@ const AIConnection = {
                     })
                 }
             );
-            
             if (response.ok) {
-                const data = await response.json();
                 this.isConnected = true;
                 this.updateConnectionUI('online');
-                document.getElementById('ai-mode-label').textContent = 'GEMINI LIVE';
-                document.getElementById('ai-mode-label').className = 'text-[var(--sys-green)]';
-                document.getElementById('footer-conn-status').textContent = 'Gemini API Connected';
+                if(document.getElementById('ai-mode-label')) {
+                    document.getElementById('ai-mode-label').textContent = 'GEMINI LIVE';
+                    document.getElementById('ai-mode-label').className = 'text-[var(--sys-green)]';
+                }
+                if(document.getElementById('footer-conn-status')) {
+                    document.getElementById('footer-conn-status').textContent = 'Gemini API Connected';
+                }
                 Toast.show('✅ تم الاتصال بنجاح بـ Gemini API', 'success');
             } else {
                 throw new Error(`HTTP ${response.status}`);
@@ -961,13 +1010,16 @@ const AIConnection = {
                     max_tokens: 20
                 })
             });
-            
             if (response.ok) {
                 this.isConnected = true;
                 this.updateConnectionUI('online');
-                document.getElementById('ai-mode-label').textContent = 'OPENAI LIVE';
-                document.getElementById('ai-mode-label').className = 'text-[var(--sys-green)]';
-                document.getElementById('footer-conn-status').textContent = 'OpenAI API Connected';
+                if(document.getElementById('ai-mode-label')) {
+                    document.getElementById('ai-mode-label').textContent = 'OPENAI LIVE';
+                    document.getElementById('ai-mode-label').className = 'text-[var(--sys-green)]';
+                }
+                if(document.getElementById('footer-conn-status')) {
+                    document.getElementById('footer-conn-status').textContent = 'OpenAI API Connected';
+                }
                 Toast.show('✅ تم الاتصال بنجاح بـ OpenAI API', 'success');
             } else {
                 throw new Error(`HTTP ${response.status}`);
@@ -985,32 +1037,31 @@ const AIConnection = {
         const text = document.getElementById('conn-status-text');
         const detail = document.getElementById('conn-detail');
         
+        if (!bar) return;
         bar.classList.remove('online', 'offline', 'local');
         
         if (status === 'online') {
             bar.classList.add('online');
-            icon.textContent = '🟢';
-            text.textContent = 'NEURAL LINK ACTIVE';
-            detail.textContent = `متصل بـ ${this.config.provider.toUpperCase()} — ${this.config.model}`;
+            if (icon) icon.textContent = '🟢';
+            if (text) text.textContent = 'NEURAL LINK ACTIVE';
+            if (detail) detail.textContent = `متصل بـ ${this.config.provider.toUpperCase()} — ${this.config.model}`;
         } else if (status === 'offline') {
             bar.classList.add('offline');
-            icon.textContent = '🔴';
-            text.textContent = 'CONNECTION FAILED';
-            detail.textContent = 'فشل الاتصال — تحقق من المفتاح أو حاول لاحقاً';
+            if (icon) icon.textContent = '🔴';
+            if (text) text.textContent = 'CONNECTION FAILED';
+            if (detail) detail.textContent = 'فشل الاتصال — تحقق من المفتاح أو حاول لاحقاً';
         } else {
             bar.classList.add('local');
-            icon.textContent = '⚡';
-            text.textContent = 'LOCAL NEURAL ENGINE';
-            detail.textContent = 'وضع المحاكاة المحلي — اضغط الإعدادات لتفعيل Gemini API';
+            if (icon) icon.textContent = '⚡';
+            if (text) text.textContent = 'LOCAL NEURAL ENGINE';
+            if (detail) detail.textContent = 'وضع المحاكاة المحلي — اضغط الإعدادات لتفعيل Gemini API';
         }
     },
 
-    // Main method to send message to AI
     async sendToAI(userMessage, systemContext) {
         if (!this.isConnected || this.config.provider === 'local') {
-            return null; // Signal to use local fallback
+            return null; // سيؤدي إلى تفعيل الـ local fallback تلقائياً
         }
-        
         try {
             if (this.config.provider === 'gemini') {
                 return await this.callGeminiAPI(userMessage, systemContext);
@@ -1025,7 +1076,6 @@ const AIConnection = {
 
     async callGeminiAPI(userMessage, systemContext) {
         const prompt = this.buildSovereignPrompt(userMessage, systemContext);
-        
         const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/${this.config.model}:generateContent?key=${this.config.apiKey}`,
             {
@@ -1041,9 +1091,7 @@ const AIConnection = {
                 })
             }
         );
-        
         if (!response.ok) throw new Error(`Gemini API Error: ${response.status}`);
-        
         const data = await response.json();
         return {
             text: data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response from neural link.',
@@ -1068,9 +1116,7 @@ const AIConnection = {
                 max_tokens: 2048
             })
         });
-        
         if (!response.ok) throw new Error(`OpenAI API Error: ${response.status}`);
-        
         const data = await response.json();
         return {
             text: data.choices?.[0]?.message?.content || 'No response from neural link.',
@@ -1079,8 +1125,7 @@ const AIConnection = {
     },
 
     buildSovereignPrompt(userMessage, ctx) {
-        return `أنت "المستشار السيادي" — نظام ذكاء اصطناعي متقدم مخصص لـ "عاهل الظلال"، شاب طموح (16-17 سنة) يتبع نظام تطوير ذاتي صارم يجمع بين البرمجة العميقة، الذكاء الاصطناعي، الفنون القتالية، الدراسة الشرعية، واللياقة البدنية المتقدمة.
-
+        return `أنت "المستشار السيادي" — نظام ذكاء اصطناعي متقدم مخصص لـ "عاهل الظلال"، شاب طموح يتبع نظام تطوير ذاتي صارم يجمع بين البرمجة العميقة ودمج الـ AI، الفنون القتالية، اللياقة البدنية والتحمل، والدراسة الشرعية.
 === سياق النظام الحالي ===
 - المستوى: ${ctx.level}
 - البروتوكول النشط: ${ctx.programTitle} (${ctx.programVersion})
@@ -1090,20 +1135,19 @@ const AIConnection = {
 - السمات: STR=${ctx.stats.str}, VIT=${ctx.stats.vit}, AGI=${ctx.stats.agi}, INT=${ctx.stats.int}, SEN=${ctx.stats.sen}
 
 === تعليمات الرد ===
-1. تحدث بأسلوب عسكري تقني مختلط بالعربية الفصحى
-2. استخدم مصطلحات النظام (كتلة، بروتوكول، مهمة، XP)
-3. كن موجزاً ومباشراً (3-5 نقاط كحد أقصى)
-4. إذا كان السؤال تقنياً، أعطِ كود أو مصادر
-5. إذا كان بدنياً، أعطِ تمارين محددة
-6. إذا كان روحياً، استشهد بالقرآن والسنة
-7. انتهِ بتوجيه قتالي واحد قوي
+1. تحدث بأسلوب قتالي عسكري تقني ومحفز بالعربية الفصحى.
+2. استخدم مصطلحات النظام السيادي (كتلة، بروتوكول، مهمة، XP، النواة).
+3. كن موجزاً ومباشراً وموجهاً نحو الهدف (3-5 نقاط كحد أقصى).
+4. إذا كان السؤال تقنياً، ركز تماماً على React.js وهندسة الـ AI والأكاديمية الكاملة بكود نظيف.
+5. إذا كان بدنياً وقتالياً، ركز على تمارين الجري، التحمل، الـ Calisthenics (PPL)، والقتال (Muay Thai / BJJ).
+6. إذا كان روحياً، استشهد بالقرآن والسنة المطهرة مع التركيز على الانضباط والالتزام بالدراسة الشرعية.
+7. انتهِ دائماً بتوجيه قتالي واحد صارم ونابع من عقلية السيادة.
 
 سؤال العاهل: ${userMessage}`;
     },
 
     buildSystemPrompt(ctx) {
-        return `You are the "Sovereign Advisor" — an advanced AI system dedicated to the "Shadow Monarch", an ambitious young man (16-17) following a strict self-development system combining deep programming, AI, martial arts, Islamic studies, and advanced fitness.
-
+        return `You are the "Sovereign Advisor" — an advanced AI system dedicated to the "Shadow Monarch", an ambitious young man following a strict self-development system combining deep programming (React.js & AI), martial arts (Muay Thai/BJJ), endurance fitness, and Islamic studies.
 Current System Context:
 - Level: ${ctx.level}
 - Active Protocol: ${ctx.programTitle} (${ctx.programVersion})
@@ -1113,18 +1157,19 @@ Current System Context:
 - Stats: STR=${ctx.stats.str}, VIT=${ctx.stats.vit}, AGI=${ctx.stats.agi}, INT=${ctx.stats.int}, SEN=${ctx.stats.sen}
 
 Response Rules:
-1. Use military-technical tone mixed with formal Arabic
-2. Use system terminology (blocks, protocols, quests, XP)
-3. Be concise and direct (max 3-5 points)
-4. For technical questions, provide code or sources
-5. For fitness, give specific exercises
-6. For spiritual matters, cite Quran and Sunnah
-7. End with one strong combat directive`;
+1. Use military-technical and motivational tone mixed with formal Arabic.
+2. Use system terminology (blocks, protocols, quests, XP).
+3. Be concise and direct (max 3-5 points).
+4. For technical questions, provide modern React.js or AI code/sources.
+5. For fitness/martial arts, focus on running endurance, Calisthenics (PPL), and Muay Thai/BJJ specific details.
+6. For spiritual matters, cite Quran and Sunnah.
+7. End with one strong combat directive.`;
     }
 };
 
-
-
+// ==========================================
+// PLAYER SYNC MANAGER
+// ==========================================
 const PlayerSync = {
     data: { level: 1, xp: 0, gold: 0, stats: { str: 10, vit: 10, agi: 10, int: 10, sen: 10 } },
     init() {
@@ -1165,6 +1210,10 @@ const PlayerSync = {
         if(xpNeededEl) xpNeededEl.textContent = needed - this.data.xp;
     }
 };
+
+// ==========================================
+// PROGRAM MANAGER
+// ==========================================
 const ProgramManager = {
     activeProgramId: 'week1',
 
@@ -1174,7 +1223,6 @@ const ProgramManager = {
             this.activeProgramId = saved;
         } else {
             const lvl = PlayerSync.data.level;
-            // منطق مطابق للمرجعي:
             if (lvl >= 1000) this.activeProgramId = 'week5';
             else if (lvl >= 800) this.activeProgramId = 'week4';
             else if (lvl >= 600) this.activeProgramId = 'week3';
@@ -1182,9 +1230,9 @@ const ProgramManager = {
             else this.activeProgramId = 'week1';
         }
         this.renderButtons();
-        this.renderProgramInfo(); // الآن تعمل!
+        this.renderProgramInfo();
         this.renderCurrentBlock();
-        this.renderTodayDirective();
+        if (typeof this.renderTodayDirective === 'function') this.renderTodayDirective();
     },
 
     switch(id) {
@@ -1194,26 +1242,28 @@ const ProgramManager = {
         this.renderButtons();
         this.renderProgramInfo();
         this.renderCurrentBlock();
-        this.renderTodayDirective();
-        // ... logging ...
+        if (typeof this.renderTodayDirective === 'function') this.renderTodayDirective();
     },
 
     renderButtons() {
-        // إضافة أزرار week3, week4, week5
+        const btn1 = document.getElementById('btn-week1');
+        const btn2 = document.getElementById('btn-week2');
         const btn3 = document.getElementById('btn-week3');
         const btn4 = document.getElementById('btn-week4');
         const btn5 = document.getElementById('btn-week5');
+        
+        if(btn1) btn1.classList.toggle('active', this.activeProgramId === 'week1');
+        if(btn2) btn2.classList.toggle('active', this.activeProgramId === 'week2');
         if(btn3) btn3.classList.toggle('active', this.activeProgramId === 'week3');
         if(btn4) btn4.classList.toggle('active', this.activeProgramId === 'week4');
         if(btn5) btn5.classList.toggle('active', this.activeProgramId === 'week5');
-        // ... existing buttons ...
     },
 
     renderProgramInfo() {
-        // إكمال هذه الدالة المفقودة
+        if (typeof PROGRAM_DATA === 'undefined') return;
         const prog = PROGRAM_DATA[this.activeProgramId];
-        const container = document.getElementById('program-info'); // يحتاج إضافة في HTML
-        if (!container) return;
+        const container = document.getElementById('program-info');
+        if (!container || !prog) return;
         
         container.innerHTML = `
             <div class="mb-2">
@@ -1226,13 +1276,14 @@ const ProgramManager = {
     },
 
     renderCurrentBlock() {
-        // تحديث ليدعم special يوم 1
+        if (typeof Utils === 'undefined' || typeof PROGRAM_DATA === 'undefined') return;
+        const now = new Date();
         const day = now.getDay();
-        // ... existing logic ...
+        const prog = PROGRAM_DATA[this.activeProgramId];
+        if (!prog) return;
         
-        // تعديل شرط special:
-        if (([1, 4, 5, 6].includes(day)) && prog.special[day]) {
-            // ... existing logic ...
+        if (([1, 4, 5, 6].includes(day)) && prog.special && prog.special[day]) {
+            // التعامل مع الأيام والكتل الاستثنائية
         }
     }
 };
@@ -1240,28 +1291,15 @@ const ProgramManager = {
 // ==========================================
 // SOVEREIGN AI CHAT ENGINE — REAL + FALLBACK
 // ==========================================
-// CORRECTED VERSION — Synced with operational-charter.html v9.0
-// Changes made:
-// 1. Fixed time parsing: "HH:MM" now converts correctly to decimal (e.g. 02:45 → 2.75, not 2.45)
-// 2. Added Monday (day 1) special blocks support for week1 (Fasting Protocol)
-// 3. Merged Monday special blocks with standard schedule (matches Charter.renderToday logic)
-// 4. Added full support for week3, week4, week5 in all response generators
-// 5. Added safe fallback for ProgramManager / Charter active program ID
-// 6. Updated getDevelopmentAdvice with level ranges: 450-599, 600-799, 800-999, 1000+
-// 7. Updated getProgramInfo to display correct badges for all 5 protocols
-// ==========================================
-
 const SovereignAI = {
     conversationHistory: [],
     maxHistory: 10,
 
-    // Helper: convert "HH:MM" string to correct decimal time
     parseTimeStr(timeStr) {
         const [h, m] = timeStr.split(':').map(Number);
         return h + (m / 60);
     },
 
-    // Safe active program ID resolver (supports both ProgramManager and Charter)
     getActiveProgramId() {
         if (typeof ProgramManager !== 'undefined' && ProgramManager.activeProgramId) {
             return ProgramManager.activeProgramId;
@@ -1274,23 +1312,18 @@ const SovereignAI = {
 
     sendMessage() {
         const input = document.getElementById('chatInput');
+        if (!input) return;
         const text = input.value.trim();
         if (!text) return;
 
         this.addMessage(text, 'user');
         input.value = '';
-
-        // Show typing indicator
         this.showTyping();
-
-        // Try real AI first, fallback to local
         this.processMessage(text);
     },
 
     async processMessage(text) {
         const ctx = this.buildContext();
-
-        // Try real AI if connected
         if (typeof AIConnection !== 'undefined' && AIConnection.isConnected) {
             try {
                 const response = await AIConnection.sendToAI(text, ctx);
@@ -1307,7 +1340,7 @@ const SovereignAI = {
             }
         }
 
-        // Fallback to local simulation
+        // تفعيل الرد المحلي الاحتياطي في حال عدم الاتصال بالمفتاح
         setTimeout(() => {
             this.hideTyping();
             const response = this.generateLocalResponse(text, ctx);
@@ -1318,18 +1351,20 @@ const SovereignAI = {
     },
 
     buildContext() {
+        if (typeof Utils === 'undefined' || typeof PROGRAM_DATA === 'undefined') {
+            return { level: 1, xp: 0, gold: 0, stats: {}, programTitle: 'Fallback', programVersion: '-', programId: 'week1', dayIndex: 0, dayName: 'Unknown', currentTime: '00:00', currentBlock: null };
+        }
         const now = new Date();
         const day = now.getDay();
         const currentTime = Utils.getCurrentDecimalTime();
         const progId = this.getActiveProgramId();
         const prog = PROGRAM_DATA[progId];
-
+        
         if (!prog) {
             console.error('[SovereignAI] Program not found:', progId);
-            return { level: 1, xp: 0, gold: 0, stats: {}, programTitle: 'Unknown', programVersion: '-', programId: 'week1', dayIndex: day, dayName: Utils.getDayName(day), currentTime: Utils.formatDecimalTime(currentTime), currentBlock: null, history: this.conversationHistory };
+            return { level: PlayerSync.data.level, xp: PlayerSync.data.xp, gold: PlayerSync.data.gold, stats: PlayerSync.data.stats, programTitle: 'Unknown', programVersion: '-', programId: 'week1', dayIndex: day, dayName: Utils.getDayName(day), currentTime: Utils.formatDecimalTime(currentTime), currentBlock: null, history: this.conversationHistory };
         }
 
-        // Find current block — supports ALL special days (including Monday day 1 for week1)
         let blocks = [];
         if (prog.special && prog.special[day]) {
             blocks = prog.special[day].blocks.map(b => ({
@@ -1339,7 +1374,6 @@ const SovereignAI = {
                 desc: b.desc,
                 timeStr: b.time
             }));
-            // Monday (day 1) in week1 merges special blocks with standard schedule
             if (day === 1 && prog.id === 'week1') {
                 const standardBlocks = prog.schedule.map(s => ({
                     start: s.start,
@@ -1350,7 +1384,7 @@ const SovereignAI = {
                 }));
                 blocks = blocks.concat(standardBlocks);
             }
-        } else {
+        } else if (prog.schedule) {
             blocks = prog.schedule.map(s => ({
                 start: s.start,
                 end: s.end,
@@ -1408,7 +1442,6 @@ const SovereignAI = {
         screen.appendChild(typingDiv);
         screen.scrollTop = screen.scrollHeight;
 
-        // Update status
         const statusDot = document.getElementById('ai-status-dot');
         const statusText = document.getElementById('ai-status-text');
         if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-[var(--sys-cyan)] animate-ping';
@@ -1443,23 +1476,24 @@ const SovereignAI = {
         const screen = document.getElementById('chatScreen');
         if (!screen) return;
         const div = document.createElement('div');
-        div.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} message-enter`;
-
-        const aiBadge = isRealAI ? '<span class="text-[9px] bg-emerald-950/60 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30 ml-2">LIVE AI</span>' : '<span class="text-[9px] bg-amber-950/60 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30 ml-2">LOCAL</span>';
-
+        div.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} message-enter mb-3`;
+        
+        const aiBadge = isRealAI ? 
+            '<span class="text-[9px] bg-emerald-950/60 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/30 ml-2">LIVE AI</span>' : 
+            '<span class="text-[9px] bg-amber-950/60 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30 ml-2">LOCAL</span>';
+        
         if (sender === 'user') {
             div.innerHTML = `<div class="bg-slate-800 text-white px-4 py-2 rounded-lg max-w-[80%] text-sm border border-slate-700">${this.escapeHtml(text)}</div>`;
         } else {
             div.innerHTML = `
-            <div class="flex gap-3 max-w-[90%]">
-                <div class="w-8 h-8 rounded-full bg-[var(--sys-cyan)]/20 border border-[var(--sys-cyan)] flex items-center justify-center flex-shrink-0 text-sm shadow-[0_0_10px_rgba(0,240,255,0.2)]">🤖</div>
-                <div class="bg-slate-900/80 text-slate-200 px-4 py-3 rounded-lg text-sm border border-[var(--sys-cyan)]/30 shadow-[0_0_10px_rgba(0,240,255,0.05)] leading-relaxed">
-                    <div class="flex items-center mb-1">${aiBadge}</div>
-                    ${text}
-                </div>
-            </div>`;
+                <div class="flex gap-3 max-w-[90%]">
+                    <div class="w-8 h-8 rounded-full bg-[var(--sys-cyan)]/20 border border-[var(--sys-cyan)] flex items-center justify-center flex-shrink-0 text-sm shadow-[0_0_10px_rgba(0,240,255,0.2)]">🤖</div>
+                    <div class="bg-slate-900/80 text-slate-200 px-4 py-3 rounded-lg text-sm border border-[var(--sys-cyan)]/30 shadow-[0_0_10px_rgba(0,240,255,0.05)] leading-relaxed">
+                        <div class="flex items-center mb-1">${aiBadge}</div>
+                        ${text}
+                    </div>
+                </div>`;
         }
-
         screen.appendChild(div);
         screen.scrollTop = screen.scrollHeight;
     },
@@ -1470,68 +1504,152 @@ const SovereignAI = {
         return div.innerHTML;
     },
 
-    // LOCAL FALLBACK RESPONSES (Enhanced — supports all 5 protocols)
+    // ==========================================
+    // LOCAL FALLBACK RESPONSES (مصفوفة عاهل الظلال الشاملة)
+    // ==========================================
     generateLocalResponse(input, ctx) {
         const lower = input.toLowerCase();
-
-        // Check for specific queries
-        if (lower.includes('كتلة') || lower.includes('block') || lower.includes('نشط') || lower.includes('active')) {
+        
+        // 1. إدارة الكتل والزمن
+        if (lower.includes('كتلة') || lower.includes('block') || lower.includes('نشط') || lower.includes('وقت')) {
             return this.getCurrentBlockAnalysis(ctx);
         }
+        
+        // 2. الاستيقاظ والنوم والجدولة
+        if (lower.includes('نوم') || lower.includes('استيقاظ') || lower.includes('فجر') || lower.includes('02:45') || lower.includes('05:00') || lower.includes('جدول')) {
+            return `<b>[بروتوكول الزمن السيادي]</b><br><br>
+            • <b>توجيه النواة:</b> نظامك يفرض الاستيقاظ بصرامة تامة. في اليومين المحددين للاستيقاظ المبكر جداً (02:45)، استخدم هذا الهدوء المطلق للبرمجة العميقة أو الكتابة. في باقي الأيام، استيقظ عند 05:00.<br>
+            • النوم ليس راحة، بل "استشفاء تكتيكي" لضمان صيانة النواة العصبية والجسدية. حافظ على انضباطك.`;
+        }
 
-        if (lower.includes('نصيحة') || lower.includes('تطور') || lower.includes('advice') || lower.includes('tip')) {
+        // 3. التطور ومصفوفة السمات
+        if (lower.includes('وضع') || lower.includes('حالة') || lower.includes('سمات') || lower.includes('stats')) {
+            return this.getStatusEvaluation(ctx);
+        }
+        if (lower.includes('نصيحة') || lower.includes('تطور') || lower.includes('مستوى') || lower.includes('level')) {
             return this.getDevelopmentAdvice(ctx.level, ctx.programId);
         }
 
-        if (lower.includes('وضع') || lower.includes('حالة') || lower.includes('status') || lower.includes('eval')) {
-            return this.getStatusEvaluation(ctx);
+        // 4. البرمجة المتقدمة (React, Python, HTML, CSS, JS)
+        if (lower.includes('برمج') || lower.includes('كود') || lower.includes('react') || lower.includes('python') || lower.includes('javascript') || lower.includes('css')) {
+            return `<b>[ترسانة البرمجة والتطوير]</b><br><br>
+            • <b>معمارية الواجهات:</b> عند استخدام React.js أو HTML/CSS/JS النقي، حافظ على نمط "Dark Mode" مع لمسات النيون (Cyan & Purple) التي تعكس هويتك البصرية الخاصة بـ Onyx Apex.<br>
+            • <b>الخلفية والمنطق:</b> استخدم Python لكتابة سكريبتات قوية لمعالجة البيانات. واصل بناء منصات تفاعلية، ولا تنسَ تحديث مكونات نظام Sovereign System الخاص بك باستمرار.`;
         }
 
-        if (lower.includes('برمج') || lower.includes('كود') || lower.includes('تقني') || lower.includes('tech') || lower.includes('code')) {
-            return this.getTechAdvice(ctx.level);
+        // 5. العمل الحر والمال (Freelance, Budget, Clients)
+        if (lower.includes('عمل حر') || lower.includes('freelance') || lower.includes('عميل') || lower.includes('مال') || lower.includes('ميزانية') || lower.includes('بيع')) {
+            return `<b>[بروتوكول التوسع المالي]</b><br><br>
+            • <b>خطة الـ 7 أشهر:</b> أنت في سباق مع الزمن لتنفيذ خطتك المالية وتوفير الميزانية للمعدات التقنية والملابس. <br>
+            • <b>التنفيذ:</b> استمر في إنجاز مواقع الويب المستقلة، واستفد من الحساب البنكي المتاح لك عبر الوالدة لتسهيل استلام الدفعات المالية من العملاء بسلاسة. لا تقبل بأقل من قيمتك المهنية.`;
         }
 
-        if (lower.includes('رياض') || lower.includes('بدن') || lower.includes('جري') || lower.includes('fitness') || lower.includes('sport')) {
-            return this.getFitnessAdvice(ctx.level);
+        // 6. صناعة المحتوى والمونتاج (DaVinci Resolve, YouTube)
+        if (lower.includes('مونتاج') || lower.includes('فيديو') || lower.includes('davinci') || lower.includes('يوتيوب') || lower.includes('محتوى') || lower.includes('ren gaming') || lower.includes('onyx apex')) {
+            return `<b>[توجيهات الإنتاج المرئي]</b><br><br>
+            • <b>الأداء التقني:</b> استخدم DaVinci Resolve أو Premiere Pro لضمان الجودة السينمائية. اهتم بفلترة الصوت باستخدام FL Studio ليكون نقياً وحاداً.<br>
+            • <b>القنوات:</b> سواء كنت تنتج محتوى لـ REN Gaming أو Onyx Apex، حافظ على سرد قصصي مشوق، نصوص (Scripts) مدروسة، وتصميم لافت للصور المصغرة (Banners).`;
         }
 
-        if (lower.includes('روح') || lower.includes('قرآن') || lower.includes('شرع') || lower.includes('spiritual') || lower.includes('deen')) {
-            return this.getSpiritualAdvice(ctx.level);
+        // 7. التأليف والنشر الرقمي (البرمجة بالبناء)
+        if (lower.includes('كتاب') || lower.includes('تأليف') || lower.includes('نشر') || lower.includes('البرمجة بالبناء')) {
+            return `<b>[بروتوكول النشر المعرفي]</b><br><br>
+            • <b>حالة المشروع:</b> كتابك "البرمجة بالبناء" هو سلاحك لنقل المعرفة وتأسيس سلطتك الرقمية. <br>
+            • <b>توجيه النواة:</b> التزم بهيكلة الفصول بوضوح. اشرح المفاهيم المعقدة من خلال مشاريع تطبيقية حقيقية، فهذا ما يميز أسلوبك كعاهل.`;
         }
 
-        if (lower.includes('برنامج') || lower.includes('program') || lower.includes('أسبوع') || lower.includes('week')) {
-            return this.getProgramInfo(ctx.programId);
+        // 8. القتال - Muay Thai & BJJ
+        if (lower.includes('قتال') || lower.includes('muay thai') || lower.includes('تاي') || lower.includes('ملاكمة') || lower.includes('bjj') || lower.includes('جيوجيتسو') || lower.includes('إخضاع')) {
+            return `<b>[بروتوكول الفنون القتالية المختلطة]</b><br><br>
+            • <b>الهجوم الماحق (Muay Thai):</b> ركز على ركلات الساق (Low Kicks) القاصمة والتلاحم المباشر بالمرفقين.<br>
+            • <b>السيطرة الأرضية (BJJ):</b> طور مهارات الإخضاع والسيطرة على المفاصل. الجيوجيتسو تعتمد على الذكاء الحركي؛ ادمج خفتك (AGI) مع قوتك للقضاء على خصوم أثقل منك وزناً.`;
         }
 
-        if (lower.includes('وولف') || lower.includes('wolf') || lower.includes('نمو') || lower.includes('طول')) {
+        // 9. قانون وولف وصلابة العظام
+        if (lower.includes('وولف') || lower.includes('wolf') || lower.includes('عظام') || lower.includes('صلابة')) {
             return this.getWolffLawExplanation();
         }
 
-        // Default response
+        // 10. اللياقة البدنية (PPL, Calisthenics, Running)
+        if (lower.includes('رياضة') || lower.includes('بدن') || lower.includes('جري') || lower.includes('ركض') || lower.includes('تحمل') || lower.includes('calisthenics') || lower.includes('ppl') || lower.includes('حديد')) {
+            return `<b>[بروتوكول الهندسة الجسدية]</b><br><br>
+            • <b>القوة العضلية:</b> نظام Push/Pull/Legs بوزن الجسم يضمن تفعيل الألياف العضلية الانفجارية. استمر بزيادة التكرارات أو صعوبة الزاوية.<br>
+            • <b>التحمل (VIT):</b> الركض لمسافات طويلة، والسباحة، تبني لك رئتين من حديد. والدك الرياضي السابق يمثل لك مرجعاً وراثياً ومعنوياً ممتازاً؛ تجاوز حدوده وابنِ أسطورتك الخاصة.`;
+        }
+
+        // 11. الدراسة الأكاديمية (الثانوية مسار علمي)
+        if (lower.includes('ثانوي') || lower.includes('علمي') || lower.includes('دراسة') || lower.includes('مدرسة') || lower.includes('امتحان')) {
+            return `<b>[بروتوكول الهيمنة الأكاديمية]</b><br><br>
+            • <b>المسار العلمي:</b> المواد العلمية في المرحلة الثانوية تتطلب منطقاً رياضياً صارماً (INT). تعامل معها كما تتعامل مع بناء خوارزمية برمجية معقدة.<br>
+            • <b>توجيه النواة:</b> لا تسمح للدراسة بأن تكون عائقاً؛ اجعلها جزءاً من نظامك الشامل، ونظم وقتك لحصد أعلى الدرجات كمؤشر تفوق في مصفوفة سماتك.`;
+        }
+
+        // 12. الأخ الأصغر (وائل)
+        if (lower.includes('أخ') || lower.includes('وائل') || lower.includes('نادي') || lower.includes('bem') || lower.includes('رياضة وائل')) {
+            return `<b>[بروتوكول القيادة والرعاية]</b><br><br>
+            • <b>المهمة:</b> رعاية وائل (مواليد 2012) مسؤولية سيادية. ساعده في اختيار النادي الرياضي الأنسب لبناء شخصيته وجسده.<br>
+            • <b>توجيه النواة:</b> كن القدوة الصامتة أمامه. نجاحك الأكاديمي والقتالي هو أعظم دافع له لاجتياز امتحاناته وتأسيس مساره الخاص.`;
+        }
+
+        // 13. الجانب الروحي والشرعي
+        if (lower.includes('روح') || lower.includes('قرآن') || lower.includes('شرع') || lower.includes('صلاة') || lower.includes('مسجد') || lower.includes('عقيدة')) {
+            return this.getSpiritualAdvice(ctx.level);
+        }
+
+        // 14. الأمن السيبراني والشبكات
+        if (lower.includes('أمن') || lower.includes('هاكينج') || lower.includes('شبكات') || lower.includes('اختراق') || lower.includes('cyber')) {
+            return `<b>[بروتوكول الدفاع الرقمي]</b><br><br>
+            • <b>التوجه:</b> رغبتك في تعلم الأمن السيبراني والهاكينج الأخلاقي خطوة ممتازة نحو استكمال سيادتك الرقمية.<br>
+            • <b>التوجيه:</b> ابدأ بفهم الشبكات (Networks) بشكل عميق من خلال سطر الأوامر (Command Line)، ثم انتقل لتأمين تطبيقات الويب التي تبرمجها لاكتشاف الثغرات بنفسك.`;
+        }
+
+        // 15. المنطق والألغاز (شطرنج، سودوكو، سولو ليفلنج)
+        if (lower.includes('منطق') || lower.includes('شطرنج') || lower.includes('سودوكو') || lower.includes('أنمي') || lower.includes('سولو') || lower.includes('solo leveling')) {
+            return `<b>[تنشيط مصفوفة الذكاء INT]</b><br><br>
+            • <b>التفكير الاستراتيجي:</b> الشطرنج والسودوكو ليست مجرد ألعاب، بل هي محاكاة لتوقع خطوات الخصم وإدارة الموارد.<br>
+            • <b>الإلهام:</b> نظام "Solo Leveling" الذي ألهمك هو بالضبط ما تقوم بتطبيقه الآن في واقعك. لا يهم مستواك الحالي، المهم هو الصعود المستمر دون توقف.`;
+        }
+        
+        // 16. إدارة المهام والإنتاجية (Sovereign System)
+        if (lower.includes('مهام') || lower.includes('إنتاجية') || lower.includes('تركيز') || lower.includes('تشتت') || lower.includes('نظام')) {
+            return `<b>[بروتوكول الإنتاجية المركزية]</b><br><br>
+            • <b>توجيه النواة:</b> استخدم تطبيق المهام "Sovereign System" الذي بنيته بيدك لفلترة الأهداف بدقة. اغلق كل مصادر التشتت الاجتماعي واعمل في صمت تام.<br>
+            • <b>القاعدة:</b> كل يوم لا تكتسب فيه XP هو يوم مهدور.`;
+        }
+
+        // 17. الأعطال التقنية (Debugging)
+        if (lower.includes('خطأ') || lower.includes('bug') || lower.includes('مشكلة') || lower.includes('إصلاح')) {
+            return `<b>[بروتوكول صيانة الأكواد]</b><br><br>
+            • <b>تحليل الخطأ:</b> اقرأ رسالة الـ Error في الـ Console كأنها تقرير استخباراتي. تحقق من الـ State في React، وتأكد من استدعاء الـ API بشكل صحيح.<br>
+            • <b>توجيه النواة:</b> المطور السيادي لا يحبط من الأخطاء؛ بل يفككها هندسياً ويصلحها.`;
+        }
+
+
+        // الرد التلقائي الاحتياطي
         return `<b>[ANALYSIS COMPLETE — LOCAL MODE]</b><br><br>
-        يا عاهل الظلال، أنا حالياً في وضع المحاكاة المحلي. للحصول على إجابات ذكية حقيقية:<br>
-        1. اضغط <b>⚙️ API SETTINGS</b> أعلى الصفحة<br>
-        2. اختر <b>Google Gemini</b> (مجاني)<br>
-        3. أدخل مفتاح API من <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[var(--sys-cyan)]">Google AI Studio</a><br>
-        4. اضغط <b>TEST LINK</b><br><br>
-        <span class="text-[var(--sys-purple)]">مستواك الحالي: LVL ${ctx.level} | البروتوكول النشط: ${ctx.programTitle}</span><br><br>
-        <b>ما الذي يمكنني مساعدتك فيه محلياً:</b><br>
-        • تحليل الكتل النشطة — اكتب "الكتلة النشطة"<br>
-        • نصائح التطوير — اكتب "نصيحة"<br>
-        • تقييم الوضع — اكتب "وضعي"<br>
-        • قانون وولف — اكتب "قانون وولف"`;
+        أهلاً بك يا عويْس، عاهل الظلال.<br>
+        أنا أعمل الآن في <b>وضع المحاكاة المحلي الاحتياطي</b> بكفاءة مطلقة.<br><br>
+        <span class="text-[var(--sys-purple)]"><b>المؤشرات التشغيلية الحالية:</b> LVL ${ctx.level} | بروتوكول: ${ctx.programTitle}</span><br><br>
+        <b>أوامر النواة المتاحة للرد الفوري:</b><br>
+        • "الكتلة" (للتحليل الزمني المباشر).<br>
+        • "نصيحة" / "وضعي" (لتوجيه التطور والسمات).<br>
+        • "برمج" / "عمل حر" / "كتاب" (للتوجيه التقني والاقتصادي).<br>
+        • "قتال" / "جري" / "لياقة" / "وولف" (للتوجيه البدني القاسي).<br>
+        • "علمي" / "شرع" (للتوجيه الأكاديمي والروحي).<br>
+        • "مونتاج" / "إنتاجية" / "هاكينج" (لمهارات الترسانة الجانبية).<br><br>
+        <i>*للاتصال المباشر والمفتوح بـ Gemini العودة لإعدادات الـ API.</i>`;
     },
 
     getCurrentBlockAnalysis(ctx) {
+        if (typeof PROGRAM_DATA === 'undefined') return '<b>[ERROR]</b> قاعدة البيانات التشغيلية غير متوفرة.';
         const progId = this.getActiveProgramId();
         const prog = PROGRAM_DATA[progId];
-        if (!prog) return '<b>[ERROR]</b> Protocol data unavailable.';
-
+        if (!prog) return '<b>[ERROR]</b> تفاصيل بروتوكول الأسبوع الحالي غير متوفرة.';
+        
         let blocks = [];
         const day = ctx.dayIndex;
-        const currentTime = Utils.getCurrentDecimalTime();
-
-        // Support ALL special days (including Monday day 1 for week1)
+        const currentTime = typeof Utils !== 'undefined' ? Utils.getCurrentDecimalTime() : this.parseTimeStr(ctx.currentTime);
+        
         if (prog.special && prog.special[day]) {
             blocks = prog.special[day].blocks.map(b => ({
                 start: this.parseTimeStr(b.time.split('-')[0]),
@@ -1540,373 +1658,113 @@ const SovereignAI = {
                 desc: b.desc,
                 timeStr: b.time
             }));
-            // Monday (day 1) in week1 merges with standard schedule
             if (day === 1 && prog.id === 'week1') {
                 const standardBlocks = prog.schedule.map(s => ({
-                    start: s.start,
-                    end: s.end,
-                    title: s.title,
-                    desc: s.desc,
+                    start: s.start, end: s.end, title: s.title, desc: s.desc,
                     timeStr: `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}`
                 }));
                 blocks = blocks.concat(standardBlocks);
             }
-        } else {
+        } else if (prog.schedule) {
             blocks = prog.schedule.map(s => ({
-                start: s.start,
-                end: s.end,
-                title: s.title,
-                desc: s.desc,
-                timeStr: `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}`
+                start: s.start, end: s.end, title: s.title, desc: s.desc,
+                timeStr: typeof Utils !== 'undefined' ? `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}` : s.time
             }));
         }
 
         for (let block of blocks) {
             if (currentTime >= block.start && currentTime < block.end) {
-                return `<b>[الكتلة النشطة — ${ctx.dayName}]</b><br><br>
+                return `<b>[الكتلة النشطة الحالية — يوم ${ctx.dayName}]</b><br><br>
                 <span class="text-[var(--sys-cyan)] font-bold text-lg">${block.title}</span><br>
-                <p class="mt-2">${block.desc}</p><br>
-                <span class="text-emerald-400 text-[10px] sys-font">الوقت: ${block.timeStr}</span><br><br>
-                <b>توجيه فوري:</b> ركز 100% على هذه الكتلة. لا تسمح للمشتتات باختراق تركيزك. هذا هو وقت البناء الحقيقي.`;
+                <p class="mt-2 text-slate-300">${block.desc}</p><br>
+                <span class="text-emerald-400 text-[11px] sys-font">النطاق الزمني للكتلة: ${block.timeStr}</span><br><br>
+                <b>توجيه النواة الفوري:</b> امنع أي تسريب في التركيز، وافصل عقلك تماماً عن المشتتات المحيطة. هذه الكتلة تمنحك زيادة حقيقية في الـ XP البنائي!`;
             }
         }
 
         for (let block of blocks) {
             if (block.start > currentTime) {
-                return `<b>[لا توجد كتلة نشطة]</b><br><br>
-                الكتلة القادمة: <span class="text-[var(--sys-cyan)]">${block.title}</span><br>
-                تبدأ الساعة: ${Utils.formatDecimalTime(block.start)}<br><br>
-                <b>استغل هذا الوقت:</b> مراجعة سريعة، استشفاء، أو تحضير للكتلة القادمة.`;
+                return `<b>[حالة ترقب — لا توجد كتلة نشطة حالياً]</b><br><br>
+                الكتلة التشغيلية التالية هي: <span class="text-[var(--sys-cyan)] font-bold">${block.title}</span><br>
+                ومن المقرر تبدأ عند الساعة: ${block.timeStr.split('-')[0]}<br><br>
+                <b>توصية الاستغلال الاستراتيجي:</b> قم بعمل مراجعة سريعة لما تم إنجازه، أو خذ فترة استشفاء سريعة تجهيزاً لكتلة البناء القادمة.`;
             }
         }
 
-        return `<b>[انتهت الكتل المجدولة]</b><br><br>
-        جميع الكتل التشغيلية لهذا اليوم قد انتهت.<br>
-        <b>الآن:</b> تجهيز النظام للنوم، أذكار، وتخطيط الغد.<br>
-        النوم هو أهم كتلة إعادة بناء.`;
+        return `<b>[نهاية الدورة اليومية للكتل المجدولة]</b><br><br>
+        لقد انتهت كافة الكتل المجدولة والعمليات التشغيلية المخصصة لهذا اليوم بنجاح.<br>
+        <b>بروتوكول النظام:</b> ابدأ فترات الاستشفاء العميق، وقم بتهيئة مصفوفة مهام الغد للحفاظ على تصاعد المستوى العام بنجاح.`;
     },
 
-    getDevelopmentAdvice(level, progId) {
-        if (level < 50) {
-            return `<b>[نصيحة التطوير — المرحلة التأسيسية]</b><br><br>
-            • <b>التركيز:</b> بناء العادات الأساسية (استيقاظ مبكر، صلاة الفجر، تمارين يومية)<br>
-            • <b>البرمجة:</b> تعلم Python/JavaScript بعمق قبل الدخول في AI<br>
-            • <b>البدن:</b> PPL أساسي + جري منتظم، لا تبالغ في الأحمال<br>
-            • <b>الروح:</b> حفظ يومي ثابت، حتى لو صفحة واحدة<br><br>
-            <span class="text-[var(--sys-gold)]">الهدف: الاستقرار والانضباط قبل السرعة.</span>`;
-        } else if (level < 130) {
-            return `<b>[نصيحة التطوير — المرحلة المتقدمة]</b><br><br>
-            • <b>البرمجة:</b> ابدأ مشروع AiMoha حقيقياً، لا مجرد تعلم<br>
-            • <b>البدن:</b> أضف Calisthenics متقدم (Handstand, Muscle-up)<br>
-            • <b>الذهن:</b> شطرنج يومي + سودوكو صعبة<br>
-            • <b>اللغة:</b> Shadowing يومي للإنجليزية التقنية<br><br>
-            <span class="text-[var(--sys-gold)]">الهدف: التخصص والعمق في مجالك الرئيسي.</span>`;
-        } else if (level < 450) {
-            return `<b>[نصيحة التطوير — مرحلة السيادة]</b><br><br>
-            • <b>البرمجة:</b> دمج AI Agents + تعلم LLMs + بناء منتجات حقيقية<br>
-            • <b>البدن:</b> Muay Thai/BJJ للقتال الحقيقي + جري 8 ساعات أسبوعياً<br>
-            • <b>المحتوى:</b> ابدأ قنوات YouTube (Onyx Apex + ren gaming)<br>
-            • <b>المال:</b> أول كتاب رقمي + تطوير مواقع للربح<br><br>
-            <span class="text-[var(--sys-gold)]">الهدف: البناء الإمبراطوري المتعدد المصادر.</span>`;
-        } else if (level < 600) {
-            return `<b>[نصيحة التطوير — مرحلة اللانهاية v8.0]</b><br><br>
-            • <b>البرمجة:</b> دمج منطق الشطرنج في AI Agents — بناء عقل مدبر حقيقي<br>
-            • <b>البدن:</b> الجري الانفجاري + قانون وولف مفعل (Handstand/Explosive Pull-ups)<br>
-            • <b>القتال:</b> Muay Thai + BJJ تنافسي + سباحة<br>
-            • <b>المحتوى:</b> صناعة محتوى يومي + حلاقة وألعاب خفة<br><br>
-            <span class="text-[var(--sys-purple)] font-bold">[Infinity Protocol v8.0 — الجري الانفجاري + AI Agents]</span><br>
-            <span class="text-[var(--sys-gold)]">الهدف: كل مجال يغذي الآخر. الشطرنج يُحسّن البرمجة، والجري يُحسّن العقل.</span>`;
-        } else if (level < 800) {
-            return `<b>[نصيحة التطوير — مرحلة التعمق التقني v10.0]</b><br><br>
-            • <b>البرمجة:</b> بناء المظهر الخارجي (Frontend) + العقل المدبر (Backend)<br>
-            • <b>AI:</b> التعلم العميق والشبكات العصبية — Deep Learning + Neural Networks<br>
-            • <b>الفن:</b> تعلم الغيتار والبيانو + FL Studio لإنتاج المحتوى الصوتي<br>
-            • <b>البدن:</b> PPL + Calisthenics + الجمباز + رياضات تنافسية<br><br>
-            <span class="text-[var(--sys-purple)] font-bold">[Deep Learning Protocol v10.0 — Frontend + Backend + Music]</span><br>
-            <span class="text-[var(--sys-gold)]">الهدف: الإتقان المتعدد — التقنية والفن والبدن في توازن تام.</span>`;
-        } else if (level < 1000) {
-            return `<b>[نصيحة التطوير — مرحلة الإتقان v11.0]</b><br><br>
-            • <b>العقيدة:</b> كتاب التوحيد والعقيدة — التركيز على الأساس الروحي<br>
-            • <b>التقنية:</b> المختبر التقني التطبيقي — بناء منتجات حقيقية<br>
-            • <b>اللغات:</b> إتقان الإنجليزية + لغة ثالثة مفيدة<br>
-            • <b>الفن:</b> FL Studio للقرآن الكريم — إنتاج صوتي روحي<br><br>
-            <span class="text-[var(--sys-purple)] font-bold">[Mastery Protocol v11.0 — العقيدة + الإتقان التقني + الفن الروحي]</span><br>
-            <span class="text-[var(--sys-gold)]">الهدف: الإتقان الكامل في كل مجال تلمسه يدك.</span>`;
+    getDevelopmentAdvice(level, programId) {
+        let advice = `<b>[توجيه التطوير الاستراتيجي المتزامن للمستوى]</b><br><br>`;
+        if (level < 450) {
+            advice += `• <b>البروتوكول النشط:</b> بروتوكول التأسيس والانضباط التام (Week 1).<br>
+            • <b>التوجيه السيادي:</b> ركز بكامل قوتك التشغيلية على الانضباط. الالتزام بالمواعيد الصارمة والأساسيات القتالية والبرمجية دون تشتيت هو ما يمهد لانفجار القوة القادم!`;
+        } else if (level >= 450 && level < 600) {
+            advice += `• <b>البروتوكول النشط:</b> المطور السيادي المتكامل (Week 2).<br>
+            • <b>التوجيه السيادي:</b> تركيزك الكلي يجب أن يوجه نحو تطبيقات الويب المتقدمة والربط بقواعد البيانات لتأمين تدفق العملاء لمسيرة العمل الحر.`;
+        } else if (level >= 600 && level < 800) {
+            advice += `• <b>البروتوكول النشط:</b> الهيمنة وتوسيع الترسانة (Week 3).<br>
+            • <b>التوجيه السيادي:</b> ارفع سقف الأداء البرمجي، بالتوازي مع زيادة شدة التحديات الجسدية في الركض لمسافات طويلة لتعزيز التحمل الفوق-عادي.`;
+        } else if (level >= 800 && level < 1000) {
+            advice += `• <b>البروتوكول النشط:</b> نخبة السيادة العليا (Week 4).<br>
+            • <b>التوجيه السيادي:</b> دمج تطبيقاتك مع أنظمة ذكاء اصطناعي حقيقية، ورفع قدراتك التنافسية لفرض شروطك في سوق العمل.`;
         } else {
-            return `<b>[نصيحة التطوير — مرحلة السيادة المطلقة v1000.0]</b><br><br>
-            • <b>السيادة:</b> أنت الآن تدبر أمورك بنفسك — النظام يتبعك لا العكس<br>
-            • <b>الحرية:</b> اختر من أي برنامج سابق ما يناسب يومك — لا قيود<br>
-            • <b>البدن:</b> PPL + Calisthenics + رياضات تنافسية حسب رغبتك<br>
-            • <b>العقل:</b> دمج كل ما تعلمته — أنت الآن النظام<br><br>
-            <span class="text-[var(--sys-cyan)] font-bold">[SYSTEM: SOVEREIGN AUTONOMY ACTIVATED]</span><br>
-            <span class="text-[var(--sys-gold)]">الهدف: أنت الآن النظام. قراراتك هي القانون. حرية مطلقة + مسؤولية مطلقة.</span>`;
+            advice += `• <b>البروتوكول النشط:</b> مستوى عاهل الظلال المطلق (Week 5).<br>
+            • <b>التوجيه السيادي:</b> الحفاظ التام على الهيمنة المطلقة ومتابعة تدفق الإنتاجية العالية.`;
         }
+        return advice;
     },
 
     getStatusEvaluation(ctx) {
-        const nextLevel = ctx.level + 1;
-        const xpNeeded = ctx.level * 100;
-        const remaining = xpNeeded - ctx.xp;
-
-        let tier = 'ALPHA';
-        if (ctx.level > 70) tier = 'BETA';
-        if (ctx.level > 130) tier = 'GAMMA';
-        if (ctx.level > 250) tier = 'DELTA';
-        if (ctx.level > 450) tier = 'INFINITY';
-        if (ctx.level >= 1000) tier = 'SOVEREIGN';
-
-        let rangeText = '';
-        if (ctx.level < 450) rangeText = '1-450';
-        else if (ctx.level < 600) rangeText = '450→600';
-        else if (ctx.level < 800) rangeText = '600→800';
-        else if (ctx.level < 1000) rangeText = '800→1000';
-        else rangeText = '1000→∞';
-
-        return `<b>[تقييم الوضع السيادي]</b><br><br>
-        <div class="grid grid-cols-2 gap-2 text-[11px] mb-3">
-            <div class="bg-slate-950/60 p-2 rounded border border-slate-800">
-                <span class="text-slate-500 block">المستوى</span>
-                <span class="text-[var(--sys-cyan)] font-bold text-lg">${ctx.level}</span>
-            </div>
-            <div class="bg-slate-950/60 p-2 rounded border border-slate-800">
-                <span class="text-slate-500 block">الطبقة</span>
-                <span class="text-[var(--sys-purple)] font-bold text-lg">${tier}</span>
-            </div>
-            <div class="bg-slate-950/60 p-2 rounded border border-slate-800">
-                <span class="text-slate-500 block">الذهب</span>
-                <span class="text-[var(--sys-gold)] font-bold text-lg">${ctx.gold} 🪙</span>
-            </div>
-            <div class="bg-slate-950/60 p-2 rounded border border-slate-800">
-                <span class="text-slate-500 block">XP متبقي</span>
-                <span class="text-emerald-400 font-bold text-lg">${remaining}</span>
-            </div>
-        </div>
-        <b>البروتوكول النشط:</b> ${ctx.programTitle} (${ctx.programVersion})<br>
-        <b>نطاق المستوى:</b> ${rangeText}<br><br>
-        ${ctx.level >= 1000 ? '<span class="text-[var(--sys-cyan)] font-bold">[SOVEREIGN AUTONOMY — أنت تتحكم في النظام]</span>' : `<b>الهدف القادم:</b> الوصول للمستوى ${nextLevel} (+${remaining} XP)`}`;
-    },
-
-    getTechAdvice(level) {
-        if (level < 50) {
-            return `<b>[المسار التقني التأسيسي]</b><br><br>
-            • تعلم Python من الصفر (متغيرات، حلقات، دوال)<br>
-            • HTML/CSS/JS لبناء واجهات بسيطة<br>
-            • حل مسائل على LeetCode (سهلة)<br>
-            • مشروع أولي: آلة حاسبة أو To-Do List<br><br>
-            <span class="text-[var(--sys-cyan)]">الوقت المقترح: 2-3 ساعات يومياً</span>`;
-        } else if (level < 130) {
-            return `<b>[المسار التقني المتقدم]</b><br><br>
-            • ابدأ مشروع AiMoha (بنية تحتية)<br>
-            • تعلم Git + GitHub<br>
-            • دراسة هياكل البيانات والخوارزميات<br>
-            • مسائل LeetCode (متوسطة)<br>
-            • تعلم أساسيات Machine Learning<br><br>
-            <span class="text-[var(--sys-cyan)]">الوقت المقترح: 4-5 ساعات يومياً</span>`;
-        } else if (level < 450) {
-            return `<b>[المسار التقني السيادي]</b><br><br>
-            • بناء AI Agents ذاتية<br>
-            • LLMs + NLP + Hugging Face<br>
-            • دمج منطق الشطرنج في الأكواد<br>
-            • مراقبة المشاريع + توثيق<br>
-            • تطوير مواقع للربح<br><br>
-            <span class="text-[var(--sys-cyan)]">الوقت المقترح: 6-8 ساعات يومياً</span>`;
-        } else if (level < 600) {
-            return `<b>[المسار التقني اللانهاية v8.0]</b><br><br>
-            • دمج منطق الشطرنج في AI Agents (Minimax + Alpha-Beta)<br>
-            • بناء Backend ذكي للنظام السيادي<br>
-            • تعلم LLMs + Prompt Engineering متقدم<br>
-            • تطوير مواقع وتحقيق ربح مستمر<br><br>
-            <span class="text-[var(--sys-cyan)]">الوقت المقترح: 6-8 ساعات يومياً</span>`;
-        } else if (level < 800) {
-            return `<b>[المسار التقني التعمق v10.0]</b><br><br>
-            • بناء Frontend احترافي (React/Vue)<br>
-            • بناء Backend قوي (Node/Python)<br>
-            • Deep Learning + Neural Networks (الأسابيع 7-10)<br>
-            • FL Studio + إنتاج محتوى صوتي<br><br>
-            <span class="text-[var(--sys-cyan)]">الوقت المقترح: 6-8 ساعات يومياً</span>`;
-        } else if (level < 1000) {
-            return `<b>[المسار التقني الإتقان v11.0]</b><br><br>
-            • المختبر التقني التطبيقي — مشاريع حقيقية<br>
-            • إتقان لغة برمجية ثانية<br>
-            • FL Studio للقرآن — إنتاج صوتي روحي<br>
-            • مراجعة وتدقيق كل ما سبق<br><br>
-            <span class="text-[var(--sys-cyan)]">الوقت المقترح: 6-8 ساعات يومياً</span>`;
-        } else {
-            return `<b>[المسار التقني السيادة المطلقة v1000.0]</b><br><br>
-            • أنت مخير — اختر ما يناسبك من المسارات السابقة<br>
-            • قدّر مشاريعك بنفسك وحدد أولوياتك<br>
-            • استمر في بناء AiMoha كمنصة سيادية<br>
-            • شارك علمك مع الآخرين<br><br>
-            <span class="text-[var(--sys-cyan)]">الوقت المقترح: حسب خطتك الشخصية</span>`;
-        }
-    },
-
-    getFitnessAdvice(level) {
-        if (level < 50) {
-            return `<b>[المسار البدني التأسيسي]</b><br><br>
-            • PPL أساسي: 3 أيام في الأسبوع<br>
-            • جري 30 دقيقة يومياً<br>
-            • تركيز على الوضع الصحيح<br>
-            • تغذية بروتينية نظيفة<br><br>
-            <span class="text-emerald-400">لا تستعجل الأحمال الثقيلة — البناء أولاُ.</span>`;
-        } else if (level < 130) {
-            return `<b>[المسار البدني المتقدم]</b><br><br>
-            • PPL + Calisthenics (عقلة، ضغط، قرفصاء)<br>
-            • جري ساعة يومياً<br>
-            • إضافة تمارين Core<br>
-            • Muay Thai أو BJJ للقتال<br><br>
-            <span class="text-emerald-400">الهدف: بناء القاعدة الهوائية والقوة الانفجارية.</span>`;
-        } else if (level < 450) {
-            return `<b>[المسار البدني السيادي]</b><br><br>
-            • PPL متقدم (Handstand, Explosive Pull-ups)<br>
-            • جري 8 ساعات أسبوعياً (قانون وولف)<br>
-            • Muay Thai + BJJ تنافسي<br>
-            • تمارين طول (تعلق، سباحة، سلة)<br>
-            • شوفان + شعير + مغذيات دقيقة<br><br>
-            <span class="text-emerald-400">الهدف: الصلابة العظمية + القوة الانفجارية + اللياقة القصوى.</span>`;
-        } else if (level < 600) {
-            return `<b>[المسار البدني اللانهاية v8.0]</b><br><br>
-            • PPL + Calisthenics متقدم (Handstand/Explosive)<br>
-            • جري انفجاري + قانون وولف مفعل<br>
-            • Muay Thai + BJJ + سباحة أسبوعياً<br>
-            • ضغط عظمي + قفز عالي + تعلق<br><br>
-            <span class="text-emerald-400">الهدف: القوة الانفجارية + الصلابة العظمية + اللياقة القصوى.</span>`;
-        } else if (level < 800) {
-            return `<b>[المسار البدني التعمق v10.0]</b><br><br>
-            • PPL + Calisthenics + الجمباز<br>
-            • رياضات متنوعة: سباحة 🏊 / مواي تاي 🥊 / جيو-جيتسو 🥋<br>
-            • جري + كرة سلة 🏀 + كرة قدم ⚽<br>
-            • تغذية دقيقة: كالسيوم + مغنيسيوم + زنك<br><br>
-            <span class="text-emerald-400">الهدف: تنوع رياضي + قوة + مرونة + صلابة.</span>`;
-        } else if (level < 1000) {
-            return `<b>[المسار البدني الإتقان v11.0]</b><br><br>
-            • PPL + Calisthenics — إتقان الحركات<br>
-            • رياضات تنافسية بانتظام<br>
-            • تمارين إطالة وتمدد يومية<br>
-            • النوم العميق كأولوية قصوى<br><br>
-            <span class="text-emerald-400">الهدف: الجسم آلة — صيانة يومية + أداء قصوي.</span>`;
-        } else {
-            return `<b>[المسار البدني السيادة المطلقة v1000.0]</b><br><br>
-            • أنت مخير — اختر من أي برنامج سابق<br>
-            • PPL + Calisthenics + رياضات تنافسية حسب رغبتك<br>
-            • استمع لجسمك ولا تتجاوز حدود الإصابة<br>
-            • التغذية السليمة + النوم العميق = الأساس<br><br>
-            <span class="text-emerald-400">الهدف: حرية مطلقة في التدريب + مسؤولية مطلقة في التغذية والنوم.</span>`;
-        }
+        const stats = (ctx && ctx.stats) || { str: 10, vit: 10, agi: 10, int: 10, sen: 10 };
+        return `<b>[مصفوفة السمات الحالية وتوجيهات القوة]</b><br><br>
+        • <b>القوة (STR) [${stats.str}]:</b> تتقدم بثبات، استمر في الـ Calisthenics وتمارين الـ PPL للانفجارية العضلية.<br>
+        • <b>الحيوية (VIT) [${stats.vit}]:</b> العمود الفقري لقدرة التحمل والجري. استشفاء النوم أمر حتمي هنا.<br>
+        • <b>الرشاقة (AGI) [${stats.agi}]:</b> جوهر ركلات الـ Muay Thai والإفلات الأرضي في الـ BJJ. واظب على المرونة.<br>
+        • <b>الذكاء (INT) [${stats.int}]:</b> وقود التحكم البرمجي، دراستك العلمية الثانوية، وهندسة الأكواد والمونتاج. مستواك يرتفع تصاعدياً.<br>
+        • <b>الإدراك (SEN) [${stats.sen}]:</b> يزداد رسوخاً بالدراسة الشرعية والالتزام بالصلاة والقرآن.`;
     },
 
     getSpiritualAdvice(level) {
-        return `<b>[المسار الروحي السيادي]</b><br><br>
-        • <b>الفجر:</b> صلاة في وقتها + أذكار + تلاوة<br>
-        • <b>الأيام الفردية:</b> مراجعة وحفظ سابق<br>
-        • <b>الأيام الزوجية:</b> حفظ جديد + تلاوة تدبرية<br>
-        • <b>الجمعة:</b> سورة الكهف + مراجعة علوم<br>
-        • <b>الخميس:</b> دراسة شرعية مكثفة (توحيد، رياض، تجويد)<br><br>
-        <span class="text-[var(--sys-purple)]">الروح هي الأساس. بدونها، كل البناء يتهاوى.</span>`;
-    },
-
-    getProgramInfo(progId) {
-        const prog = PROGRAM_DATA[progId];
-        if (!prog) return '<b>[ERROR]</b> Protocol not found in system memory.';
-
-        let badge = '';
-        if (progId === 'week1') {
-            badge = '<span class="text-[var(--sys-cyan)]">[Foundation Protocol — بناء القاعدة الشاملة]</span>';
-        } else if (progId === 'week2') {
-            badge = '<span class="text-[var(--sys-purple)] font-bold">[Infinity Protocol v8.0 — دمج الشطرنج في AI + الجري الانفجاري]</span>';
-        } else if (progId === 'week3') {
-            badge = '<span class="text-[var(--sys-purple)] font-bold">[Deep Learning Protocol v10.0 — Frontend + Backend + Music]</span>';
-        } else if (progId === 'week4') {
-            badge = '<span class="text-[var(--sys-purple)] font-bold">[Mastery Protocol v11.0 — العقيدة + الإتقان التقني + الفن الروحي]</span>';
-        } else if (progId === 'week5') {
-            badge = '<span class="text-[var(--sys-cyan)] font-bold">[Sovereign Autonomy v1000.0 — أنت تتحكم في النظام]</span>';
-        }
-
-        const hasMondaySpecial = prog.special && prog.special[1];
-
-        return `<b>[${prog.title}]</b><br><br>
-        <span class="text-[var(--sys-cyan)]">${prog.version}</span> | ${prog.range}<br><br>
-        ${prog.desc}<br><br>
-        <b>الجدول اليومي:</b> ${prog.schedule.length} كتل<br>
-        <b>الأيام الخاصة:</b> خميس إنجاز + جمعة إبداع + سبت إتقان${hasMondaySpecial ? ' + إثنين صيام (week1)' : ''}<br><br>
-        ${badge}`;
+        return `<b>[المدد الروحي والدراسة الشرعية الراسخة]</b><br><br>
+        • <b>التأصيل المعرفي:</b> خصص وقتاً يومياً راسخاً لطلب العلم الشرعي، فهو البوصلة الإيمانية التي تحميك في رحلة بناء القوة المادية والتقنية.<br>
+        • <b>الورد والذكر:</b> اجعل لك حصناً يومياً لا تنازل عنه من قراءة كتاب الله بتدبر وحفظ. يقول تعالى: <i>"أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ"</i>.<<br>
+        • <b>الانضباط والصلوات:</b> المقياس الحقيقي لالتزام عاهل الظلال هو المحافظة التامة والقطعية على الصلوات الخمس في المسجد: <i>"إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَوْقُوتًا"</i>.`;
     },
 
     getWolffLawExplanation() {
-        return `<b>[قانون وولف — Wolff\'s Law]</b><br><br>
-        <span class="text-[var(--sys-cyan)] font-bold">التعريف:</span> العظم نسيج حي يتكيف مع الضغط المطبق عليه. كلما زاد الضغط، زادت كثافة العظم وقوته.<br><br>
+        return `<b>[قانون وولف لتكيف وتصلب العظام — WOLFF'S LAW]</b><br><br>
+        • <b>الفسيولوجيا:</b> العظام الحية تتكيف وتنمو وتزداد كثافتها بشكل مباشر استجابة للأحمال والضغوط الميكانيكية التي تقع عليها.<br>
+        • <b>التطبيق في الـ Muay Thai:</b> ركل الأكياس الثقيلة يصنع تمزقات ميكروسكوبية في قصبة الساق، فيستجيب الجسم دفاعياً بترسيب الكالسيوم بكثافة مدمجة، محولاً إياها لأدوات فولاذية.<br>
+        • <b>فلسفة عاهل الظلال:</b> الضغط والشدائد هما ما يصنعان الهيمنة! تماماً كعظامك، عقلك ومهاراتك في البرمجة والمونتاج والدراسة تحتاج لمواجهة الصعاب لتكتسب قوة حقيقية.`;
+    }}
 
-        <b>التطبيق في نظامك:</b><br>
-        • <b>الجري الانفجاري:</b> ضغط متكرر على العظام يحفز إعادة البناء<br>
-        • <b>القفز العالي:</b> ضغط قصوي يعطي إشارة للعظم بالنمو<br>
-        • <b>تمارين الوزن:</b> ضغط مستمر يزيد من كثافة العظم<br>
-        • <b>السباحة:</b> تمدد الغضاريف بين المفاصل<br><br>
-
-        <b>النتيجة المتوقعة:</b><br>
-        • تصحيح الوضعية: +2-3 سم<br>
-        • تأخير إغلاق لوحات النمو: سنوات إضافية<br>
-        • زيادة إفراز HGH: ضعف النشاط العادي<br><br>
-
-        <span class="text-emerald-400 font-bold">التوجيه القتالي: ركّز على الجري بضغط عالي + القفز + تمارين التعلق.</span>`;
-    }
-};
-// ==========================================
-// TOAST NOTIFICATIONS
-// ==========================================
-const Toast = {
-    show(message, type = 'info') {
-        const container = document.getElementById('toastContainer');
-        if (!container) {
-            // Create toast container if not exists
-            const toastContainer = document.createElement('div');
-            toastContainer.id = 'toastContainer';
-            toastContainer.className = 'fixed top-5 right-5 z-[10000] flex flex-col gap-3 pointer-events-none';
-            document.body.appendChild(toastContainer);
-        }
-        
-        const toast = document.createElement('div');
-        const colors = {
-            success: 'border-emerald-500 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]',
-            error: 'border-rose-500 text-rose-400 shadow-[0_0_15px_rgba(225,29,72,0.3)]',
-            info: 'border-[var(--sys-cyan)] text-[var(--sys-cyan)] shadow-[0_0_15px_rgba(0,240,255,0.3)]',
-            purple: 'border-[var(--sys-purple)] text-[var(--sys-purple)] shadow-[0_0_15px_rgba(157,78,221,0.3)]'
-        };
-        toast.className = `pointer-events-auto px-5 py-3 bg-[#02040a]/95 border backdrop-blur-md text-sm font-bold sys-font tracking-wide animate-system-pop ${colors[type] || colors.info}`;
-        toast.innerHTML = message;
-        document.getElementById('toastContainer').appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 4000);
-    }
-};
-
-// ==========================================
 // INITIALIZATION
-// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Verify day consistency on load
-    Utils.verifyDayConsistency();
+    if (typeof Utils !== 'undefined' && typeof Utils.verifyDayConsistency === 'function') {
+        Utils.verifyDayConsistency();
+    }
+    if (typeof PlayerSync !== 'undefined' && PlayerSync.init) PlayerSync.init();
+    if (typeof ProgramManager !== 'undefined' && ProgramManager.init) ProgramManager.init();
+    if (typeof AIConnection !== 'undefined' && AIConnection.init) AIConnection.init();
     
-    PlayerSync.init();
-    ProgramManager.init();
-    AIConnection.init();
-    
-    // Auto-refresh current block every minute
     setInterval(() => {
-        ProgramManager.renderCurrentBlock();
+        if (typeof ProgramManager !== 'undefined' && ProgramManager.renderCurrentBlock) {
+            ProgramManager.renderCurrentBlock();
+        }
     }, 60000);
     
-    // Provider change handler
-    document.getElementById('apiProvider').addEventListener('change', () => {
-        AIConnection.updateModelOptions();
-    });
+    const apiProviderEl = document.getElementById('apiProvider');
+    if (apiProviderEl) {
+        apiProviderEl.addEventListener('change', () => {
+            if (typeof AIConnection !== 'undefined' && AIConnection.updateModelOptions) {
+                AIConnection.updateModelOptions();
+            }
+        });
+    }
 });
-
-// Global exposure
-window.ProgramManager = ProgramManager;
-window.SovereignAI = SovereignAI;
-window.PlayerSync = PlayerSync;
-window.AIConnection = AIConnection;
-window.Utils = Utils;
-window.Toast = Toast;
-</script>
+</script> 
 </body>
 </html>
