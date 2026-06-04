@@ -1921,48 +1921,60 @@ document.addEventListener('DOMContentLoaded', () => {
     if(taskInput) taskInput.addEventListener('keypress', e => { if(e.key === 'Enter') QuestSystem.addTask(); });
 });
 // ==========================================
-// SOVEREIGN TITLE SYSTEM (UPDATED)
+// SOVEREIGN TITLE SYSTEM (EXPANDED & UPDATED)
 // ==========================================
 function loadMonarchTitle() {
     const titleElement = document.getElementById('monarch-active-title');
-    const defaultTitleElement = document.getElementById('activeTitleDisplay'); // اللقب القديم الافتراضي
+    const defaultTitleElement = document.getElementById('activeTitleDisplay'); 
     
     if (!titleElement) return;
 
-    // قاموس ترجمة المعرفات (IDs) المحفوظة في المتجر إلى الألقاب الحقيقية
+    // قاموس شامل للألقاب (الأساسي + التوسعات العليا)
     const titlesDictionary = {
+        // الألقاب الأساسية
         "title-novice": "المبرمج المبتدئ",
         "title-styling": "عاهل التنسيقات",
         "title-script": "سيد جافا سكريبت",
         "title-react": "مهندس رياكت",
         "title-shadow": "العاهل الشاب",
-        "title-master": "متقن الزنازين"
+        "title-master": "متقن الزنازين",
+        // الألقاب العليا الجديدة (مرحلة التطور)
+        "title-git": "حارس الإصدارات",
+        "title-backend": "بارون الباك إيند",
+        "title-data": "أمير البيانات",
+        "title-design": "مهندس التجربة",
+        "title-perf": "خاطف السرعة",
+        "title-cyber": "محصن الظلال",
+        "title-architect": "المعمار السيادي"
     };
 
     try {
-        // 1. جلب البيانات من حاوية النظام الرئيسية بدلاً من البحث عنها كعنصر منفصل
+        // 1. جلب البيانات من حاوية النظام الرئيسية
         const systemData = JSON.parse(localStorage.getItem('monarch_system_data') || '{}');
-        const equippedId = systemData.equippedTitle; // استخراج الـ ID مثل "title-shadow"
+        const equippedId = systemData.equippedTitle; 
 
-        // 2. التحقق من وجود اللقب وتطابقه مع القاموس
+        // 2. التحقق من وجود اللقب في القاموس
         if (equippedId && titlesDictionary[equippedId]) {
             const actualTitle = titlesDictionary[equippedId];
             
-            // 3. عرض اللقب السيادي الجديد بتأثير النيون
+            // عرض اللقب السيادي
             titleElement.textContent = `[ ${actualTitle} ]`;
             titleElement.classList.add('active');
 
-            // 4. إخفاء اللقب الافتراضي القديم لتجنب التكرار البصري
+            // إخفاء اللقب الافتراضي لتجنب التكرار البصري
             if(defaultTitleElement) defaultTitleElement.style.display = 'none';
+        } else {
+            // في حال عدم وجود لقب مجهز، نضمن إعادة اللقب الافتراضي للواجهة
+            titleElement.classList.remove('active');
+            if(defaultTitleElement) defaultTitleElement.style.display = '';
         }
     } catch(e) {
-        console.error("خطأ في جلب اللقب السيادي:", e);
+        console.error("خطأ في نظام الألقاب السيادية:", e);
     }
 }
 
 // تشغيل الدالة فور اكتمال تحميل هيكل الصفحة
 document.addEventListener('DOMContentLoaded', loadMonarchTitle);
-
 // Global Accessibility
 window.UI = UI;
 window.Toast = Toast;
@@ -1985,4 +1997,3 @@ window.Router = Router;
 </script>
 </body>
 </html>
-
