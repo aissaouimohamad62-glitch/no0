@@ -170,9 +170,58 @@
             border-color: var(--sys-gold);
             color: var(--sys-gold);
         }
+        /* ==========================================
+   SOVEREIGN VIDEO BACKGROUND SYSTEM
+   ========================================== */
+.sovereign-video-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2; /* ليكون خلف جزيئات الـ Canvas وخلف كل محتوى المتجر */
+    overflow: hidden;
+    background-color: #000000; /* خلفية احتياطية سوداء في حال تأخر تحميل الفيديو */
+}
+
+.sovereign-video-element {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    
+    /* ميزة التضبيب المطلوبة (مضببة قليلاً فقط لتمنح عمقاً بصرياً فخماً) */
+    filter: blur(8px) brightness(0.4); 
+    
+    /* نسبة شفافية متوازنة لكي لا تؤثر الحركة على تركيزك أثناء قراءة الألقاب والمخططات */
+    opacity: 0.55; 
+    transition: opacity 1s ease-in-out;
+}
+
+.sovereign-video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* تدرج ظلي يسحب الضوء نحو الأطراف ليعطي تأثير بوابات الزنازين Dark Rpg */
+    background: radial-gradient(circle, transparent 30%, rgba(0, 0, 0, 0.85) 100%);
+    pointer-events: none;
+}
     </style>
 </head>
 <body class="min-h-screen flex flex-col p-2 md:p-6">
+   <div class="sovereign-video-bg-container">
+    <video autoplay loop muted playsinline class="sovereign-video-element">
+        <source src="blue-tunnel.1920x1080.mp4" type="video/mp4">
+    </video>
+    <div class="sovereign-video-overlay"></div>
+</div>
 
     <!-- NAVIGATION -->
     <nav class="max-w-5xl w-full mx-auto mb-4 p-2 bg-slate-900/40 backdrop-blur border border-slate-800 rounded-lg flex flex-wrap justify-center gap-2 animate-system-pop">
@@ -2222,7 +2271,76 @@ if (lower.includes('maintain discipline alone') || lower.includes('living alone 
     • <b>The Weekly Self-Audit (Non-Negotiable):</b> Every Sunday at 8 PM: review the week honestly. What was executed? What was skipped? Why? Rate yourself 1-10. Below 7? Next week has a 20% intensity increase as penalty. This is not cruelty — it is self-respect.<br>
     • <b>CORE DIRECTIVE:</b> External accountability is training wheels. The sovereign removes them deliberately. True discipline is doing what must be done when NO ONE is watching, when NO ONE will know, when NO ONE will praise or punish you. This is the final test. Pass it, and you are no longer practicing discipline — you ARE discipline.`;
 }
+/**
+ * نظام المعالجة الذكي للردود (AI Response Handler)
+ * يتضمن: بروتوكول السيادة، ملف وائل الشخصي، وأنظمة ترحيبية.
+ */
+function processUserQuery(userInput) {
+    const lower = userInput.toLowerCase();
 
+    // --- 1. قسم بروتوكول السيادة الفردية (Solo Sovereignty Protocol) ---
+    if (
+        lower.includes('maintain discipline alone') || lower.includes('living alone discipline') || 
+        lower.includes('no accountability partner') || lower.includes('self accountability') || 
+        lower.includes('personal discipline system') || lower.includes('discipline without gym buddy') || 
+        lower.includes('discipline without study group') || lower.includes('discipline without coach') || 
+        lower.includes('discipline without mentor') || lower.includes('discipline without boss') || 
+        lower.includes('discipline without parents') || lower.includes('discipline without teacher') || 
+        lower.includes('discipline without partner') || lower.includes('discipline without friends') || 
+        lower.includes('solo discipline') || lower.includes('lone wolf discipline') || 
+        lower.includes('self motivation alone') || lower.includes('self driven discipline') || 
+        lower.includes('intrinsic motivation') || lower.includes('internal accountability') || 
+        lower.includes('personal integrity') || lower.includes('honor system') || 
+        lower.includes('self policing') || lower.includes('self governance') || 
+        lower.includes('autonomous discipline') || lower.includes('independent discipline') || 
+        lower.includes('discipline in isolation') || lower.includes('quarantine discipline') || 
+        lower.includes('remote work discipline') || lower.includes('work from home discipline') || 
+        lower.includes('solopreneur discipline') || lower.includes('indie hacker discipline') || 
+        lower.includes('freelancer discipline') || lower.includes('self employed discipline') || 
+        lower.includes('no structure life') || lower.includes('create own structure') || 
+        lower.includes('be your own boss') || lower.includes('be your own coach') || 
+        lower.includes('be your own drill sergeant')
+    ) {
+        return `<b>[SOLO SOVEREIGNTY PROTOCOL — SELF-ACCOUNTABILITY ARCHITECTURE]</b><br><br>
+        • <b>The Mirror Contract:</b> Every morning, look in the mirror and make a verbal contract with yourself. "Today I will execute X, Y, Z. No excuses. No negotiations." The mirror is your accountability partner.<br>
+        • <b>The Environmental Design:</b> Living alone is an ADVANTAGE. Design your space for execution: no sitting options, phone in lockbox, clothes laid out. Your environment is your accountability.<br>
+        • <b>The Public Commitment System:</b> Post your daily goals publicly. State "I will do X." The sovereign's word is their bond.<br>
+        • <b>The Weekly Self-Audit:</b> Every Sunday at 8 PM: review what was executed vs. skipped. Intensity increase for failures. This is self-respect.<br>
+        • <b>CORE DIRECTIVE:</b> True discipline is doing what must be done when NO ONE is watching. Pass this test, and you ARE discipline.`;
+    }
+
+    // --- 2. قسم الملف الشخصي لوائل عيساوي (Wael Aissaoui Profile) ---
+    else if (
+        lower.includes('wael') || lower.includes('وائل') || 
+        lower.includes('أخي') || lower.includes('شقيقك') || 
+        lower.includes('who is wael') || lower.includes('اخوك')
+    ) {
+        return `<b>[WAEL AISSAOUI — الملف الشخصي والتعريفي]</b><br><br>
+        • <b>الاسم:</b> عيساوي وائل (لقب الدلع: وائل).<br>
+        • <b>النشأة:</b> مواليد 2012، من مدينة مسعد (ولاية الجلفة)، حي القدس، عمارة 20.<br>
+        • <b>الجانب الدراسي:</b> يدرس في متوسطة خليفة برابح، مقبل حالياً على مرحلة السنة الرابعة متوسط.<br>
+        • <b>الصفات الشخصية:</b> شاب وسيم، بشرة بيضاء، شعر أسود. يتميز بروح المشاكسة الذكية والطموح العالي.<br>
+        • <b>الشغف الرياضي:</b> طموحه أن يصبح لاعب كرة قدم محترف، عاشق كبير لنادي ريال مدريد، ولديه اهتمام خاص بالأحذية الرياضية.<br>
+        • <b>شجرة العائلة:</b><br>
+          - <b>الأب:</b> عيساوي عمر (والداه: عيساوي محمد وبن قرينة شايعة).<br>
+          - <b>الأم:</b> تواتي سمية (والداها: تواتي لخضر وتواتي خديجة).<br>
+        <br>
+        <b>[رسالة للنظام]:</b> وائل هو بطل المستقبل. ذكاء، طموح، وانضباط. المستقبل في قدميه.`;
+    }
+
+    // --- 3. قسم الترحيب الأساسي (Greetings) ---
+    else if (lower.includes('hello') || lower.includes('مرحبا') || lower.includes('سلام')) {
+        return `أهلاً بك! أنا هنا للمساعدة. هل تسأل عن "بروتوكول الانضباط" أم تود معرفة معلومات عن "وائل عيساوي"؟ أنا في خدمتك.`;
+    }
+
+    // --- 4. الرد الافتراضي (Default Fallback) ---
+    else {
+        return `عذراً، لم أتمكن من فهم طلبك بدقة. يمكنك سؤالي عن: <br>
+        1. <b>تطوير الذات</b> (Self-Discipline Protocol).<br>
+        2. <b>معلومات وائل عيساوي</b> الشخصية.<br>
+        يرجى إعادة صياغة سؤالك بوضوح أكثر.`;
+    }
+}
 
 
         // الرد التلقائي الاحتياطي
