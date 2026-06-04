@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign System | Sovereign Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sys-dark': '#000000',
+                        'sys-cyan': '#00f0ff',
+                        'sys-purple': '#b026ff',
+                        'sys-white': '#ffffff',
+                        'sys-gold': '#ffd700',
+                        'sys-rose': '#e11d48',
+                        'sys-orange': '#f97316',
+                        'sys-green': '#10b981',
+                    },
+                    fontFamily: {
+                        'cairo': ['Cairo', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                        'rajdhani': ['Rajdhani', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --sys-cyan: #00f0ff;
+            --sys-purple: #b026ff;
+            --sys-white: #ffffff;
+            --sys-gold: #ffd700;
+            --sys-rose: #e11d48;
+            --sys-orange: #f97316;
+            --sys-green: #10b981;
+            --sys-bg: #000000;
+        }
+
+        * { scrollbar-width: thin; scrollbar-color: var(--sys-purple) #000000; }
+        *::-webkit-scrollbar { width: 6px; }
+        *::-webkit-scrollbar-track { background: #000000; }
+        *::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--sys-cyan), var(--sys-purple)); border-radius: 3px; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #000000;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(176, 38, 255, 0.015) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .bg-radial-glow {
+            background: 
+                radial-gradient(ellipse at 50% 0%, rgba(0, 240, 255, 0.06) 0%, transparent 55%),
+                radial-gradient(ellipse at 20% 80%, rgba(176, 38, 255, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 40%);
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.02) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.5;
+        }
+
+        .neon-border {
+            border: 1px solid rgba(0, 240, 255, 0.12);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.04), inset 0 0 15px rgba(0, 240, 255, 0.02);
+            transition: all 0.3s ease;
+        }
+        .neon-border:hover {
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15), 0 0 50px rgba(0, 240, 255, 0.05), inset 0 0 20px rgba(0, 240, 255, 0.08);
+        }
+
+        .neon-border-purple {
+            border: 1px solid rgba(176, 38, 255, 0.12);
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.04), inset 0 0 15px rgba(176, 38, 255, 0.02);
+            transition: all 0.3s ease;
+        }
+        .neon-border-purple:hover {
+            border-color: rgba(176, 38, 255, 0.5);
+            box-shadow: 0 0 25px rgba(176, 38, 255, 0.15), 0 0 50px rgba(176, 38, 255, 0.05), inset 0 0 20px rgba(176, 38, 255, 0.08);
+        }
+
+        .neon-border-gold {
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.04), inset 0 0 15px rgba(255, 215, 0, 0.02);
+            transition: all 0.3s ease;
+        }
+        .neon-border-gold:hover {
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.2), inset 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .sys-btn {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .sys-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        .sys-btn:hover::after { left: 100%; }
+
+        .glitch-text {
+            position: relative;
+            animation: glitch 3s infinite;
+        }
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 10px var(--sys-cyan), 0 0 20px var(--sys-cyan); }
+            50% { text-shadow: 0 0 20px var(--sys-purple), 0 0 40px var(--sys-purple), -2px 0 var(--sys-purple), 2px 0 var(--sys-cyan); }
+        }
+
+        .particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shop-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(5, 5, 12, 0.97) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .shop-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-grid-pattern bg-radial-glow relative">
+    <div class="sovereign-video-bg-container">
+    <video autoplay loop muted playsinline class="sovereign-video-element">
+        <source src="abstract-neon-rose.1920x1080.mp4" type="video/mp4">
+    </video>
+    <div class="sovereign-video-overlay"></div>
+</div>
+    <canvas id="particles" class="particle-canvas"></canvas>
+    <div class="scanline"></div>
+
+    <!-- Header -->
+    <header class="relative z-10 max-w-7xl mx-auto mb-6 p-4">
+        <div class="bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 flex flex-wrap justify-between items-center gap-4 neon-border">
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='index.html'" class="sys-btn text-xs bg-black/80 px-4 py-2 border border-white/20 hover:border-sys-cyan hover:text-sys-cyan transition rounded-lg flex items-center gap-2 text-white/70">
+                    <span>↩</span> <span> 🏠 DASHBOARD العودة للرئيسية</span>
+                </button>
+                <div class="flex flex-col">
+                    <span class="font-orbitron text-[10px] text-white/30 tracking-[0.3em] uppercase">Sovereign System Exchange</span>
+                    <h1 class="font-orbitron text-xl font-black tracking-widest text-sys-gold uppercase glitch-text">🔮 SOVEREIGN SHOP</h1>
+                </div>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="flex flex-wrap gap-2 justify-center md:justify-start">
+                <a href="index.html" class="px-3 py-1.5 text-xs font-mono rounded hover:bg-sys-cyan hover:text-black border border-white/5 transition duration-300 text-slate-300">🏠 DASHBOARD</a>
+                <a href="active-quests.html" class="px-3 py-1.5 text-xs font-mono rounded hover:bg-sys-cyan hover:text-black border border-white/5 transition duration-300 text-slate-300">⚔️ QUESTS</a>
+                <a href="brain-stats.html" class="px-3 py-1.5 text-xs font-mono rounded hover:bg-sys-cyan hover:text-black border border-white/5 transition duration-300 text-slate-300">🧠 DUNGEONS</a>
+                <a href="operational-charter.html" class="px-3 py-1.5 text-xs font-mono rounded hover:bg-sys-cyan hover:text-black border border-white/5 transition duration-300 text-slate-300">📜 CHARTER</a>
+                <a href="monarch-ai.html" class="px-3 py-1.5 text-xs font-mono rounded hover:bg-sys-cyan hover:text-black border border-white/5 transition duration-300 text-slate-300">🤖 MONARCH AI</a>
+                <a href="system-logs.html" class="px-3 py-1.5 text-xs font-mono rounded hover:bg-sys-cyan hover:text-black border border-white/5 transition duration-300 text-slate-300">📊 LOGS</a>
+                <a href="sovereign-shop.html" class="px-3 py-1.5 text-xs font-mono bg-amber-950/40 border border-sys-gold text-sys-gold rounded font-bold shadow-[0_0_10px_rgba(255,215,0,0.15)]">🔮 SHOP</a>
+            </nav>
+
+            <!-- Live Player Stats Bar -->
+            <div class="w-full grid grid-cols-3 gap-4 mt-2 pt-2 border-t border-white/5">
+                <div class="bg-slate-900/60 backdrop-blur border border-slate-800/80 p-2 rounded flex flex-col justify-center">
+                    <span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Player Level</span>
+                    <span id="player-level-display" class="text-md font-black text-sys-purple font-orbitron">LVL --</span>
+                </div>
+                <div class="bg-slate-900/60 backdrop-blur border border-slate-800/80 p-2 rounded flex flex-col justify-center">
+                    <span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Sovereign Gold</span>
+                    <span id="player-gold-display" class="text-md font-black text-sys-gold font-orbitron">0 G</span>
+                </div>
+                <div class="bg-slate-900/60 backdrop-blur border border-slate-800/80 p-2 rounded flex flex-col justify-center">
+                    <span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Experience Points</span>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <div class="w-full bg-slate-950 h-1.5 rounded overflow-hidden border border-slate-800">
+                            <div id="player-xp-bar" class="bg-gradient-to-r from-sys-purple to-indigo-500 h-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <span id="player-xp-text" class="text-[10px] font-bold text-slate-400 whitespace-nowrap font-orbitron">0/0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 pb-20 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- Right/Sidebar: Manual, Guide, and System Motivation -->
+        <div class="lg:col-span-1 space-y-6">
+            
+            <!-- System Guide Panel -->
+            <div class="bg-black/90 p-4 rounded-xl border border-white/10 neon-border flex flex-col space-y-3">
+                <div class="flex items-center gap-2 text-sys-cyan">
+                    <span class="text-lg">📜</span>
+                    <h2 class="font-bold text-sm font-cairo">دليل المقايضة السيادية</h2>
+                </div>
+                <div class="text-xs text-slate-400 space-y-2 leading-relaxed">
+                    <p><strong class="text-sys-gold">⚖️ استحقاق المستويات:</strong> إذا كان مستواك أقل من مستوى العنصر، ستدفعه بسعره الأصلي الباهظ. بمجرد بلوغك المستوى المطلوب، يفرض النظام <span class="text-sys-green font-bold">خصم عواهل يصل إلى 90%</span>!</p>
+                    <p><strong class="text-sys-orange">⏳ الفلترة الزمنية:</strong> المتجر يعرض فقط روابط السجلات والملفات المخصصة لليوم الفعلي من الأسبوع لمساعدتك على التركيز الكامل على خطتك الحالية دون شتات.</p>
+                </div>
+            </div>
+
+            <!-- Motivation Quotes Panel -->
+            <div class="bg-gradient-to-br from-purple-950/20 to-black p-4 rounded-xl border border-sys-purple/20 neon-border-purple">
+                <div class="flex items-center gap-2 text-sys-purple mb-2">
+                    <span class="text-lg">⚡</span>
+                    <h2 class="font-bold text-sm font-cairo">تنبيهات النظام السيادي</h2>
+                </div>
+                <p id="motivational-quote" class="text-xs text-slate-300 italic leading-relaxed font-cairo">
+                    "الذهب لا قيمة له إذا لم تستخدمه لتوسيع نفوذك وظلالك البرمجية!"
+                </p>
+                <div class="mt-4 pt-2 border-t border-white/5 flex justify-between items-center text-[10px] text-slate-500 font-mono">
+                    <span>STATUS: MONITORING</span>
+                    <span id="current-day-label">Thursday</span>
+                </div>
+            </div>
+
+            <!-- Admin Toggle For Testing -->
+            <div class="bg-slate-900/40 p-3 rounded-lg border border-slate-800 text-center">
+                <button onclick="toggleDayFilter()" class="text-[10px] font-mono text-sys-cyan hover:underline">
+                    ⚙️ [Admin] التبديل بين (أيام اليوم فقط / عرض كل الأيام)
+                </button>
+            </div>
+        </div>
+
+        <!-- Left/Main: Products Sections (Secret Links & Titles) -->
+        <div class="lg:col-span-3 space-y-8">
+            
+            <!-- Section 1: Secret Links Archive -->
+            <div>
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">📑</span>
+                        <h2 class="text-lg font-black text-white font-cairo">أرشيف الروابط والمخططات السرية</h2>
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-cyan/10 text-sys-cyan rounded border border-sys-cyan/20">SECRET ARCHIVE</span>
+                </div>
+                <div id="links-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic Generation via JS -->
+                </div>
+            </div>
+
+            <!-- Section 2: Sovereign Titles Shop -->
+            <div>
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🎖️</span>
+                        <h2 class="text-lg font-black text-white font-cairo">متجر الألقاب والسمات السيادية</h2>
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-purple/10 text-sys-purple rounded border border-sys-purple/20">TITLES SHOP</span>
+                </div>
+                <div id="titles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamic Generation via JS -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Custom Alert Container -->
+    <div id="custom-alert" class="fixed bottom-5 left-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border-2 rounded-xl p-4 max-w-sm flex items-start gap-3 shadow-2xl">
+        <span id="alert-icon" class="text-2xl"></span>
+        <div>
+            <h4 id="alert-title" class="font-bold text-sm font-cairo text-white"></h4>
+            <p id="alert-desc" class="text-xs text-slate-400 mt-1 font-cairo"></p>
+        </div>
+    </div>
+
+<script>
+// ==========================================
+// DATA DEFINITIONS & ARCHITECTURE
+// ==========================================
+const DAYS_AR = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+const DAYS_EN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+// Quotes Database
+const MOTIVATIONAL_QUOTES = [
+    "«كل رابط سري تفتحه اليوم، هو ترسانة برمجية تدعم سيادتك غداً.»",
+    "«المستويات العالية تفرض نفوذها على المتجر؛ ارتقِ لتنحني لك الأسعار.»",
+    "«النظام يراقب تقدمك. الذهب المتروك دون استثمار هو طاقة مهدرة.»",
+    "«تجهيز اللقب الصحيح يغير هالتك السيادية أمام لوحة التحكم والمهام.»",
+    "«لا تشتت نفسك بملفات الأيام الأخرى، ركز على بوابات اليوم أولاً.»"
+];
+
+// Items Matrix (Weeks 1 - 5)
+const SECRET_LINKS_DATA = [
+    { id: "link-w1", name: "مخطط التأسيس البرمجي (HTML/CSS Foundations)", week: 1, reqLevel: 1, basePrice: 100, discPrice: 10, day: 6, url: "https://github.com/topics/html5", desc: "أرشيف الأدوات والمصادر الحصري لبناء قواعد فرونت إند خارقة." },
+    { id: "link-w2", name: "مكتبة التنسيقات المتقدمة والأنميشن (Advanced Layouts)", week: 2, reqLevel: 2, basePrice: 250, discPrice: 25, day: 0, url: "https://tailwindcss.com", desc: "ملفات وحزم مخصصة لإنتاج واجهات تفاعلية متطابقة مع أسلوب الأنمي النيون." },
+    { id: "link-w3", name: "مصفوفة جافا سكريبت والمحركات الديناميكية (JS DOM Matrix)", week: 3, reqLevel: 3, basePrice: 500, discPrice: 50, day: 1, url: "https://javascript.info", desc: "نصوص برمجية وخوارزميات معقدة للتحكم المطلق ببيانات ومكونات النظام." },
+    { id: "link-w4", name: "مستندات بيئات React.js وهيكلة المشاريع (React Vault)", week: 4, reqLevel: 4, basePrice: 1000, discPrice: 100, day: 2, url: "https://react.dev", desc: "دليل إعداد المكونات الفعالة وربط الـ State المحلى بالمحركات الكبرى." },
+    { id: "link-w5", name: "بوابة الربط الكامل بالخلفية وبايثون (Fullstack/Python Scripting)", week: 5, reqLevel: 5, basePrice: 2000, discPrice: 200, day: 3, url: "https://python.org", desc: "أدوات برمجية متطورة تمنحك سلطة دمج الواجهات بقواعد البيانات الذكية." },
+    { id: "link-special", name: "مخطط السيادة والإنتاجية الكامل (Sovereign Mastery Blueprint)", week: 4, reqLevel: 4, basePrice: 1500, discPrice: 150, day: 4, url: "https://google.com", desc: "ملف استراتيجي سري يجمع بين ضبط ساعات النوم، العمل الحر، وتكثيف التدريب البدني." }
+];
+
+const SOVEREIGN_TITLES_DATA = [
+    { id: "title-novice", nameAr: "المبرمج المبتدئ", nameEn: "Novice Coder", week: 1, reqLevel: 1, basePrice: 50, discPrice: 5, desc: "لقب يثبت اجتيازك للأسبوع التأسيسي الأول لبناء الواجهات الأساسية." },
+    { id: "title-styling", nameAr: "عاهل التنسيقات", nameEn: "Styling Monarch", week: 2, reqLevel: 2, basePrice: 150, discPrice: 15, desc: "هالة بصرية تمنح واجهتك طابع الاحترافية والتحكم الجمالي المطلق." },
+    { id: "title-script", nameAr: "سيد جافا سكريبت", nameEn: "Shadow Scripter", week: 3, reqLevel: 3, basePrice: 300, discPrice: 30, desc: "لقب مخصص لمن يمتلكون القدرة على التلاعب بالـ DOM وصناعة المحركات الحية." },
+    { id: "title-react", nameAr: "مهندس رياكت", nameEn: "React Sovereign", week: 4, reqLevel: 4, basePrice: 600, discPrice: 60, desc: "لقب يعكس الكفاءة في بناء الهياكل البرمجية المعقدة للمتاجر والأنظمة الحية." },
+    { id: "title-shadow", nameAr: "العاهل الشاب", nameEn: "Young Shadow", week: 5, reqLevel: 5, basePrice: 1200, discPrice: 120, desc: "اللقب الأسمى المقتبس من مصفوفة العمل الكاملة لتجهيز هالتك النهائية." },
+    { id: "title-master", nameAr: "متقن الزنازين", nameEn: "Dungeon Master", week: 4, reqLevel: 4, basePrice: 800, discPrice: 80, desc: "لقب خاص ومكافأة تفتح تلقائياً في أيام الخميس المخصصة لاختبارات الذكاء الفائقة." }
+];
+
+// ==========================================
+// CORE SHOP SYSTEM ENGINE
+// ==========================================
+let filterByCurrentDay = true;
+const currentDayIndex = new Date().getDay(); // 0 = Sunday, ..., 4 = Thursday
+
+const ShopSystem = {
+    playerData: {
+        level: 1, xp: 0, gold: 0,
+        purchasedLinks: [],
+        purchasedTitles: [],
+        equippedTitle: ""
+    },
+
+    init() {
+        this.loadState();
+        this.setRandomQuote();
+        document.getElementById('current-day-label').textContent = `${DAYS_EN[currentDayIndex]} (${DAYS_AR[currentDayIndex]})`;
+        this.renderShop();
+    },
+
+    loadState() {
+        const saved = localStorage.getItem('monarch_system_data');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            this.playerData.level = parsed.level || 1;
+            this.playerData.xp = parsed.xp || 0;
+            this.playerData.gold = parsed.gold || 0;
+            this.playerData.purchasedLinks = parsed.purchasedLinks || [];
+            this.playerData.purchasedTitles = parsed.purchasedTitles || [];
+            this.playerData.equippedTitle = parsed.equippedTitle || "";
+        }
+        this.updateHeaderUI();
+    },
+
+    saveState() {
+        localStorage.setItem('monarch_system_data', JSON.stringify(this.playerData));
+        this.updateHeaderUI();
+    },
+
+    updateHeaderUI() {
+        const lvl = this.playerData.level;
+        const xp = this.playerData.xp;
+        const gold = this.playerData.gold;
+        const need = lvl * 100;
+        const pct = Math.min((xp / need) * 100, 100);
+
+        document.getElementById('player-level-display').innerText = `LVL ${lvl}`;
+        document.getElementById('player-gold-display').innerHTML = `${gold.toLocaleString()} <span class="text-xs text-amber-600/70">G</span>`;
+        document.getElementById('player-xp-text').innerText = `${xp}/${need} XP`;
+        document.getElementById('player-xp-bar').style.width = `${pct}%`;
+    },
+
+    setRandomQuote() {
+        const rand = Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length);
+        document.getElementById('motivational-quote').textContent = MOTIVATIONAL_QUOTES[rand];
+    },
+
+    getPrice(item) {
+        // Level Discount Mechanic: if player level >= required item level -> 90% discount
+        return (this.playerData.level >= item.reqLevel) ? item.discPrice : item.basePrice;
+    },
+
+    renderShop() {
+        this.renderSecretLinks();
+        this.renderTitles();
+    },
+
+    renderSecretLinks() {
+        const container = document.getElementById('links-grid');
+        container.innerHTML = "";
+
+        // Filter items based on time restriction
+        const visibleLinks = SECRET_LINKS_DATA.filter(item => !filterByCurrentDay || item.day === currentDayIndex);
+
+        if (visibleLinks.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-2 text-center py-8 border border-dashed border-white/10 rounded-xl text-slate-500 text-xs">
+                    [النظام] لا توجد روابط مخصصة ليوم ${DAYS_AR[currentDayIndex]} حالياً. تحقق من خيارات المشرف لعرض محتوى بقية الأسبوع.
+                </div>`;
+            return;
+        }
+
+        visibleLinks.forEach(item => {
+            const price = this.getPrice(item);
+            const isDiscounted = this.playerData.level >= item.reqLevel;
+            const isPurchased = this.playerData.purchasedLinks.includes(item.id);
+
+            let actionBtn = "";
+            if (isPurchased) {
+                actionBtn = `
+                    <a href="${item.url}" target="_blank" class="w-full text-center block text-xs bg-sys-green/20 border border-sys-green text-sys-green font-bold py-2 px-4 rounded hover:bg-sys-green hover:text-black transition duration-300">
+                        🔓 فتح الرابط السري المكتشف
+                    </a>`;
+            } else {
+                actionBtn = `
+                    <button onclick="ShopSystem.buyLink('${item.id}', ${price})" class="w-full text-xs font-bold font-orbitron tracking-wider py-2 px-4 rounded border transition duration-300 ${this.playerData.gold >= price ? 'bg-sys-cyan/10 border-sys-cyan text-sys-cyan hover:bg-sys-cyan hover:text-black' : 'bg-slate-900 border-slate-800 text-slate-500 cursor-not-allowed'}">
+                        🪙 شراء مقابل ${price} G
+                    </button>`;
+            }
+
+            const cardHtml = `
+                <div class="shop-card rounded-xl p-5 relative flex flex-col justify-between ${isPurchased ? 'border-sys-green/30' : (isDiscounted ? 'neon-border-gold' : 'border-white/5')}">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-400">Week ${item.week}</span>
+                            <span class="text-[9px] font-mono text-slate-500 uppercase">${DAYS_EN[item.day]}</span>
+                        </div>
+                        <h3 class="font-bold text-sm text-white mb-1 font-cairo">${item.name}</h3>
+                        <p class="text-[11px] text-slate-400 leading-relaxed mb-4 font-cairo">${item.desc}</p>
+                    </div>
+                    <div class="space-y-3 pt-3 border-t border-white/5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-[10px] text-slate-500">متطلب المستوى: <span class="text-sys-purple font-bold">LVL ${item.reqLevel}</span></span>
+                            <div class="text-right">
+                                ${isDiscounted && !isPurchased ? `<span class="text-[9px] text-sys-rose line-through block font-mono">${item.basePrice} G</span>` : ''}
+                                <span class="font-bold font-orbitron ${isPurchased ? 'text-sys-green' : (isDiscounted ? 'text-sys-gold animate-pulse' : 'text-sys-rose')}">
+                                    ${isPurchased ? '[ممتلك]' : price + ' G'}
+                                </span>
+                            </div>
+                        </div>
+                        ${actionBtn}
+                    </div>
+                </div>`;
+            container.innerHTML += cardHtml;
+        });
+    },
+
+    renderTitles() {
+        const container = document.getElementById('titles-grid');
+        container.innerHTML = "";
+
+        const visibleTitles = SOVEREIGN_TITLES_DATA.filter(item => !filterByCurrentDay || !item.day || item.day === currentDayIndex);
+
+        visibleTitles.forEach(item => {
+            const price = this.getPrice(item);
+            const isDiscounted = this.playerData.level >= item.reqLevel;
+            const isPurchased = this.playerData.purchasedTitles.includes(item.id);
+            const isEquipped = this.playerData.equippedTitle === item.id;
+
+            let actionBtn = "";
+            if (isEquipped) {
+                actionBtn = `
+                    <button class="w-full text-xs font-bold py-1.5 px-3 rounded bg-sys-purple text-white border border-sys-purple cursor-default">
+                        🔮 مجهز الآن (Active)
+                    </button>`;
+            } else if (isPurchased) {
+                actionBtn = `
+                    <button onclick="ShopSystem.equipTitle('${item.id}')" class="w-full text-xs font-bold py-1.5 px-3 rounded bg-transparent border border-sys-purple text-sys-purple hover:bg-sys-purple/20 transition duration-300">
+                        ⚡ تجهيز اللقب
+                    </button>`;
+            } else {
+                actionBtn = `
+                    <button onclick="ShopSystem.buyTitle('${item.id}', ${price})" class="w-full text-xs font-bold py-1.5 px-3 rounded border transition duration-300 ${this.playerData.gold >= price ? 'bg-amber-500/10 border-sys-gold text-sys-gold hover:bg-sys-gold hover:text-black' : 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'}">
+                        🪙 مقايضة (${price} G)
+                    </button>`;
+            }
+
+            const cardHtml = `
+                <div class="shop-card rounded-xl p-4 relative flex flex-col justify-between border ${isEquipped ? 'border-sys-purple shadow-[0_0_15px_rgba(176,38,255,0.15)]' : 'border-white/5'}">
+                    <div>
+                        <div class="text-center pb-2 mb-2 border-b border-white/5">
+                            <span class="block text-xs font-black text-sys-cyan font-orbitron tracking-widest">${item.nameEn}</span>
+                            <span class="block text-sm font-bold text-slate-200 mt-0.5 font-cairo">${item.nameAr}</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 text-center leading-relaxed mb-4 h-10 overflow-hidden font-cairo">${item.desc}</p>
+                    </div>
+                    <div class="space-y-2 pt-2 border-t border-white/5">
+                        <div class="flex justify-between text-[10px] text-slate-500">
+                            <span>Week ${item.week} (Req: Lvl ${item.reqLevel})</span>
+                            <span class="font-bold ${isPurchased ? 'text-sys-green' : 'text-sys-gold'}">${isPurchased ? 'Owned' : price + ' G'}</span>
+                        </div>
+                        ${actionBtn}
+                    </div>
+                </div>`;
+            container.innerHTML += cardHtml;
+        });
+    },
+
+    buyLink(id, price) {
+        if (this.playerData.gold < price) {
+            this.showAlert("❌ خطأ في المقايضة", "رصيدك من الذهب السيادي غير كافٍ للحصول على هذا المخطط.", "sys-rose");
+            return;
+        }
+        this.playerData.gold -= price;
+        this.playerData.purchasedLinks.push(id);
+        this.saveState();
+        this.renderShop();
+        this.triggerConfetti();
+        this.showAlert("🔓 تم فتح المخطط السري", "تم فك تشفير البيانات، الرابط متاح للاستخدام الآن.", "sys-green");
+    },
+
+    buyTitle(id, price) {
+        if (this.playerData.gold < price) {
+            this.showAlert("❌ استحقاق ذهبي منخفض", "يتطلب النظام رصيد ذهب سيادي أعلى لإتمام العقد.", "sys-rose");
+            return;
+        }
+        this.playerData.gold -= price;
+        this.playerData.purchasedTitles.push(id);
+        this.saveState();
+        this.renderShop();
+        this.triggerConfetti();
+        this.showAlert("🎖️ لقب سيادي جديد", "تم تسجيل السمة الجديدة في هالتك الشخصية.", "sys-purple");
+    },
+
+    equipTitle(id) {
+        this.playerData.equippedTitle = id;
+        this.saveState();
+        this.renderShop();
+        this.showAlert("🔮 تم تجهيز اللقب", "تغيرت هالة لوحة القيادة إلى السمة المجهزة الجديدة.", "sys-cyan");
+    },
+
+    showAlert(title, desc, borderColorClass) {
+        const alertBox = document.getElementById('custom-alert');
+        const iconEl = document.getElementById('alert-icon');
+        document.getElementById('alert-title').textContent = title;
+        document.getElementById('alert-desc').textContent = desc;
+
+        alertBox.className = `fixed bottom-5 left-5 z-50 transform border-2 bg-black rounded-xl p-4 max-w-sm flex items-start gap-3 shadow-2xl transition-all duration-300 border-${borderColorClass}`;
+        
+        if (borderColorClass.includes('rose')) iconEl.textContent = "⚠️";
+        else if (borderColorClass.includes('green')) iconEl.textContent = "⚡";
+        else iconEl.textContent = "🔮";
+
+        alertBox.style.transform = "translateY(0)";
+        alertBox.style.opacity = "1";
+
+        setTimeout(() => {
+            alertBox.style.transform = "translateY(20px)";
+            alertBox.style.opacity = "0";
+        }, 4000);
+    },
+
+    triggerConfetti() {
+        confetti({
+            particleCount: 80,
+            spread: 60,
+            origin: { y: 0.8 },
+            colors: ['#00f0ff', '#b026ff', '#ffd700']
+        });
+    }
+};
+
+function toggleDayFilter() {
+    filterByCurrentDay = !filterByCurrentDay;
+    ShopSystem.renderShop();
+    ShopSystem.showAlert("⚙️ تم تعديل الفلترة", filterByCurrentDay ? "يتم الآن عرض عناصر اليوم الفعلي فقط." : "تم فتح بوابات الأيام كاملة للمراجعة العادية.", "sys-cyan");
+}
+
+// ==========================================
+// BACKGROUND PARTICLES SYSTEM
+// ==========================================
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.4 + 0.1;
+        this.color = Math.random() > 0.6 ? '0, 240, 255' : (Math.random() > 0.5 ? '176, 38, 255' : '255, 215, 0');
+    }
+    update() {
+        this.x += this.speedX; this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+    }
+    draw() {
+        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.color}, ${this.opacity})`; ctx.fill();
+    }
+}
+
+for (let i = 0; i < 50; i++) particles.push(new Particle());
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// Dom Loaded
+document.addEventListener('DOMContentLoaded', () => ShopSystem.init());
+</script>
+</body>
+</html>
