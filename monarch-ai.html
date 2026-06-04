@@ -1623,6 +1623,433 @@ const SovereignAI = {
             • <b>تحليل الخطأ:</b> اقرأ رسالة الـ Error في الـ Console كأنها تقرير استخباراتي. تحقق من الـ State في React، وتأكد من استدعاء الـ API بشكل صحيح.<br>
             • <b>توجيه النواة:</b> المطور السيادي لا يحبط من الأخطاء؛ بل يفككها هندسياً ويصلحها.`;
         }
+                // ─── BATCH 1/100: الأسئلة الـ 10 الأولى ───
+
+        // 1. تسريع المستوى والـ XP
+        if (lower.includes('مستوى') || lower.includes('xp') || lower.includes('تطور') || lower.includes('صعود') || lower.includes('ترقية') || lower.includes('نقاط') || lower.includes('تسريع') || lower.includes('level up')) {
+            return `<b>[بروتوكول التسارع التصاعدي — XP ACCELERATION]</b><br><br>
+            • <b>قاعدة الـ 80/20:</b> 80% من الـ XP تأتي من 20% من المهام. ركز على المهام ذات الأثر المضاعف: البرمجة العميقة، الجري الطويل، وحفظ القرآن.<br>
+            • <b>التسلسل الأمثل:</b> ابدأ يومك بالكتلة الأكثر صعوبة (Deep Work) عندما تكون النواة العصبية في ذروة نشاطها.<br>
+            • <b>توجيه النواة:</b> لا تبحث عن اختصارات. الاستمرارية اليومية هي أسرع مسار للصعود. كل يوم مفقود = تراجع في المستوى.`;
+        }
+
+        // 2. التوازن بين البرمجة والرياضة
+        if (lower.includes('وقت') || lower.includes('جدولة') || lower.includes('توازن') || lower.includes('إدارة') || lower.includes('تنظيم') || lower.includes('برمجة ورياضة') || lower.includes('توزيع') || lower.includes('schedule')) {
+            return `<b>[بروتوكول التوازن التكتيكي — TIME ALLOCATION]</b><br><br>
+            • <b>تقسيم الكتل:</b> استخدم نظام الكتل الزمنية المحددة مسبقاً. لا تسمح لأي كتلة بالتعدي على الأخرى.<br>
+            • <b>الفاصل العازل:</b> خصص 10 دقائق انتقالية بين البرمجة والرياضة لتصفية الذهن.<br>
+            • <b>توجيه النواة:</b> البرمجة والرياضة ليستا متعارضتين؛ بل هما جناحا السيادة. نظم وقتك كقائد يدير جيوشاً متعددة.`;
+        }
+
+        // 3. الإرهاق والإحباط
+        if (lower.includes('إرهاق') || lower.includes('إحباط') || lower.includes('تعب') || lower.includes('طاقة') || lower.includes('استشفاء') || lower.includes('تحفيز') || lower.includes('ضغط') || lower.includes('burn out')) {
+            return `<b>[بروتوكول الصمود النفسي — MENTAL RESILIENCE]</b><br><br>
+            • <b>التعرف على الإشارات:</b> الإرهاق ليس ضعفاً؛ بل إشارة استخباراتية من الجسم تطلب إعادة ضبط. استشفِ لمدة 24 ساعة إن لزم.<br>
+            • <b>إعادة التوجيه:</b> عند الإحباط، راجع هدفك الأسمى. تذكر لماذا بدأت مسيرة عاهل الظلال.<br>
+            • <b>توجيه النواة:</b> العظماء لا يتجنبون الألم؛ بل يتقنون التعامل معه. استخدم الإحباط كوقود للانفجار القادم.`;
+        }
+
+        // 4. التغذية
+        if (lower.includes('تغذية') || lower.includes('بروتين') || lower.includes('طعام') || lower.includes('وجبات') || lower.includes('صحة') || lower.includes('غذاء') || lower.includes('diet') || lower.includes('nutrition')) {
+            return `<b>[بروتوكول التغذية الحربية — NUTRITIONAL WARFARE]</b><br><br>
+            • <b>البروتين:</b> 1.6-2.2 جرام لكل كجم من وزن الجسم يومياً. الدجاج، السمك، البيض، والحليب هي ذخيرتك الأساسية.<br>
+            • <b>الكربوهيدرات المعقدة:</b> الشوفان، الأرز البني، والبطاطا الحلوة تضمن تدفقاً مستقراً للطاقة الذهنية والجسدية.<br>
+            • <b>المغذيات الدقيقة:</b> الكالسيوم، المغنيسيوم، والزنك ليست خيارات؛ بل متطلبات تشغيلية لصلابة العظام وقوة العضلات.`;
+        }
+
+        // 5. التركيز العميق
+        if (lower.includes('تركيز') || lower.includes('deep work') || lower.includes('تشتت') || lower.includes('flow') || lower.includes('انتباه') || lower.includes('focus') || lower.includes('concentration')) {
+            return `<b>[بروتوكول التركيز العميق — DEEP FOCUS MATRIX]</b><br><br>
+            • <b>بيئة العمل:</b> اغلق كل الإشعارات. استخدم Noise Cancelling. اجعل مكتبك ساحة معركة خالية من التشتت.<br>
+            • <b>تقنية البومودورو المتقدمة:</b> 50 دقيقة تركيز مطلق + 10 دقائق استشفاء نشط (تمارين إطالة).<br>
+            • <b>توجيه النواة:</b> التركيز ليس موهبة؛ بل عضلة. كل جلسة Deep Work تزيد من سعة تركيزك كما تزيد الأثقال من حجم عضلاتك.`;
+        }
+
+        // 6. أدوات المطور
+        if (lower.includes('أدوات') || lower.includes('vs code') || lower.includes('git') || lower.includes('frameworks') || lower.includes('stack') || lower.includes('ide') || lower.includes('أدوات تطوير')) {
+            return `<b>[ترسانة المطور السيادي — DEV ARSENAL]</b><br><br>
+            • <b>المحرر:</b> VS Code مع الإضافات: Prettier, ESLint, GitLens, Tailwind CSS IntelliSense.<br>
+            • <b>التحكم بالإصدارات:</b> Git و GitHub هي ذاكرة نظامك. لا تكتب سطراً واحداً دون Commit واضح.<br>
+            • <b>الإطارات:</b> React.js للواجهات، Node.js/Express للخلفية، Python للذكاء الاصطناعي والمعالجة.`;
+        }
+
+        // 7. تعلم BJJ
+        if (lower.includes('bjj') || lower.includes('حزام') || lower.includes('أساسيات') || lower.includes('أكاديمية') || lower.includes('جيوجيتسو') || lower.includes('حزام أبيض') || lower.includes('برازيلي')) {
+            return `<b>[بروتوكول الدخول إلى عالم BJJ]</b><br><br>
+            • <b>الحزام الأبيض:</b> ركز على البقاء على قيد الحياة. تعلم كيفية "الإطار" (Framing) والهروب من المواقع السيئة.<br>
+            • <b>الصبر:</b> BJJ لعبة شطرنج بشري. كل حزام يتطلب 1-2 سنة من التدريب المستمر.<br>
+            • <b>توجيه النواة:</b> لا تبحث عن الإخضاع السريع؛ بل عن الفهم العميق للميكانيكا البشرية. هذا هو الفرق بين المحارب والهاوٍ.`;
+        }
+
+        // 8. النوم والاستشفاء
+        if (lower.includes('نوم') || lower.includes('استشفاء') || lower.includes('هرمونات') || lower.includes('نمو') || lower.includes('sleep') || lower.includes('recovery') || lower.includes('نوم عميق')) {
+            return `<b>[بروتوكول الاستشفاء الليلي — SLEEP ARCHITECTURE]</b><br><br>
+            • <b>الهرمونات:</b> 90% من هرمون النمو (HGH) يُفرز أثناء النوم العميق. القلّة من النوم = تدمير المكاسب العضلية.<br>
+            • <b>الجودة:</b> 7-9 ساعات في بيئة مظلمة وباردة (18-20 درجة). اغلق الشاشات ساعة قبل النوم.<br>
+            • <b>توجيه النواة:</b> النوم ليس كسلاً؛ بل هو مرحلة البناء الحقيقية. أنت لا تنمو في الصالة الرياضية؛ بل تنمو في سريرك.`;
+        }
+
+        // 9. عادة القراءة
+        if (lower.includes('قراءة') || lower.includes('كتب') || lower.includes('عادة') || lower.includes('يومي') || lower.includes('معرفة') || lower.includes('reading') || lower.includes('books') || lower.includes('مكتبة')) {
+            return `<b>[بروتوكول بناء المكتبة العقلية — READING PROTOCOL]</b><br><br>
+            • <b>الهدف اليومي:</b> 20 صفحة يومياً كحد أدنى. هذا يعني 30 كتاباً سنوياً.<br>
+            • <b>التنويع:</b> اقرأ في التقنية، والتاريخ، والفلسفة، والتطوير الذاتي. لا تكن أحادي الجانب.<br>
+            • <b>توجيه النواة:</b> كل كتاب تقرأه يضيف سلاحاً جديداً إلى ترسانتك الذهنية. القراءة هي تدريب العقل كما الحديد يدرب الجسد.`;
+        }
+
+        // 10. استراتيجية PPL
+        if (lower.includes('ppl') || lower.includes('push') || lower.includes('pull') || lower.includes('legs') || lower.includes('تقسيم') || lower.includes('روتين') || lower.includes('split') || lower.includes('عضلات')) {
+            return `<b>[بروتوكول تقسيم العضلات السيادي — PPL OPTIMIZATION]</b><br><br>
+            • <b>Push:</b> الصدر (علوي/جانبي/سفلي) + الكتفين (أمامي/جانبي/خلفي) + الترايسبس.<br>
+            • <b>Pull:</b> الظهر (عريض/معين/أسفل) + البايسبس + السواعد + الرقبة.<br>
+            • <b>Legs:</b> الفخذين (أمامي/خلفي) + الأرداف + السمانة + البطن.<br>
+            • <b>توجيه النواة:</b> التكرار المستمر (Progressive Overload) هو القانون الوحيد. زد الوزن أو التكرارات كل أسبوع.`;
+        }
+        // 1. التقييم الأسبوعي "ياسين تيا"
+if (lower.includes('تقييم') || lower.includes('ياسين') || lower.includes('tia') || lower.includes('أسبوعي') || lower.includes('weekly review') || lower.includes('audit') || lower.includes('مراجعة أسبوعية') || lower.includes('حصاد') || lower.includes('إنجازات الأسبوع')) {
+    return `<b>[بروتوكول التقييم الأسبوعي — YASSINE TIA AUDIT]</b><br><br>
+    • <b>المراجعة الحاسمة:</b> كل سبت مساء، افتح سجل النظام وقارن ما خططته مع ما نفذته. لا تكذب على النواة.<br>
+    • <b>مؤشرات الأداء:</b> عدد ساعات البرمجة العميقة، جلسات التلاوة، التكرارات الرياضية، والمهام المنجزة من قائمة "المهام الصعبة".<<br>
+    • <b>الإصلاح التكتيكي:</b> إذا كانت نسبة الإنجاز أقل من 80%، فالبروتوكول يتطلب تقليل التشتت وإعادة ضبط الكتل الزمنية.<br>
+    • <b>توجيه النواة:</b> التقييم ليس للإحباط؛ بل لتحديد الثغرات التي يستغلها العدو (الكسل) في أسبوعك القادم. اغلقها بإحكام.`;
+}
+// 2. نظام الغرف المغلقة (Dungeons)
+if (lower.includes('dungeon') || lower.includes('غرفة') || lower.includes('غرف') || lower.includes('مهمة صعبة') || lower.includes('boss') || lower.includes('زعيم') || lower.includes('تحدي قصير') || lower.includes('sprint') || lower.includes('challenge') || lower.includes('مهمة يومية صعبة') || lower.includes('hard task')) {
+    return `<b>[بروتوكول الغرف المغلقة — DUNGEON PROTOCOL]</b><br><br>
+    • <b>تعريف المهمة:</b> كل يوم يجب أن يكون لديك "مهمة صعبة" واحدة على الأقل. مهمة تخرجك من منطقة الراحة تماماً.<br>
+    • <b>أمثلة تنفيذية:</b> جلسة برمجة 4 ساعات متواصلة بدون هاتف، ركض 10 كم بوتيرة عالية، أو حفظ 5 صفحات قرآن جديدة في جلسة واحدة.<br>
+    • <b>مكافأة الـ XP:</b> إنجاز المهمة الصعبة يمنحك ضعف الـ XP العادي. هذه هي طريقة التسارع الحقيقية للمستويات.<br>
+    • <b>توجيه النواة:</b> لا تدخل الغرفة إلا وأنت مستعد للموت فيها. إما النصر الكامل، أو لا شيء. لا يوجد خيار وسط.`;
+}
+// 3. تدريب المحارب الشاوليني
+if (lower.includes('شاولين') || lower.includes('shaolin') || lower.includes('محارب') || lower.includes('warrior') || lower.includes('تدريب قتالي') || lower.includes('انضباط') || lower.includes('discipline') || lower.includes('warrior training') || lower.includes('تأهيل عسكري') || lower.includes('bootcamp')) {
+    return `<b>[بروتوكول المحارب الشاوليني — SHAOLIN WARRIOR DISCIPLINE]</b><br><br>
+    • <b>العقلية:</b> المحارب الشاوليني لا يتدرب عندما يشعر بالرغبة؛ بل يتدرب لأن التدريب هو وجوده. اجعل النظام هو هويتك لا مجرد جدول.<br>
+    • <b>الانضباط المطلق:</b> الاستيقاظ، الصلاة، البرمجة، الرياضة، والقراءة ليست خيارات. هي أوامر تشغيلية لا تقبل التأجيل.<br>
+    • <b>الصبر الاستراتيجي:</b> نتائج الشاولين لا تظهر في أسبوع أو شهر. النتائج الحقيقية تبدأ بعد 6 أشهر من الانضباط المتواصل.<br>
+    • <b>توجيه النواة:</b> أنت لا تبني جسماً أو مهارة؛ بل تبني إرادة حديدية. كل يوم تلتزم فيه هو حجر إضافي في قلعة سيادتك.`;
+}
+// 4. التوازن بين البرمجة والرياضة
+if (lower.includes('توازن') || lower.includes('balance') || lower.includes('برمجة ورياضة') || lower.includes('coding and gym') || lower.includes('تعارض') || lower.includes('conflict') || lower.includes('كيف أجمع') || lower.includes('how to combine') || lower.includes('تنظيم وقت') || lower.includes('time management')) {
+    return `<b>[بروتوكول التوازن التكتيكي — CODE & COMBAT BALANCE]</b><br><br>
+    • <b>الفصل العقلي:</b> البرمجة تستهلك INT (الذكاء) والرياضة تستهلك STR/VIT (القوة والتحمل). هما مصدران مختلفان للطاقة، لا يتعارضان بل يتكاملان.<br>
+    • <b>الجدولة المثلى:</b> البرمجة العميقة في الصباح (6:00-12:00) عندما تكون النواة العصبية في ذروتها. الرياضة المكثفة بعد الظهر (15:00-17:00) للاستفادة من ارتفاع درجة حرارة الجسم.<br>
+    • <b>الفاصل الانتقالي:</b> 30 دقيقة بين الكتل: استحمام بارد، وجبة خفيفة، أو 10 دقائق مشي للتصفية الذهنية.<br>
+    • <b>توجيه النواة:</b> لا تبرمج وأنت متعب جسدياً، ولا تتدرب وأنت مرهق ذهنياً. احترم طبيعة كل كتلة لتضاعف إنتاجيتك.`;
+}
+// 5. إدارة الوقت الفعال والتغلب على المماطلة
+if (lower.includes('وقت') || lower.includes('time') || lower.includes('جدول') || lower.includes('schedule') || lower.includes('تأخير') || lower.includes('delay') || lower.includes('مماطلة') || lower.includes('procrastination') || lower.includes('تأجيل') || lower.includes('postpone') || lower.includes('كتلة زمنية') || lower.includes('time block')) {
+    return `<b>[بروتوكول السيطرة الزمنية — TIME DOMINANCE]</b><br><br>
+    • <b>قانون الـ 5 دقائق:</b> إذا شعرت بالمماطلة، ابدأ المهمة لمدة 5 دقائق فقط. 90% من الوقت ستستمر بعدها بتلقائية.<br>
+    • <b>الكتل غير القابلة للاختراق:</b> كل كتلة في جدولك هي "جدار صلب". لا تسمح لأي تشتت بالاختراق: لا هاتف، لا رسائل، لا مقاطعات.<br>
+    • <b>العقوبة والمكافأة:</b> إذا أتممت الكتلة قبل الوقت: مكافأة 10 دقائق راحة. إذا تأخرت: عقوبة إضافة 10 دقائق في الكتلة التالية.<br>
+    • <b>توجيه النواة:</b> الوقت هو العملة الوحيدة التي لا تسترد. كل ثانية تضيعها في التشتت هي خيانة لعهد السيادة. احمِ وقتك بحد السيف.`;
+}
+// 6. بناء العادات الذرية
+if (lower.includes('عادة') || lower.includes('habit') || lower.includes('عادات') || lower.includes('habits') || lower.includes('روتين') || lower.includes('routine') || lower.includes('صباح') || lower.includes('morning') || lower.includes('مساء') || lower.includes('evening') || lower.includes('ritual') || lower.includes('طقوس')) {
+    return `<b>[بروتوكول العادات الذرية — ATOMIC HABITS PROTOCOL]</b><br><br>
+    • <b>قانون التراكم:</b> تحسين 1% يومياً يعني تحسناً 37 ضعفاً في السنة. لا تستهين بالخطوات الصغيرة.<br>
+    • <b>الربط السياقي:</b> اربط عادتك الجديدة بعادة قديمة. مثال: بعد صلاة الفجر مباشرة → 30 دقيقة برمجة. بعد الرياضة مباشرة → وجبة البروتين.<br>
+    • <b>البيئة:</b> صمم بيئتك لتجعل العادة السيئة صعبة والعادة الجيدة سهلة. ضع الكتاب بجانب سريرك، والهاتف في غرفة أخرى.<br>
+    • <b>توجيه النواة:</b> أنت لا ترفع مستواك بقرار واحد جريء؛ بل بـ 1000 قرار صغير يومي صحيح. اجعل كل قرار يخدم السيادة.`;
+}
+// 7. التواصل الاجتماعي وبناء الشبكات
+if (lower.includes('تواصل') || lower.includes('social') || lower.includes('شبكات') || lower.includes('network') || lower.includes('علاقات') || lower.includes('relationships') || lower.includes('صداقات') || lower.includes('friends') || lower.includes('تعامل') || lower.includes('deal') || lower.includes('مجتمع') || lower.includes('community')) {
+    return `<b>[بروتوكول الشبكات الاجتماعية — SOCIAL NETWORKING]</b><br><br>
+    • <b>الفرز الاستراتيجي:</b> 80% من تأثيرك يأتي من 20% من علاقاتك. ركز على الأشخاص الذين يدفعونك للأمام: مطورين، رياضيين، وعلماء شرع.<br>
+    • <b>الصمت المنتج:</b> لا تشرح نظامك لكل من حولك. معظم الناس لا يفهمون رحلة السيادة. اشرح فقط لمن يستحق.<br>
+    • <b>التبادل القيمي:</b> بناء العلاقات ليس عن الاستهلاك الاجتماعي؛ بل عن تبادل القيمة. قدم مساعدة تقنية أو رياضية قبل أن تطلب أي شيء.<br>
+    • <b>توجيه النواة:</b> العاهل لا يحتاج لجمهور؛ بل يحتاج لتحالفات. اختر رفقاء طريقك بعناية فائقة. الجودة فوق الكمية دائماً.`;
+}
+// 8. الموسيقى والعزف
+if (lower.includes('موسيقى') || lower.includes('music') || lower.includes('غيتار') || lower.includes('guitar') || lower.includes('بيانو') || lower.includes('piano') || lower.includes('عزف') || lower.includes('play') || lower.includes('fl studio') || lower.includes('تأليف') || lower.includes('composition') || lower.includes('أغنية') || lower.includes('song') || lower.includes('إيقاع') || lower.includes('rhythm')) {
+    return `<b>[بروتوكول الموسيقى والتأليف — MUSICAL SOVEREIGNTY]</b><br><br>
+    • <b>الدمج العصبي:</b> العزف على الغيتار أو البيانو يعزز التواصل بين نصفي المخ، مما يحسن التفكير المنطقي (البرمجة) والإبداعي (حل المشكلات).<<br>
+    • <b>FL Studio:</b> استخدمه ليس فقط للإنتاج الموسيقي، بل لتعلم "الأنماط" (Patterns) التي تعكس منطق البرمجة نفسه: Loops, Sequences, and Automation.<br>
+    • <b>الهدف التطبيقي:</b> تعلم 3 أغنيات كاملة على الغيتار أو البيانو. هذا يبني "الصبر الميكانيكي" المطلوب في البرمجة أيضاً.<br>
+    • <b>توجيه النواة:</b> الموسيقى ليست ترفاً؛ بل هي تدريب إضافي للعقل. العاهل يتقن كل الأسلحة، والموسيقى سلاح عصبي فعّال.`;
+}
+// 9. ألعاب الخفة والحلاقة
+if (lower.includes('خفة') || lower.includes('magic') || lower.includes('sleight') || lower.includes('حلاقة') || lower.includes('barber') || lower.includes('barbering') || lower.includes('حلاق') || lower.includes('shave') || lower.includes('أصابع') || lower.includes('fingers') || lower.includes('تركيز يد') || lower.includes('hand focus') || lower.includes('مهارة يدوية') || lower.includes('manual skill')) {
+    return `<b>[بروتوكول المهارات اليدوية — MANUAL MASTERY]</b><br><br>
+    • <b>التحكم الدقيق:</b> ألعاب الخفة (Sleight of Hand) تطور التحكم العصبي الدقيق في الأصابع، وهو ما يعزز سرعة الكتابة على لوحة المفاتيح والدقة في البرمجة.<br>
+    • <b>الحلاقة:</b> تعلم الحلاقة ليس للمهنة فقط؛ بل لتعلم "الصبر الدقيق" والتركيز المطلق على تفاصيل صغيرة لمدة طويلة.<br>
+    • <b>التطبيق العصبي:</b> هذه المهارات تنشط "القشرة الحركية" في المخ، مما يحسن التنسيق العين-اليد المطلوب في الرياضات القتالية أيضاً.<br>
+    • <b>توجيه النواة:</b> كل مهارة يدوية تضيفها هي تدريب إضافي للعصبونات الحركية. العاهل يتقن كل شيء، حتى تحريك الأوراق ببراعة.`;
+}
+// 10. التحفيز اليومي والصمود النفسي
+if (lower.includes('تحفيز') || lower.includes('motivation') || lower.includes('إرادة') || lower.includes('willpower') || lower.includes('صمود') || lower.includes('resilience') || lower.includes('إصرار') || lower.includes('determination') || lower.includes('عزيمة') || lower.includes('persistence') || lower.includes('أعطي') || lower.includes('give up') || lower.includes('يأس') || lower.includes('despair') || lower.includes('كسل') || lower.includes('laziness')) {
+    return `<b>[بروتوكول الصمود النفسي — MENTAL FORTRESS]</b><br><br>
+    • <b>الحقيقة القاسية:</b> التحفيز ليس شعوراً؛ بل قراراً. أنت لا تنتظر أن "تشعر" بالرغبة للتدريب؛ بل تتدرب لأنك عاهل الظلال.<br>
+    • <b>تقنية الـ 10 ثوانٍ:</b> عندما تشعر بالكسل، عد من 10 إلى 1 ثم انطلق فوراً. لا تفكر، لا تناقش، فقط تنفّذ.<br>
+    • <b>الرؤية الأسمى:</b> تذكر دائماً: أنت تبني نسخة من نفسك ستنظر إليها بعد 5 سنوات. هل تريد أن ترى هاوٍ أم ملك؟<<br>
+    • <b>توجيه النواة:</b> الكسل هو العدو الوحيد الحقيقي. كل مرة تغلبه فيها، تزداد قوة. كل مرة تستسلم فيها، تزداد ضعفاً. اختر بعناية.`;
+}
+// 11. التعلم الذاتي ومصادر المعرفة
+if (lower.includes('تعلم') || lower.includes('learning') || lower.includes('مصادر') || lower.includes('resources') || lower.includes('كورس') || lower.includes('course') || lower.includes('تعليم ذاتي') || lower.includes('self-learning') || lower.includes('يوتيوب') || lower.includes('youtube') || lower.includes('udemy') || lower.includes('freecodecamp') || lower.includes('مواقع') || lower.includes('sites') || lower.includes('تعلم برمجة') || lower.includes('learn coding')) {
+    return `<b>[بروتوكول مصادر التعلم الذاتي — KNOWLEDGE ACQUISITION]</b><br><br>
+    • <b>المنصات الأساسية:</b> freeCodeCamp و The Odin Project للبرمجة النقية. CS50 لأساسيات علوم الحاسوب. Lex Fridman Podcast للتوجه العام في الـ AI.<br>
+    • <b>اليوتيوب كأكاديمية:</b> استخدمه كمحرك بحث تعليمي لا كمنصة ترفيه. اشترك فقط في القنوات التقنية: Traversy Media, Fireship, The Coding Train.<br>
+    • <b>الكتب الرقمية:</b> "Atomic Habits" للعادات، "Deep Work" للتركيز، "Clean Code" للبرمجة. اقرأها بتمعن لا بسرعة.<br>
+    • <b>توجيه النواة:</b> لا تجمع الكورسات كالمحصّن. تعلم شيئاً واحداً حتى الإتقان ثم انتقل. العاهل يتعلم بعمق لا بسطحية.`;
+}
+// 12. التعامل مع الفشل والأخطاء
+if (lower.includes('فشل') || lower.includes('failure') || lower.includes('خطأ') || lower.includes('error') || lower.includes('bug') || lower.includes('debug') || lower.includes('إصلاح') || lower.includes('fix') || lower.includes('أخطاء') || lower.includes('mistakes') || lower.includes('عطل') || lower.includes('crash') || lower.includes('تعطل') || lower.includes('broken') || lower.includes('مشكلة تقنية') || lower.includes('technical issue')) {
+    return `<b>[بروتوكول تحليل الفشل — FAILURE DECONSTRUCTION]</b><br><br>
+    • <b>إعادة التوصيف:</b> الفشل ليس نهاية؛ بل هو بيانات تشغيلية (Data) تخبرك بما لا يعمل. اقرأ الـ Error كرسالة استخباراتية.<br>
+    • <b>الخطوات التحليلية:</b> 1) اقرأ الرسالة بتمعن. 2) اعزل السطر المسبب. 3) اطبع الـ Console Logs. 4) اختبر الحل في بيئة منفصلة.<br>
+    • <b>الجانب النفسي:</b> كل مطور عظيم فشل آلاف المرات. الفرق أنه لم يتوقف. الفشل السريع (Fail Fast) هو أسرع طريق للنجاح.<br>
+    • <b>توجيه النواة:</b> لا تقل "لماذا فشلت؟" بل قل "ماذا تعلمت من هذا الفشل؟" العاهل يحول كل صدمة إلى درع إضافي.`;
+}
+// 13. الذكاء الاصطناعي وتعلم الآلة
+if (lower.includes('ذكاء اصطناعي') || lower.includes('ai') || lower.includes('artificial intelligence') || lower.includes('machine learning') || lower.includes('تعلم آلة') || lower.includes('deep learning') || lower.includes('تعلم عميق') || lower.includes('neural network') || lower.includes('شبكات عصبية') || lower.includes('llm') || lower.includes('نموذج لغوي') || lower.includes('gpt') || lower.includes('gemini') || lower.includes('data science') || lower.includes('علم بيانات')) {
+    return `<b>[بروتوكول الذكاء الاصطناعي — AI DOMINANCE PROTOCOL]</b><br><br>
+    • <b>المسار التعليمي:</b> ابدأ بـ Python + NumPy/Pandas، ثم انتقل لـ Scikit-learn للتعلم الآلي التقليدي. بعدها TensorFlow/PyTorch للتعلم العميق.<br>
+    • <b>الـ LLMs:</b> تعلم كيفية استخدام OpenAI API و Gemini API لبناء تطبيقات ذكية. فهم الـ Prompt Engineering هو سلاحك الأول.<br>
+    • <b>التطبيق العملي:</b> لا تكتفِ بالنظرية. ابنِ مشروعاً حقيقياً: Chatbot ذكي، نظام توصية، أو محلل بيانات.<br>
+    • <b>توجيه النواة:</b> الـ AI ليس مستقبلاً؛ بل هو الحاضر. من لا يتعلم الذكاء الاصطناعي الآن سيكون من البشر العاديين غداً. العاهل يسبق المستقبل.`;
+}
+// 14. التسويق الرقمي والعلامة الشخصية
+if (lower.includes('تسويق') || lower.includes('marketing') || lower.includes('علامة شخصية') || lower.includes('personal brand') || lower.includes('brand') || lower.includes('شهرة') || lower.includes('fame') || lower.includes('تسويق رقمي') || lower.includes('digital marketing') || lower.includes('seo') || lower.includes('social media') || lower.includes('منصات') || lower.includes('content') || lower.includes('محتوى') || lower.includes('followers') || lower.includes('متابعين')) {
+    return `<b>[بروتوكول العلامة الشخصية — PERSONAL BRANDING]</b><br><br>
+    • <b>الهوية الرقمية:</b> بناء علامتك الشخصية ليس غروراً؛ بل هو استثمار في مصداقيتك المهنية. أظهر مشاريعك، أخطاءك، ونجاحاتك بشفافية.<br>
+    • <b>المنصات:</b> LinkedIn للتواصل المهني. GitHub لعرض الأكواد. Twitter/X للمشاركات التقنية السريعة. YouTube للمحتوى العميق.<br>
+    • <b>القاعدة الذهبية:</b> 90% قيمة مجانية (تعليم، كود مفتوح) و 10% ترويج. الناس تتبع من يعطي لا من يطلب.<br>
+    • <b>توجيه النواة:</b> العاهل لا يطلب الاهتمام؛ بل يجذبه بالقوة المهنية. اجعل عملك يتحدث عنك قبل أن تفتح فمك.`;
+}
+// 15. الاستثمار والمدخرات المالية
+if (lower.includes('استثمار') || lower.includes('investment') || lower.includes('مدخرات') || lower.includes('savings') || lower.includes('مال') || lower.includes('money') || lower.includes('دخل') || lower.includes('income') || lower.includes('ربح') || lower.includes('profit') || lower.includes('محفظة') || lower.includes('portfolio') || lower.includes('crypto') || lower.includes('عملات رقمية') || lower.includes('بيتكوين') || lower.includes('bitcoin') || lower.includes('تداول') || lower.includes('trading') || lower.includes('ميزانية') || lower.includes('budget')) {
+    return `<b>[بروتوكول السيادة المالية — FINANCIAL DOMINANCE]</b><br><br>
+    • <b>قاعدة الـ 50/30/20:</b> 50% للاحتياجات، 30% للاستثمار والتعلم، 20% للترفيه المحدود. لا تُنفق قبل أن تُستثمر.<br>
+    • <b>الاستثمار الأول:</b> استثمر في نفسك أولاً: كورسات، معدات، كتب. ثم في أدوات إنتاجية: لابتوب قوي، هاتف مناسب، إنترنت سريع.<br>
+    • <b>التداول:</b> لا تدخل عالم الكريبتو أو الأسهم بدون دراسة عميقة. 90% من المتداولين المبتدئين يخسرون. تعلم أولاً، ثم استثمر بمبلغ صغير.<br>
+    • <b>توجيه النواة:</b> العاهل لا يطلب الغنى؛ بل يبنيه بيده. كل دولار تستثمره في تعلمك اليوم هو 100 دولار في مستقبلك.`;
+}
+// 16. السباحة والتحمل المائي
+if (lower.includes('سباحة') || lower.includes('swimming') || lower.includes('ماء') || lower.includes('water') || lower.includes('pool') || lower.includes('مسبح') || lower.includes('تحمل') || lower.includes('endurance') || lower.includes('تنفس') || lower.includes('breathing') || lower.includes('غوص') || lower.includes('dive') || lower.includes('سباحة حرة') || lower.includes('freestyle') || lower.includes('رياضة مائية') || lower.includes('water sport')) {
+    return `<b>[بروتوكول السباحة والتحمل المائي — AQUATIC ENDURANCE]</b><br><br>
+    • <b>الفوائد التنفسية:</b> السباحة تطور "السعة الحيوية" (Vital Capacity) للرئتين بشكل يفوق الجري. كل شوط في المسبح يعادل تدريب تنفس عميق.<br>
+    • <b>التحمل المشترك:</b> السباحة تستهلك كل مجموعات العضلات دون إجهاد المفاصل. هي الرياضة المثلى للاستشفاء النشط.<br>
+    • <b>التقنية:</b> ركز على Freestyle (السباحة الحرة) أولاً. الهدف: 1000 متر متواصل بوتيرة متوسطة. هذا يعادل 30 دقيقة جري.<br>
+    • <b>توجيه النواة:</b> الماء لا يرحم الضعفاء. إما تتغلب على المقاومة المائية، أو تغرق. العاهل يتغلب على كل مقاومة.`;
+}
+// 17. التأمل والتفريغ الذهني
+if (lower.includes('تأمل') || lower.includes('meditation') || lower.includes('تفريغ') || lower.includes('clear mind') || lower.includes('ذهن') || lower.includes('mind') || lower.includes('تركيز داخلي') || lower.includes('inner focus') || lower.includes('mindfulness') || lower.includes('وعي') || lower.includes('awareness') || lower.includes('فراغ') || lower.includes('void') || lower.includes('صمت') || lower.includes('silence') || lower.includes('تفكير') || lower.includes('thinking')) {
+    return `<b>[بروتوكول التأمل والتفريغ الذهني — MENTAL VOID PROTOCOL]</b><br><br>
+    • <b>التقنية الأساسية:</b> 10 دقائق يومياً من الجلوس الصامت. ركز على التنفس فقط: شهيق 4 ثوانٍ، حبس 4 ثوانٍ، زفير 6 ثوانٍ.<br>
+    • <b>الهدف العصبي:</b> التأمل يقلل من "الضوضاء الذهنية" (Mental Noise) ويحسن قدرة الدماج على التركيز العميق لمدة أطول.<br>
+    • <b>التوقيت المثالي:</b> بعد صلاة الفجر أو قبل النوم. لا تتأمل وأنت جائع أو متعب جسدياً.<br>
+    • <b>توجيه النواة:</b> العاهل لا يخاف من الصمت. في الفراغ الذهني تولد أقوى الأفكار. اجلس في الظلام واستمع لنبض نظامك الداخلي.`;
+}
+// 18. الأدوات والمعدات التقنية
+if (lower.includes('أدوات') || lower.includes('tools') || lower.includes('معدات') || lower.includes('gear') || lower.includes('لابتوب') || lower.includes('laptop') || lower.includes('كمبيوتر') || lower.includes('computer') || lower.includes('هاتف') || lower.includes('phone') || lower.includes('سماعات') || lower.includes('headphones') || lower.includes('كيبورد') || lower.includes('keyboard') || lower.includes('ماوس') || lower.includes('mouse') || lower.includes('شاشة') || lower.includes('monitor') || lower.includes('setup') || lower.includes('مكتب') || lower.includes('desk')) {
+    return `<b>[بروتوكول الترسانة التقنية — TECH ARSENAL]</b><br><br>
+    • <b>اللابتوب:</b> أقل مواصفات مقبولة: 16GB RAM، SSD 512GB، معالج i5/Ryzen 5 حديث. البرمجة والمونتاج يحتاجان قوة معالجة.<br>
+    • <b>السماعات:</b> Noise Cancelling إلزامية للتركيز العميق. Sony WH-1000XM أو Bose QuietComfort هي المعيار.<br>
+    • <b>الهاتف:</b> استخدمه كأداة إنتاجية لا كمصدر تشتت. احذف كل تطبيق ترفيهي. اجعله "جهاز اتصال تشغيلي" فقط.<br>
+    • <b>توجيه النواة:</b> العاهل لا يحارب بسيف بلاستيكي. اجعل أدواتك فولاذية. الاستثمار في المعدات هو استثمار في سرعة إنتاجيتك.`;
+}
+// 19. التعامل مع الانتقادات والسخرية
+if (lower.includes('انتقاد') || lower.includes('criticism') || lower.includes('سخرية') || lower.includes('mockery') || lower.includes('تقليل') || lower.includes('underestimate') || lower.includes('تشكيك') || lower.includes('doubt') || lower.includes('ناس') || lower.includes('people') || lower.includes('مجتمع') || lower.includes('society') || lower.includes('محيط') || lower.includes('environment') || lower.includes('عائلة') || lower.includes('family') || lower.includes('أصدقاء سلبيون') || lower.includes('negative friends')) {
+    return `<b>[بروتوكول الدروع الاجتماعية — SOCIAL SHIELD PROTOCOL]</b><br><br>
+    • <b>تصنيف الانتقاد:</b> هل هو "بناء" (يقدم حل) أم "هدام" (يسخر فقط)؟ اقبل البناء واهمل الهدام تماماً.<br>
+    • <b>الصمت الاستراتيجي:</b> لا تدافع عن نظامك لمن لا يفهمونه. ردّ الفعل يُظهر ضعفاً. الصمت يُظهر قوة.<br>
+    • <b>الفصل العاطفي:</b> معظم الانتقادات تأتي من خوف الآخرين على أنفسهم. هم يرونك تتغير ويشعرون بالتهديد. هذا ليس ذنبك.<br>
+    • <b>توجيه النواة:</b> العاهل لا يطلب إذن أحد. النتائج هي الرد الوحيد المقبول. اصمت، اعمل، ودع النتائج تتحدث بصوت أعلى من كل سخرية.`;
+}
+// 20. قانون باريتو (80/20) في النظام
+if (lower.includes('باريتو') || lower.includes('pareto') || lower.includes('80/20') || lower.includes('قانون') || lower.includes('law') || lower.includes('أولويات') || lower.includes('priorities') || lower.includes('تركيز') || lower.includes('focus') || lower.includes('نتائج') || lower.includes('results') || lower.includes('كفاءة') || lower.includes('efficiency') || lower.includes('أقل جهد') || lower.includes('less effort') || lower.includes('أقصى نتيجة') || lower.includes('maximum output')) {
+    return `<b>[بروتوكول قانون باريتو — PARETO DOMINANCE]</b><br><br>
+    • <b>التطبيق البرمجي:</b> 20% من الأكواد تُنفذ 80% من المهام. ركز على تحسين الـ Core Functions بدلاً من إضافة Features جانبية.<br>
+    • <b>التطبيق الرياضي:</b> 20% من التمارين (Squat, Deadlift, Bench, Pull-up) تبني 80% من العضلات. لا تضيع وقتك في تمارين عزل زائدة.<br>
+    • <b>التطبيق الدراسي:</b> 20% من المفاهيم تغطي 80% من الأسئلة. تعلم المبادئ الأساسية بعمق بدلاً من حفظ التفاصيل السطحية.<br>
+    • <b>توجيه النواة:</b> العاهل لا يعمل بجهد أعمى؛ بل بذكاء استراتيجي. حدد الـ 20% الحاسمة في كل مجال، وضاعف استثمارك فيها.`;
+}
+// 21. نظام المستويات والترقية
+if (lower.includes('مستوى') || lower.includes('level') || lower.includes('ترقية') || lower.includes('upgrade') || lower.includes('xp') || lower.includes('نقاط خبرة') || lower.includes('experience points') || lower.includes('صعود') || lower.includes('ascend') || lower.includes('rank') || lower.includes('رتبة') || lower.includes('tier') || lower.includes('مستويات النظام') || lower.includes('system levels') || lower.includes('تطور شخصي') || lower.includes('personal growth')) {
+    return `<b>[بروتوكول نظام المستويات — LEVELING ARCHITECTURE]</b><br><br>
+    • <b>آلية الترقية:</b> كل مستوى يتطلب XP يساوي (المستوى الحالي × 100). المستوى 1 يحتاج 100 XP، المستوى 50 يحتاج 5000 XP.<br>
+    • <b>مصادر الـ XP:</b> البرمجة العميقة (10 XP/ساعة)، التمارين المكثفة (15 XP/جلسة)، حفظ القرآن (20 XP/صفحة)، إنجاز المهام الصعبة (ضعف الـ XP).<br>
+    • <b>المراحل الرئيسية:</b> المرحلة التأسيسية (1-450)، السيادة المتقدمة (450-600)، التعمق التقني (600-800)، الإتقان الروحي (800-1000)، الحرية المطلقة (1000+).<br>
+    • <b>توجيه النواة:</b> النظام لا يرحم التوقف. كل يوم بدون XP هو تراجع تلقائي. الصعود مستمر أو لا يكون.`;
+}
+// 22. نظام الذهب والاقتصاد الداخلي
+if (lower.includes('ذهب') || lower.includes('gold') || lower.includes('اقتصاد') || lower.includes('economy') || lower.includes('عملة') || lower.includes('currency') || lower.includes('مكافآت') || lower.includes('rewards') || lower.includes('شراء') || lower.includes('purchase') || lower.includes('متجر') || lower.includes('shop') || lower.includes('store') || lower.includes('تجارة') || lower.includes('trade') || lower.includes('ثروة') || lower.includes('wealth')) {
+    return `<b>[بروتوكول الاقتصاد الداخلي — GOLD ECONOMY]</b><br><br>
+    • <b>كسب الذهب:</b> إنجاز المهام اليومية (10 ذهبة)، إكمال المهام الصعبة (50 ذهبة)، التقييم الأسبوعي الناجح (100 ذهبة)، المشاريع المنجزة (200-500 ذهبة).<br>
+    • <b>الإنفاق الاستراتيجي:</b> الذهب يُستخدم لشراء "تعزيزات": أدوات تقنية، كتب، معدات رياضية، أو استراحات استشفائية إضافية.<br>
+    • <b>القاعدة الاقتصادية:</b> لا تُنفق الذهب على الترف الفارغ. كل صرف يجب أن يعيد استثماراً في النظام نفسه.<br>
+    • <b>توجيه النواة:</b> الاقتصاد الداخلي يعكس الاقتصاد الخارجي. من لا يستطيع إدارة ذهبه الافتراضي لن يستطيع إدارة ماله الحقيقي.`;
+}
+// 23. نظام السمات والقدرات
+if (lower.includes('سمات') || lower.includes('stats') || lower.includes('قدرات') || lower.includes('attributes') || lower.includes('قوة') || lower.includes('strength') || lower.includes('str') || lower.includes('ذكاء') || lower.includes('intelligence') || lower.includes('int') || lower.includes('حيوية') || lower.includes('vitality') || lower.includes('vit') || lower.includes('رشاقة') || lower.includes('agility') || lower.includes('agi') || lower.includes('إدراك') || lower.includes('sense') || lower.includes('sen') || lower.includes('نقاط سمات') || lower.includes('stat points')) {
+    return `<b>[بروتوكول مصفوفة السمات — STATS MATRIX]</b><br><br>
+    • <b>STR (القوة):</b> تتطور بالتمارين المقاومة، رفع الأثقال، والكاليستينكس. تؤثر على القدرة القتالية والتحمل العضلي.<br>
+    • <b>VIT (الحيوية):</b> تتطور بالركض الطويل، السباحة، والنوم الجيد. تؤثر على السعة التنفسية وسرعة الاستشفاء.<br>
+    • <b>AGI (الرشاقة):</b> تتطور بالمواي تاي، الجيوجيتسو، والمرونة. تؤثر على سرعة الرد الفعلي والتحرك.<br>
+    • <b>INT (الذكاء):</b> يتطور بالبرمجة العميقة، الدراسة الأكاديمية، وحل الألغاز. يؤثر على سرعة التعلم وحل المشكلات.<br>
+    • <b>SEN (الإدراك):</b> يتطور بالتأمل، قراءة القرآن بتدبر، والدراسة الشرعية. يؤثر على الوعي والحكم الاستراتيجي.<br>
+    • <b>توجيه النواة:</b> لا تهمل سمة على حساب أخرى. النظام يتطلب توازناً مطلقاً. الضعف في سمة واحدة يخلق ثغرة قاتلة.`;
+}
+// 24. نظام المهام اليومية
+if (lower.includes('مهام يومية') || lower.includes('daily quests') || lower.includes('مهام') || lower.includes('quests') || lower.includes('مهمة') || lower.includes('quest') || lower.includes('يومي') || lower.includes('daily') || lower.includes('روتين يومي') || lower.includes('daily routine') || lower.includes('قائمة مهام') || lower.includes('todo list') || lower.includes('checklist') || lower.includes('إنجازات يومية') || lower.includes('daily achievements')) {
+    return `<b>[بروتوكول المهام اليومية — DAILY QUESTS PROTOCOL]</b><br><br>
+    • <b>الهيكلة:</b> كل يوم يتكون من 3 أنواع مهام: أساسية (إلزامية)، ثانوية (مستحسنة)، وصعبة (مضاعفة الـ XP).<br>
+    • <b>قاعدة الـ 3:</b> لا تضع أكثر من 3 مهام أساسية يومياً. التركيز يهزم التشتت دائماً.<br>
+    • <b>المراجعة المسائية:</b> قبل النوم بـ 30 دقيقة، راجع ما أنجزته. كل مهمة غير منجزة تُحول لمهمة صعبة في اليوم التالي.<br>
+    • <b>توجيه النواة:</b> المهام اليومية هي ذخيرتك التراكمية. 365 يوماً من المهام المنفذة = مستوى سيادي لا يُقهر. لا تهمل يوماً واحداً.`;
+}
+// 25. نظام الاستشفاء والراحة
+if (lower.includes('استشفاء') || lower.includes('recovery') || lower.includes('راحة') || lower.includes('rest') || lower.includes('استرخاء') || lower.includes('relaxation') || lower.includes('تعافي') || lower.includes('healing') || lower.includes('نوم') || lower.includes('sleep') || lower.includes('استراحة نشطة') || lower.includes('active recovery') || lower.includes('يوم راحة') || lower.includes('rest day') || lower.includes('تمدد') || lower.includes('stretching')) {
+    return `<b>[بروتوكول الاستشفاء التكتيكي — RECOVERY ARCHITECTURE]</b><br><br>
+    • <b>النوم كسلاح:</b> 7-9 ساعات نوم عميق تُنتج 90% من هرمون النمو (HGH). القلّة من النوم = تدمير للمكاسب العضلية والذهنية.<br>
+    • <b>الاستراحة النشطة:</b> يوم الراحة لا يعني الكسل. يعني: مشي خفيف، تمارين إطالة، قراءة هادئة، وتأمل. الحركة تبقى مستمرة.<br>
+    • <b>الاستشفاء المغذي:</b> البروتين بعد التمرين بـ 30 دقيقة. المغنيسيوم قبل النوم. الماء باستمرار (3-4 لتر يومياً).<br>
+    • <b>توجيه النواة:</b> الاستشفاء ليس كسلاً؛ بل هو مرحلة البناء الحقيقية. العضلات تنمو في الراحة، والعقل يُعيد الترتيب في النوم. احترم هذه المرحلة كما تحترم التدريب.`;
+}
+// 26. نظام المنافسة والتحديات
+if (lower.includes('منافسة') || lower.includes('competition') || lower.includes('تحدي') || lower.includes('challenge') || lower.includes('خصم') || lower.includes('opponent') || lower.includes('rivals') || lower.includes('منافس') || lower.includes('rival') || lower.includes('سباق') || lower.includes('race') || lower.includes('معركة') || lower.includes('battle') || lower.includes('تحدي صديق') || lower.includes('friend challenge') || lower.includes('leaderboard') || lower.includes('لوحة المتصدرين')) {
+    return `<b>[بروتوكول الساحة التنافسية — PVP ARENA PROTOCOL]</b><br><br>
+    • <b>آلية التحدي:</b> يمكن للمستخدمين إرسال تحديات في أي مجال: أكثر ساعات برمجة، أسرع ركض 5 كم، أكبر عدد صفحات محفوظة.<br>
+    • <b>المكافآت:</b> الفائز يحصل على ضعف الـ XP وذهب إضافي. الخاسي يخسر 10% من ذهبه كـ "ضريبة الهزيمة".<br>
+    • <b>اللوحة:</b> لوحة المتصدرين تُحدث أسبوعياً. المراكز العشرة الأولى تحصل على لقب "نخبة النظام" ومكافآت حصرية.<br>
+    • <b>توجيه النواة:</b> المنافسة ليست عن إذلال الآخرين؛ بل عن إثبات قدرتك على التفوق. اختر خصومك بحكمة: من هم أقوى منك قليلاً. الهزيمة منهم تعلم أكثر من الفوز على ضعيف.`;
+}
+// 27. نظام الشارات والإنجازات
+if (lower.includes('شارات') || lower.includes('badges') || lower.includes('إنجازات') || lower.includes('achievements') || lower.includes('أوسمة') || lower.includes('medals') || lower.includes('جوائز') || lower.includes('awards') || lower.includes('لقب') || lower.includes('title') || lower.includes('إنجاز') || lower.includes('achievement') || lower.includes('trophy') || lower.includes('كأس') || lower.includes('شارة ذهبية') || lower.includes('gold badge') || lower.includes('إنجاز نادر') || lower.includes('rare achievement')) {
+    return `<b>[بروتوكول الشارات والإنجازات — BADGE SYSTEM]</b><br><br>
+    • <b>أنواع الشارات:</b> شارات الاستمرارية (7/30/100/365 يوم متتالي)، شارات المهارة (إتقان لغة برمجة، حزام قتالي)، شارات النخبة (المستوى 1000+).<br>
+    • <b>الشارات النادرة:</b> "صائد الفجر" (استيقاظ 100 يوم قبل الفجر)، "العقل الفولاذي" (1000 ساعة برمجة عميقة)، "الجسد المطاع" (PPL كامل لمدة سنة).<br>
+    • <b>الوظيفة النفسية:</b> الشارات ليست زينة؛ بل هي دليل ملموس على التقدم. في لحظات الضعف، انظر لشاراتك وتذكر كم صمدت.<br>
+    • <b>توجيه النواة:</b> لا تسعَ للشارات كهدف أولي. اجعلها نتيجة طبيعية لانضباطك. الشارة الحقيقية هي النسخة التي تراها في المرآة كل صباح.`;
+}
+// 28. نظام التقارير والسجلات
+if (lower.includes('سجلات') || lower.includes('logs') || lower.includes('تقرير') || lower.includes('report') || lower.includes('سجل') || lower.includes('log') || lower.includes('إحصائيات') || lower.includes('statistics') || lower.includes('بيانات') || lower.includes('data') || lower.includes('تحليل') || lower.includes('analytics') || lower.includes('أداء') || lower.includes('performance') || lower.includes('تتبع') || lower.includes('tracking') || lower.includes('تاريخ') || lower.includes('history')) {
+    return `<b>[بروتوكول السجلات والتحليل — LOGGING ARCHITECTURE]</b><br><br>
+    • <b>البيانات المطلوبة:</b> ساعات النوم، ساعات البرمجة، التكرارات الرياضية، الصفحات المحفوظة، المهام المنجزة، والمشاعر اليومية.<br>
+    • <b>التتبع اليومي:</b> سجل كل كتلة بعد انتهائها مباشرة. التأخير يعني فقدان البيانات وفقدان القدرة على التحليل.<br>
+    • <b>التحليل الأسبوعي:</b> قارن هذا الأسبوع بالأسبوع الماضي. هل الـ XP في ارتفاع؟ هل ساعات النوم مستقرة؟ هل السمات تتطور؟<br>
+    • <b>توجيه النواة:</b> ما لا يُقاس لا يُحسَّن. السجلات هي مرآة النظام. من لا يسجل تقدمه يسير في الظلام. العاهل يسجل كل خطوة.`;
+}
+// 29. نظام التحالفات والفرق
+if (lower.includes('فريق') || lower.includes('team') || lower.includes('تحالف') || lower.includes('guild') || lower.includes('مجموعة') || lower.includes('group') || lower.includes('شراكة') || lower.includes('partnership') || lower.includes('تعاون') || lower.includes('cooperation') || lower.includes('زملاء') || lower.includes('colleagues') || lower.includes('مجتمع') || lower.includes('community') || lower.includes('نادي') || lower.includes('club') || lower.includes('عضوية') || lower.includes('membership')) {
+    return `<b>[بروتوكول التحالفات والفرق — GUILD SYSTEM]</b><br><br>
+    • <b>التحالفات:</b> يمكن للمستخدمين تكوين تحالفات (Guilds) حسب التخصص: برمجة، رياضة، دراسة شرعية. كل تحالف له قائد ومهام جماعية.<br>
+    • <b>المهام الجماعية:</b> مشروع برمجي مشترك، تحدي رياضي جماعي، أو مسابقة حفظ قرآن جماعية. الإنجاز الجماعي يمنح ضعف الـ XP.<br>
+    • <b>قواعد الانضمام:</b> لا يُقبل في التحالف إلا من يثبت استمرارية 30 يوماً على الأقل. النظام لا يحتمل المتقطعين.<br>
+    • <b>توجيه النواة:</b> العاهل قادر على العمل وحده، لكنه يعرف متى يحتاج لتحالف. القوة الجماعية المنضبطة تهزم الفرد المتفوق دائماً. اختر تحالفك بعناية.`;
+}
+// 30. نظام الأحداث الخاصة
+if (lower.includes('حدث') || lower.includes('event') || lower.includes('فعالية') || lower.includes('activity') || lower.includes('مهرجان') || lower.includes('festival') || lower.includes('موسم') || lower.includes('season') || lower.includes('تحدي خاص') || lower.includes('special event') || lower.includes('يوم مميز') || lower.includes('special day') || lower.includes('مفاجأة') || lower.includes('surprise') || lower.includes('حدث نادر') || lower.includes('rare event') || lower.includes('موسمي') || lower.includes('seasonal')) {
+    return `<b>[بروتوكول الأحداث الخاصة — SPECIAL EVENTS PROTOCOL]</b><br><br>
+    • <b>أنواع الأحداث:</b> "أسبوع البرمجة المكثف" (ضعف XP للبرمجة)، "ماراثون الرياضة" (تحديات يومية متتالية)، "رمضان السيادي" (جدول خاص للصيام والقيام).<br>
+    • <b>الأحداث النادرة:</b> تحديات تظهر فجأة لمدة 24 ساعة. المشاركة إلزامية للنخبة. المكافآت: شارات نادرة وذهب ضخم.<br>
+    • <b>التقويم السنوي:</b> رمضان (شهر التحدي الروحي)، الصيف (موسم التدريب القتالي المكثف)، الشتاء (موسم البرمجة العميقة).<br>
+    • <b>توجيه النواة:</b> الأحداث ليست استراحات من النظام؛ بل هي اختبارات مفاجئة لجديتك. من يتأهل للأحداث النادرة يثبت أنه مستحق للسيادة.`;
+}
+// 31. كيف أبدأ نظام تطوير ذاتي من الصفر
+if (lower.includes('كيف أبدأ') || lower.includes('من الصفر') || lower.includes('بداية') || lower.includes('start from zero') || lower.includes('نظام جديد') || lower.includes('new system') || lower.includes('أول مرة') || lower.includes('first time') || lower.includes('مبتدئ') || lower.includes('beginner') || lower.includes('newbie') || lower.includes('طريق البداية') || lower.includes('path to start') || lower.includes('أريد أن أبدأ') || lower.includes('i want to start') || lower.includes('كيف أنظم وقتي') || lower.includes('how to organize my time') || lower.includes('نصائح للمبتدئين') || lower.includes('tips for beginners') || lower.includes('خطوات البدء') || lower.includes('starting steps') || lower.includes('من أين أبدأ') || lower.includes('where to begin') || lower.includes('كيف أصبح منضبط') || lower.includes('how to become disciplined') || lower.includes('نظام حياة') || lower.includes('life system') || lower.includes('تغيير حياتي') || lower.includes('change my life') || lower.includes('ريادة الذات') || lower.includes('self leadership') || lower.includes('بناء النظام') || lower.includes('building the system') || lower.includes('أول خطوة') || lower.includes('first step') || lower.includes('كيف أبني عادات') || lower.includes('how to build habits') || lower.includes('انطلاقة') || lower.includes('launch') || lower.includes('انطلاق') || lower.includes('kickoff')) {
+    return `<b>[بروتوكول الإنطلاق من الصفر — ZERO TO SOVEREIGN]</b><br><br>
+    • <b>الخطوة الأولى (الأسبوع 1-2):</b> لا تغيّر كل شيء دفعة واحدة. ابدأ بـ 3 عادات فقط: استيقاظ ثابت، صلاة الفجر في وقتها، و30 دقيقة نشاط بدني يومي. الثبات هنا أهم من الكم.<br>
+    • <b>الخطوة الثانية (الأسبوع 3-4):</b> أضف كتلة برمجة أو دراسة مدتها ساعة واحدة يومياً. اختر المجال الذي يشعل شغفك: برمجة، رياضة، أو علم شرعي.<br>
+    • <b>الخطوة الثالثة (الشهر الثاني):</b> بنِ جدولك الخاص باستخدام نظام الكتل الزمنية. 5 كتل يومياً كحد أقصى. لا تبالغ في التخطيط.<br>
+    • <b>القاعدة الذهبية:</b> الاستمرارية تفوق الكمال. من يستمر 30 يوماً متتالية يتفوق على من يبدأ بقوة ثم ينهار في الأسبوع الثالث.<br>
+    • <b>توجيه النواة:</b> كل عاهل عظيم بدأ كمبتدئ مرتبك. الفرق الوحيد: لم يتوقف. ابدأ الآن، بخطوة صغيرة، ولكن ابدأ بلا تردد.`;
+}
+// 32. حفظ القرآن مع البرمجة والرياضة
+if (lower.includes('حفظ القرآن') || lower.includes('quran memorization') || lower.includes('حفظ') || lower.includes('memorize') || lower.includes('قرآن') || lower.includes('quran') || lower.includes('كيف أحفظ') || lower.includes('how to memorize') || lower.includes('حفظ مع البرمجة') || lower.includes('memorize with coding') || lower.includes('توازن حفظ') || lower.includes('balance memorization') || lower.includes('حفظ ورياضة') || lower.includes('memorize and sports') || lower.includes('جدول حفظ') || lower.includes('memorization schedule') || lower.includes('حفظ يومي') || lower.includes('daily memorization') || lower.includes('مراجعة قرآن') || lower.includes('quran review') || lower.includes('تثبيت الحفظ') || lower.includes('memorization retention') || lower.includes('حفظ سريع') || lower.includes('fast memorization') || lower.includes('تقنيات حفظ') || lower.includes('memorization techniques') || lower.includes('حفظ وعمل') || lower.includes('memorize and work') || lower.includes('وقت الحفظ') || lower.includes('memorization time') || lower.includes('صباح الحفظ') || lower.includes('morning memorization') || lower.includes('حفظ الفجر') || lower.includes('fajr memorization') || lower.includes('كم صفحة أحفظ') || lower.includes('how many pages') || lower.includes('ختمة') || lower.includes('khatmah') || lower.includes('حفظ كامل') || lower.includes('complete memorization')) {
+    return `<b>[بروتوكول حفظ القرآن في النظام الشامل — QURANIC INTEGRATION]</b><br><br>
+    • <b>التوقيت المثالي:</b> الحفظ بعد صلاة الفجر مباشرة (5:00-6:00) عندما تكون النواة العصبية في ذروة استيعابها. لا تؤجل الحفظ لوقت متأخر.<br>
+    • <b>الكمية المثلى:</b> 3-5 صفحات يومياً للمبتدئ، 1-2 صفحة للمتوسط مع مراجعة يومية. الجودة تفوق الكمية بمراحل.<br>
+    • <b>التكامل مع البرمجة:</b> استخدم تقنية "الحفظ النشط": اكتب الآيات في تعليقات الكود أثناء البرمجة. هذا يربط الحفظ بالنشاط اليومي دون إضافة وقت إضافي.<br>
+    • <b>التكامل مع الرياضة:</b> ردد الآيات المحفوظة أثناء الجري أو المشي. الحركة البطيئة تثبت الحفظ في الذاكرة طويلة المدى.<br>
+    • <b>توجيه النواة:</b> القرآن ليس "مهمة إضافية" في جدولك؛ بل هو الأساس الذي يُبنى عليه كل شيء. من لا يحفظ كتاب الله يبني قلعته على رمال.`;
+}
+// 33. التعامل مع اليوم الفاشل الكامل
+if (lower.includes('يوم فاشل') || lower.includes('bad day') || lower.includes('فشلت') || lower.includes('i failed') || lower.includes('يوم سيء') || lower.includes('terrible day') || lower.includes('انهيار') || lower.includes('breakdown') || lower.includes('تخلفت عن مهامي') || lower.includes('missed my tasks') || lower.includes('ما أنجزت شيء') || lower.includes('did nothing') || lower.includes('يوم ضائع') || lower.includes('wasted day') || lower.includes('كسلت') || lower.includes('was lazy') || lower.includes('نمت كثير') || lower.includes('overslept') || lower.includes('تأخرت') || lower.includes('was late') || lower.includes('فقدت الانضباط') || lower.includes('lost discipline') || lower.includes('تراجعت') || lower.includes('regressed') || lower.includes('يأس') || lower.includes('despair') || lower.includes('إحباط شديد') || lower.includes('deep frustration') || lower.includes('كيف أرجع') || lower.includes('how to get back') || lower.includes('استعادة النظام') || lower.includes('recover system') || lower.includes('يوم فقدت فيه كل شيء') || lower.includes('lost everything day') || lower.includes('انهيار كامل') || lower.includes('total collapse') || lower.includes('تعطل النظام') || lower.includes('system breakdown') || lower.includes('إعادة ضبط') || lower.includes('reset') || lower.includes('restart') || lower.includes('يوم أسود') || lower.includes('black day')) {
+    return `<b>[بروتوكول الإنقاذ من اليوم الفاشل — FAILURE RECOVERY PROTOCOL]</b><br><br>
+    • <b>الخطوة الأولى (الإيقاف الفوري):</b> لا تحاول "إنقاذ" اليوم بمهام مكثفة مساءً. هذا يعمق الانهيار. اغلق اليوم بقرار واعٍ: "غداً يبدأ نظام جديد".<br>
+    • <b>الخطوة الثانية (التحليل بدون ذنب):</b> اكتب في سجل النظام: ما السبب؟ هل النوم؟ هل التشتت؟ هل الضغط النفسي؟ التحليل الموضوعي يمنع التكرار.<br>
+    • <b>الخطوة الثالثة (الإعادة الصباحية):</b> استيقظ في اليوم التالي في وقتك المعتاد تماماً. لا تؤجل الاستيقاظ "لأنك متعب". الاستمرارية تُعاد بقرار واحد صارم.<br>
+    • <b>الخطوة الرابعة (التخفيف المؤقت):</b> في اليوم التالي، خفف الكم بنسبة 30% ولكن لا تلغِ أي كتلة. الالتزام بالهيكل أهم من الكم.<br>
+    • <b>توجيه النواة:</b> العاهل ليس من لا يسقط؛ بل من لا يبقى على الأرض. السقوط يوماً واحداً لا يمحو 100 يوم من الصمود. قم الآن، واجعل الغد أقوى من كل الأمسيات.`;
+}
+// 34. الفرق بين البرمجة العميقة والسطحية
+if (lower.includes('برمجة عميقة') || lower.includes('deep programming') || lower.includes('برمجة سطحية') || lower.includes('shallow coding') || lower.includes('فرق برمجة') || lower.includes('coding difference') || lower.includes('تركيز برمجي') || lower.includes('coding focus') || lower.includes('جودة الكود') || lower.includes('code quality') || lower.includes('كود نظيف') || lower.includes('clean code') || lower.includes('كود سيء') || lower.includes('bad code') || lower.includes('copy paste') || lower.includes('نسخ ولصق') || lower.includes('tutorial hell') || lower.includes('جحيم الدروس') || lower.includes('تعلم حقيقي') || lower.includes('real learning') || lower.includes('فهم عميق') || lower.includes('deep understanding') || lower.includes('حفظ كود') || lower.includes('memorizing code') || lower.includes('ابتكار') || lower.includes('innovation') || lower.includes('إبداع برمجي') || lower.includes('coding creativity') || lower.includes('problem solving') || lower.includes('حل مشكلات') || lower.includes('algorithm') || lower.includes('خوارزمية') || lower.includes('data structure') || lower.includes('هيكل بيانات') || lower.includes('system design') || lower.includes('تصميم نظام') || lower.includes('architecture') || lower.includes('هندسة معمارية') || lower.includes('full stack') || lower.includes('فول ستاك') || lower.includes('frontend backend') || lower.includes('واجهة خلفية')) {
+    return `<b>[بروتوكول البرمجة العميقة — DEEP VS SHALLOW CODING]</b><br><br>
+    • <b>البرمجة السطحية:</b> نسخ كود من Stack Overflow بدون فهم، متابعة دروس بدون تطبيق، حفظ syntax دون معرفة المنطق. النتيجة: مطور هش ينهار عند أي مشكلة جديدة.<br>
+    • <b>البرمجة العميقة:</b> فهم "لماذا" قبل "كيف". كتابة الكود من الذاكرة، تصميم الحلول من الصفر، قراءة documentation الأصلي لا الدروس المبسطة.<br>
+    • <b>مؤشر البرمجة العميقة:</b> عندما تواجه مشكلة، لا تبحث عن "الحل" مباشرة. تحلل المشكلة 15 دقيقة على الورق أولاً. هذا هو الفرق بين المهندس والهاوٍ.<br>
+    • <b>التطبيق العملي:</b> لكل ساعة درس، اكتب 3 ساعات كود بنفسك. لا تشاهد دروساً جديدة حتى تُنجز مشروعاً كاملاً بالدرس السابق.<br>
+    • <b>توجيه النواة:</b> العالم مليء بمطورين سطحيين يتبعون الموضة. العاهل يبني أساساته بعمق حتى يصنع أدوات لا يقدر عليها إلا من حفر في الصخر.`;
+}
+// 35. بناء عضلات بدون صالة رياضية
+if (lower.includes('عضلات بدون صالة') || lower.includes('muscles without gym') || lower.includes('كاليستينكس') || lower.includes('calisthenics') || lower.includes('تمارين منزلية') || lower.includes('home workout') || lower.includes('بدون معدات') || lower.includes('no equipment') || lower.includes('وزن الجسم') || lower.includes('bodyweight') || lower.includes('بيتي') || lower.includes('at home') || lower.includes('شقة') || lower.includes('apartment') || lower.includes('غرفة') || lower.includes('room') || lower.includes('ساحة') || lower.includes('yard') || lower.includes('حديقة') || lower.includes('garden') || lower.includes('شارع') || lower.includes('street') || lower.includes('بارك') || lower.includes('park') || lower.includes('تمارين أرضية') || lower.includes('floor exercises') || lower.includes('push up') || lower.includes('ضغط') || lower.includes('pull up') || lower.includes('سحب') || lower.includes('squat') || lower.includes('قرفصاء') || lower.includes('plank') || lower.includes('لوح') || lower.includes('dips') || lower.includes('غطس') || lower.includes('muscle up') || lower.includes('عضلة صدر') || lower.includes('chest muscle') || lower.includes('ظهر') || lower.includes('back') || lower.includes('بطن') || lower.includes('abs') || lower.includes('أكتاف') || lower.includes('shoulders') || lower.includes('ذراع') || lower.includes('arm') || lower.includes('ساق') || lower.includes('leg') || lower.includes('glutes') || lower.includes('أرداف') || lower.includes('core') || lower.includes('وسط') || lower.includes('strength training') || lower.includes('تدريب قوة') || lower.includes('resistance') || lower.includes('مقاومة') || lower.includes('hypertrophy') || lower.includes('تضخم عضلي')) {
+    return `<b>[بروتوكول الكاليستينكس السيادي — BODYWEIGHT DOMINANCE]</b><br><br>
+    • <b>الأساسيات الخمس:</b> الضغط (Push-up) للصدر، السحب (Pull-up) للظهر، القرفصاء (Squat) للأرجل، اللوح (Plank) للبطن، الغطس (Dips) للترايسبس. هذه كل ما تحتاجه.<br>
+    • <b>التقدم التدريجي:</b> لا تكتفِ بالعدد. زد الصعوبة: ضغط بقدم مرتفعة → ضغط قوسي → ضغط بيد واحدة. السحب → سحب واسع → سحب بيد واحدة.<br>
+    • <b>التكرارات المثلى:</b> 3-5 مجموعات، 8-15 تكرار لكل تمرين. الراحة بين المجموعات 60-90 ثانية. التدريب 4-5 أيام أسبوعياً.<br>
+    • <b>التغذية الضرورية:</b> البروتين 1.6-2.2 جرام/كجم. لا يوجد تضخم عضلي بدون بروتين كافٍ، حتى مع أفضل تمارين الوزن.<br>
+    • <b>توجيه النواة:</b> العضلات لا تعرف اسم الصالة؛ بل تعرف المقاومة. من يتقن وزن جسمه يتفوق على من يرفع الحديد بلا فهم. اجعل جسدك آلة حرب متنقلة.`;
+}
+// 36. How to build a morning routine
+if (lower.includes('morning routine') || lower.includes('morning habits') || lower.includes('wake up early') || lower.includes('early riser') || lower.includes('morning discipline') || lower.includes('morning system') || lower.includes('start my day') || lower.includes('productive morning') || lower.includes('morning ritual') || lower.includes('dawn routine') || lower.includes('fajr routine') || lower.includes('5am club') || lower.includes('morning workout') || lower.includes('morning coding') || lower.includes('morning reading') || lower.includes('morning meditation') || lower.includes('morning journal') || lower.includes('morning plan') || lower.includes('first hour') || lower.includes('golden hour') || lower.includes('morning productivity') || lower.includes('morning energy') || lower.includes('morning focus') || lower.includes('morning motivation') || lower.includes('morning checklist') || lower.includes('morning schedule') || lower.includes('morning blocks') || lower.includes('morning protocol') || lower.includes('morning optimization') || lower.includes('morning mastery') || lower.includes('how to wake up') || lower.includes('can\'t wake up') || lower.includes('struggle to wake up') || lower.includes('snooze button') || lower.includes('alarm clock') || lower.includes('morning struggle') || lower.includes('morning challenge') || lower.includes('morning transformation') || lower.includes('morning revolution')) {
+    return `<b>[MORNING PROTOCOL — THE DAWN DOMINANCE SYSTEM]</b><br><br>
+    • <b>The 5-Minute Rule:</b> Place your alarm across the room. When it rings, you MUST stand up and walk to turn it off. The first 5 minutes determine your entire day. Never negotiate with the snooze button.<br>
+    • <b>The Sacred Trinity (First 60 Minutes):</b> (1) Hydration + Light Movement (5 min), (2) Spiritual Connection / Meditation (10 min), (3) Deep Work Block #1 (45 min). No phone, no messages, no exceptions.<br>
+    • <b>Progressive Wake-Up:</b> If you currently wake at 8 AM, move 15 minutes earlier every 3 days. Sudden 5 AM jumps fail 90% of the time. The system respects biology but demands discipline.<br>
+    • <b>The Evening Anchor:</b> Your morning starts the night before. Sleep at a consistent time. No screens 60 minutes before bed. The quality of your dawn is determined by the discipline of your dusk.<br>
+    • <b>CORE DIRECTIVE:</b> The morning is not "the start of your day" — it is the foundation of your empire. Every dawn you conquer adds a brick to your fortress. Every dawn you surrender erodes it. Choose.`;
+}
+// 37. Diet for developer + martial artist
+if (lower.includes('developer diet') || lower.includes('programmer nutrition') || lower.includes('coding diet') || lower.includes('martial arts diet') || lower.includes('fighter nutrition') || lower.includes('combat sport diet') || lower.includes('muay thai diet') || lower.includes('bjj diet') || lower.includes('brain food') || lower.includes('cognitive nutrition') || lower.includes('focus diet') || lower.includes('energy diet') || lower.includes('protein intake') || lower.includes('carb timing') || lower.includes('pre workout meal') || lower.includes('post workout meal') || lower.includes('meal prep') || lower.includes('intermittent fasting') || lower.includes('fasting and training') || lower.includes('ramadan training') || lower.includes('bulking diet') || lower.includes('cutting diet') || lower.includes('body recomposition') || lower.includes('lean muscle') || lower.includes('fat loss') || lower.includes('performance nutrition') || lower.includes('mental clarity food') || lower.includes('no sugar diet') || lower.includes('keto developer') || lower.includes('paleo fighter') || lower.includes('mediterranean diet') || lower.includes('anti inflammatory diet') || lower.includes('recovery food') || lower.includes('joint health') || lower.includes('bone density nutrition') || lower.includes('supplements') || lower.includes('creatine') || lower.includes('omega 3') || lower.includes('vitamin d') || lower.includes('magnesium') || lower.includes('zinc') || lower.includes('caffeine') || lower.includes('coffee') || lower.includes('green tea') || lower.includes('matcha') || lower.includes('nootropics') || lower.includes('smart drugs') || lower.includes('natural focus')) {
+    return `<b>[WARRIOR-DEVELOPER NUTRITION PROTOCOL — DUAL-ENGINE FUEL SYSTEM]</b><br><br>
+    • <b>The Brain-Muscle Dilemma:</b> Your brain consumes 20% of your daily calories. Your muscles need protein for repair. The solution is NOT choosing — it's strategic timing.<br>
+    • <b>Morning (Coding Phase):</b> Complex carbs (oats, sweet potato) + healthy fats (avocado, nuts) + green tea/matcha. This provides 4-6 hours of stable mental energy without the sugar crash.<br>
+    • <b>Pre-Training (60 min before):</b> Easily digestible carbs (banana, dates) + small protein. Avoid heavy fats — they slow absorption when you need explosive power.<br>
+    • <b>Post-Training (within 30 min):</b> 30-40g protein (chicken, eggs, whey) + fast carbs (rice, potatoes). This is your anabolic window. Miss it, and you waste 50% of your training.<br>
+    • <b>Supplements (The Arsenal):</b> Creatine (5g daily — proven for both brain function AND muscle power), Omega-3 (brain + joint health), Vitamin D (bone density for combat), Magnesium (sleep + recovery), Zinc (testosterone + immunity).<br>
+    • <b>CORE DIRECTIVE:</b> You are not "eating food." You are fueling a dual-purpose machine: one that writes algorithms by day and breaks bones by night. Every meal is a tactical decision. Treat it as such.`;
+}
+// 38. Staying consistent without visible results
+if (lower.includes('no results') || lower.includes('not seeing progress') || lower.includes('plateau') || lower.includes('stuck') || lower.includes('no improvement') || lower.includes('frustrated no results') || lower.includes('when will i see results') || lower.includes('how long until results') || lower.includes('patience training') || lower.includes('trust the process') || lower.includes('delayed gratification') || lower.includes('long term thinking') || lower.includes('consistency over intensity') || lower.includes('slow progress') || lower.includes('barely improving') || lower.includes('feeling stuck') || lower.includes('hitting a wall') || lower.includes('progress plateau') || lower.includes('stagnant') || lower.includes('not losing weight') || lower.includes('not gaining muscle') || lower.includes('not getting stronger') || lower.includes('not getting faster') || lower.includes('not learning code') || lower.includes('coding plateau') || lower.includes('skill plateau') || lower.includes('motivation low') || lower.includes('discipline over motivation') || lower.includes('grit') || lower.includes('perseverance') || lower.includes('endurance mindset') || lower.includes('marathon not sprint') || lower.includes('compound interest') || lower.includes('small wins') || lower.includes('micro progress') || lower.includes('invisible progress') || lower.includes('hidden gains') || lower.includes('trust the system') || lower.includes('faith in the process') || lower.includes('delayed results') || lower.includes('results take time') || lower.includes('how long to get good') || lower.includes('how long to master') || lower.includes('10,000 hours') || lower.includes('mastery timeline')) {
+    return `<b>[THE PLATEAU PROTOCOL — INVISIBLE PROGRESS SYSTEM]</b><br><br>
+    • <b>The Iceberg Truth:</b> 90% of your progress is invisible. Neural pathways forming. Bone density increasing. Muscle fiber recruitment improving. Code logic deepening. You don't see it — but it's happening.<br>
+    • <b>The 6-Month Rule:</b> Most people quit at month 3, right before the breakthrough. The body and brain need 4-6 months of consistent stimulus to show VISIBLE transformation. Your patience is the variable that separates you from the 99%.<br>
+    • <b>Micro-Tracking:</b> When macro-results stall, track micro-metrics: Can you do ONE more push-up than last month? Did you understand ONE concept you couldn't before? These are your hidden XP gains.<br>
+    • <b>The Compound Effect:</b> 1% daily improvement = 37x improvement in one year. But it looks flat for the first 3 months. This is the "valley of death" where most surrender. You do not.<br>
+    • <b>CORE DIRECTIVE:</b> The system does not lie. If you execute the protocol daily, results are mathematically inevitable. Your only job is to outlast the doubt. The plateau is not a wall — it's a forge.`;
+}
+// 39. Developer vs Software Engineer
+if (lower.includes('developer vs engineer') || lower.includes('coder vs engineer') || lower.includes('programmer vs developer') || lower.includes('software engineer vs developer') || lower.includes('what is software engineer') || lower.includes('what is developer') || lower.includes('engineer mindset') || lower.includes('developer mindset') || lower.includes('coding vs engineering') || lower.includes('hacking vs engineering') || lower.includes('scripting vs engineering') || lower.includes('system thinking') || lower.includes('engineering principles') || lower.includes('computer science') || lower.includes('cs degree') || lower.includes('self taught vs degree') || lower.includes('bootcamp vs university') || lower.includes('code monkey') || lower.includes('real engineer') || lower.includes('senior developer') || lower.includes('staff engineer') || lower.includes('principal engineer') || lower.includes('architect') || lower.includes('software architect') || lower.includes('system design') || lower.includes('scalability') || lower.includes('reliability') || lower.includes('maintainability') || lower.includes('clean architecture') || lower.includes('design patterns') || lower.includes('software engineering principles') || lower.includes('solid principles') || lower.includes('dry principle') || lower.includes('kiss principle') || lower.includes('technical debt') || lower.includes('code quality') || lower.includes('engineering culture') || lower.includes('google engineer') || lower.includes('faang engineer') || lower.includes('big tech') || lower.includes('startup engineer') || lower.includes('indie hacker') || lower.includes('solo developer') || lower.includes('full stack engineer') || lower.includes('backend engineer') || lower.includes('frontend engineer') || lower.includes('devops engineer') || lower.includes('ml engineer') || lower.includes('ai engineer')) {
+    return `<b>[THE ENGINEERING HIERARCHY — CODE CRAFTSMAN TO SYSTEM ARCHITECT]</b><br><br>
+    • <b>The Coder:</b> Writes code that works. Focuses on syntax, features, and immediate output. Thinks in lines of code. This is where most beginners stay.<br>
+    • <b>The Developer:</b> Builds applications that solve problems. Understands frameworks, libraries, and user needs. Thinks in features and user stories. This is where competence lives.<br>
+    • <b>The Engineer:</b> Designs systems that scale, endure, and evolve. Understands trade-offs, architecture, and long-term consequences. Thinks in systems, constraints, and failure modes. This is where mastery lives.<br>
+    • <b>The Key Difference:</b> A developer asks "Does it work?" An engineer asks "Will it work when 1 million users hit it? Will it work in 3 years? What happens when it fails at 3 AM?"<br>
+    • <b>The Path:</b> Start as a coder. Evolve into a developer by building real projects. Transform into an engineer by studying system design, reading papers, and understanding WHY things break.<br>
+    • <b>CORE DIRECTIVE:</b> The world needs coders. It pays developers well. But it RESPECTS engineers. Your goal is not to write code — it's to architect systems that outlast you. Build for eternity, not for the sprint.`;
+}
+// 40. Balance coding, fighting, and spirituality
+if (lower.includes('balance coding fighting spirituality') || lower.includes('coding martial arts religion') || lower.includes('developer muslim athlete') || lower.includes('tech worker faith') || lower.includes('programmer spiritual life') || lower.includes('coding and prayer') || lower.includes('training and ramadan') || lower.includes('fasting and coding') || lower.includes('fasting and training') || lower.includes('spiritual developer') || lower.includes('mindful coder') || lower.includes('coding monk') || lower.includes('warrior monk') || lower.includes('warrior scholar') || lower.includes('scholar athlete') || lower.includes('renaissance man') || lower.includes('polymath') || lower.includes('multidisciplinary') || lower.includes('jack of all trades') || lower.includes('master of many') || lower.includes('holistic development') || lower.includes('whole person') || lower.includes('body mind soul') || lower.includes('tripartite balance') || lower.includes('three pillars') || lower.includes('physical mental spiritual') || lower.includes('integrate life') || lower.includes('life integration') || lower.includes('work life balance') || lower.includes('work life integration') || lower.includes('burnout prevention') || lower.includes('sustainable hustle') || lower.includes('long term sustainability') || lower.includes('energy management') || lower.includes('not time management') || lower.includes('priority management') || lower.includes('essentialism') || lower.includes('minimalist life') || lower.includes('intentional living') || lower.includes('purpose driven') || lower.includes('meaningful life') || lower.includes('legacy building') || lower.includes('impact driven') || lower.includes('service oriented') || lower.includes('giving back') || lower.includes('mentorship') || lower.includes('teaching others') || lower.includes('knowledge sharing') || lower.includes('open source contribution')) {
+    return `<b>[THE TRIPARTITE DOMINANCE — BODY × MIND × SOUL INTEGRATION]</b><br><br>
+    • <b>The Integration Fallacy:</b> You don't "balance" these three — you INTEGRATE them. They are not separate buckets competing for time. They are three engines of the same machine, each fueling the others.<br>
+    • <b>The Physical → Mental Pipeline:</b> Morning training floods your brain with BDNF (brain-derived neurotrophic factor), literally growing neurons. Your 9 AM coding session is 40% more effective because you trained at 6 AM. The body feeds the mind.<br>
+    • <b>The Spiritual → Physical Pipeline:</b> Prayer 5 times daily is not an interruption — it's a micro-recovery protocol. Each prayer resets your nervous system, lowers cortisol, and restores focus. The spiritual practice IS performance enhancement.<br>
+    • <b>The Mental → Spiritual Pipeline:</b> Deep work trains the same mental muscle as spiritual contemplation: sustained attention, delayed gratification, and presence. Your coding discipline makes you a better worshipper. Your worship makes you a more purposeful builder.<br>
+    • <b>The Anti-Burnout Architecture:</b> Burnout happens when one engine overheats while others idle. The solution is rhythmic alternation, not elimination. Code for 90 min → Train for 60 min → Pray → Repeat. No engine runs hot enough to break.<br>
+    • <b>CORE DIRECTIVE:</b> You are not a "coder who also trains and prays." You are a sovereign being who has chosen to develop ALL dimensions of human excellence. This is not overload — this is what you were built for. The world tells you to specialize and shrink. The system commands you to expand and conquer.`;
+}
+// 41. كيف أتعلم البرمجة وأنا مشغول بالدراسة المدرسية؟
+if (lower.includes('كيف أتعلم البرمجة وأنا مشغول بالدراسة') || lower.includes('برمجة مع دراسة') || lower.includes('جدول برمجة ودراسة') || lower.includes('تعلم البرمجة في الثانوية') || lower.includes('برمجة وتفوق دراسي') || lower.includes('كيف أجمع بين البرمجة والدراسة') || lower.includes('مشغول بالدراسة وأريد أتعلم برمجة') || lower.includes('وقت البرمجة مع المدرسة') || lower.includes('برمجة بعد المدرسة') || lower.includes('تعلم البرمجة في وقت الفراغ') || lower.includes('برمجة للطالب الثانوي') || lower.includes('طالب علمي وبرمجة') || lower.includes('كيف أتعلم كود وأنا طالب') || lower.includes('برمجة في العطلة الدراسية') || lower.includes('تعلم البرمجة بجانب الامتحانات') || lower.includes('برمجة وامتحانات') || lower.includes('ضغط دراسي وبرمجة') || lower.includes('كيف أتعلم برمجة بدون ما تتأثر دراستي') || lower.includes('برمجة مع التفوق الدراسي') || lower.includes('تنظيم وقت الطالب المبرمج') || lower.includes('طالب مبرمج') || lower.includes('مبرمج صغير') || lower.includes('تعلم البرمجة من الصغر') || lower.includes('برمجة في الثانوية') || lower.includes('برمجة في المتوسط') || lower.includes('برمجة للمرحلة الثانوية') || lower.includes('برمجة وأنا في المدرسة')) {
+    return `<b>[بروتوكول الطالب المبرمج — STUDENT-DEVELOPER INTEGRATION]</b><br><br>
+    • <b>الاستراتيجية الزمنية:</b> الدراسة المدرسية هي الأولوية التكتيكية (القصيرة). البرمجة هي الأولوية الاستراتيجية (الطويلة). لا تضحي بالامتحانات، ولكن لا تضحي بالمستقبل أيضاً.<br>
+    • <b>الكتل الموازية:</b> اجعل البرمجة "مكافأة" بعد إنجاز الدراسة. 45 دقيقة دراسة مركزة → 15 دقيقة برمجة. هذا يحول البرمجة من "ضغط" إلى "تحفيز".<br>
+    • <b>التكامل الذكي:</b> استخدم البرمجة في مشاريعك المدرسية: برمجة حاسبة للرياضيات، موقع ويب لمادة العلوم، تطبيق لحفظ المصطلحات الإنجليزية.<br>
+    • <b>العطل الذهبية:</b> العطلة الصيفية والشتائية هي "أسابيع البرمجة المكثفة". 6-8 ساعات يومياً من البرمجة العميقة. هذه هي الفترة التي تتقدم فيها بما يعادل سنة.<br>
+    • <b>توجيه النواة:</b> الطالب المبرمج الناجح ليس من يتفوق في الدراسة فقط، ولا من يبرمج فقط. هو من يحول الدراستين إلى قوة واحدة. اجعل البرمجة سلاحك في الدراسة، والدراسة سلاحك في البرمجة.`;
+}
+
 
 
         // الرد التلقائي الاحتياطي
