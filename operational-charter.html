@@ -88,6 +88,7 @@
             100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1); }
         }
     </style>
+<base target="_blank">
 </head>
 <body class="p-2 md:p-6">
 
@@ -131,6 +132,7 @@
         <a href="system-logs.html" class="px-4 py-2 text-xs sys-font sl-panel rounded hover:bg-[var(--sys-cyan)] hover:text-black transition duration-300 text-slate-300 border border-slate-800">📊 SYSTEM LOGS</a>
         <a href="monarch-ai.html" class="px-4 py-2 text-xs sys-font sl-panel rounded hover:bg-[var(--sys-cyan)] hover:text-black transition duration-300 text-slate-300 border border-slate-800">🤖 MONARCH AI</a>
         <a href="operational-charter.html" class="px-4 py-2 text-xs sys-font bg-cyan-950/40 border border-[var(--sys-cyan)] text-[var(--sys-cyan)] rounded font-bold shadow-[0_0_10px_rgba(0,240,255,0.1)]">📜 CHARTER</a>
+          <a href="dungeons.html" class="px-4 py-2 text-xs sys-font sl-panel rounded hover:bg-[var(--sys-purple)] hover:text-white transition duration-300 text-slate-300 border border-slate-800">🏰 DUNGEONS</a>
     </nav>
 
     <div class="sl-panel p-5 animate-system-pop" style="animation-delay: 0.2s;">
@@ -643,9 +645,8 @@ const Utils = {
         return days[idx];
     }
 };
-
 const PlayerSync = {
-    data: { level: 1, xp: 0, gold: 0 },
+    data: { level: 1, xp: 0, gold: 0, stats: {} },
     init() {
         this.load();
         this.updateUI();
@@ -683,22 +684,18 @@ const Charter = {
 
     init() {
         const saved = localStorage.getItem('sovereign_active_program');
-        if (saved) {
+        const validIds = ['week1','week2','week3','week4','week5'];
+
+        if (saved && validIds.includes(saved)) {
             this.activeProgramId = saved;
         } else {
             const lvl = PlayerSync.data.level;
-            // المنطق الجديد لتحديد البرنامج بناءً على المستوى
-            if (lvl >= 1000) {
-                this.activeProgramId = 'week5'; // من 1000 إلى المالانهاية
-            } else if (lvl >= 800) {
-                this.activeProgramId = 'week4'; // من 800 إلى 999
-            } else if (lvl >= 600) {
-                this.activeProgramId = 'week3'; // من 600 إلى 799
-            } else if (lvl >= 450) {
-                this.activeProgramId = 'week2'; // من 450 إلى 599
-            } else {
-                this.activeProgramId = 'week1'; // من 1 إلى 449
-            }
+            if (lvl >= 1000) this.activeProgramId = 'week5';
+            else if (lvl >= 800) this.activeProgramId = 'week4';
+            else if (lvl >= 600) this.activeProgramId = 'week3';
+            else if (lvl >= 450) this.activeProgramId = 'week2';
+            else this.activeProgramId = 'week1';
+            localStorage.setItem('sovereign_active_program', this.activeProgramId);
         }
         this.renderButtons();
         this.renderToday();
@@ -744,6 +741,8 @@ const Charter = {
         const summary = document.getElementById('day-summary');
         const dayLabel = document.getElementById('current-day-label');
         const prog = PROGRAM_DATA[this.activeProgramId];
+
+        if (!prog) { console.error('[Charter] Program not found in renderToday'); return; }
 
         const now = new Date();
         const day = now.getDay();
@@ -821,19 +820,28 @@ const Charter = {
 
     renderWeeklyMatrix() {
         const tbody = document.getElementById('weekly-matrix-body');
+        if (!tbody) { console.error('[Charter] weekly-matrix-body not found'); return; }
+
         const prog = PROGRAM_DATA[this.activeProgramId];
+        if (!prog) { console.error('[Charter] Program not found:', this.activeProgramId); return; }
+        if (!prog.days) { console.error('[Charter] Program days missing:', this.activeProgramId); return; }
+
         let html = '';
         for (let i = 0; i < 7; i++) {
             const d = prog.days[i];
+            if (!d) {
+                console.warn('[Charter] Day data missing for index', i);
+                continue;
+            }
             const isToday = (new Date().getDay() === i);
             const rowClass = isToday ? 'bg-[var(--sys-cyan)]/5 border-[var(--sys-cyan)]/30' : 'border-slate-800 hover:bg-white/5';
             html += `
             <tr class="border-b ${rowClass} transition-colors">
                 <td class="p-3 font-bold text-white whitespace-nowrap">${Utils.getDayName(i)} ${isToday ? '<span class="text-[var(--sys-cyan)] text-[10px] border border-[var(--sys-cyan)] px-1 rounded ml-1">TODAY</span>' : ''}</td>
-                <td class="p-3 text-slate-300">${d.sport}</td>
-                <td class="p-3 text-slate-300">${d.cognitive}</td>
-                <td class="p-3 text-[var(--sys-cyan)] font-bold">${d.ppl}</td>
-                <td class="p-3 text-emerald-400 font-bold">${d.academic}</td>
+                <td class="p-3 text-slate-300">${d.sport || '-'}</td>
+                <td class="p-3 text-slate-300">${d.cognitive || '-'}</td>
+                <td class="p-3 text-[var(--sys-cyan)] font-bold">${d.ppl || '-'}</td>
+                <td class="p-3 text-emerald-400 font-bold">${d.academic || '-'}</td>
             </tr>`;
         }
         tbody.innerHTML = html;
@@ -842,6 +850,8 @@ const Charter = {
     renderSpecialDays() {
         const container = document.getElementById('special-days-container');
         const prog = PROGRAM_DATA[this.activeProgramId];
+        if (!prog) { console.error('[Charter] Program not found in renderSpecialDays'); return; }
+        if (!prog.special) { container.innerHTML = ''; return; }
         let html = '';
 
         [4,5,6].forEach(dayIdx => {
@@ -879,15 +889,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Refresh active block every minute
     setInterval(() => Charter.renderToday(), 60000);
 });
-    // ==========================================
-// INITIALIZATION
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    PlayerSync.init();
-    Charter.init();
-    // Refresh active block every minute
-    setInterval(() => Charter.renderToday(), 60000);
-});
 document.addEventListener('DOMContentLoaded', () => {
     // === أضف هذا السطر هنا لحفظ الجداول في الذاكرة المشتركة فوراً ===
     localStorage.setItem('sovereign_program_data', JSON.stringify(PROGRAM_DATA));
@@ -896,6 +897,188 @@ document.addEventListener('DOMContentLoaded', () => {
     PlayerSync.init();
     CharterRender.init();
 });
+// ==========================================
+// SOVEREIGN CHARTER - مدير الميثاق التشغيلي (5 أسابيع)
+// ==========================================
+const SovereignCharter = {
+    // مصفوفة البيانات الضخمة للأسابيع الخمسة متوافقة تماماً مع شروط الـ Engine
+    defaultPrograms: {
+        week1: {
+            name: "الأسبوع الأول: التأسيس والبناء العميق",
+            schedule: [
+                { start: 5.0, end: 7.0, title: "مختبر البرمجة والذكاء الاصطناعي", desc: "تطوير النظام السيادي وهندسة المكونات الذكية." },
+                { start: 7.0, end: 8.5, title: "كتلة العلوم والقراءة الجادة", desc: "مطالعة كتاب البرمجة بالبناء ومراجعة الأنماط." },
+                { start: 13.0, end: 15.0, title: "عرين تطوير الويب والإنتاج", desc: "مراجعة قواعد البيانات وتحسين الواجهات السينمائية ذات الطابع الداكن والنيون." },
+                { start: 17.0, end: 19.0, title: "التدريب البدني القتالي", desc: "فنون قتالية، رفع اللياقة، وتمارين التحمل البدني." }
+            ],
+            special: {
+                // أيام خاصة: (مثال: الاثنين والخميس استيقاظ مبكر جداً)
+                "1": { // الاثنين
+                    blocks: [
+                        { time: "02:45-05:00", title: "بروتوكول التركيز الخارق", desc: "جلسة برمجية صامتة لإنهاء مهام الـ Core المتأخرة." },
+                        { time: "05:00-07:00", title: "مختبر البرمجة والذكاء الاصطناعي", desc: "متابعة الخطة الروتينية." }
+                    ]
+                },
+                "4": { // الخميس
+                    blocks: [
+                        { time: "02:45-05:00", title: "مراجعة الميثاق وتجهيز الإصدارات", desc: "تحضير ملفات النشر والكتب الرقمية وتدقيق الشيفرات." }
+                    ]
+                }
+            }
+        },
+        week2: {
+            name: "الأسبوع الثاني: أسبوع الهجوم والإنتاجية المكثفة",
+            schedule: [
+                { start: 5.0, end: 7.5, title: "مختبر البرمجة: التطبيقات المتقدمة", desc: "العمل على خوارزميات النظام والمزامنة السريعة." },
+                { start: 10.0, end: 12.0, title: "إدارة الوسائط والإنتاج الرقمي", desc: "تعديل محتوى مرئي متقدم، هندسة الصوت والـ Filters القوية للأقنية الإعلامية." },
+                { start: 16.5, end: 18.5, title: "تمارين اللياقة والقتال الديناميكي", desc: "تطوير مهارات القتال الأرضي والدفاع البدني." }
+            ],
+            special: {}
+        },
+        week3: {
+            name: "الأسبوع الثالث: التوسع وتحليل البيانات Security & Hacking",
+            schedule: [
+                { start: 5.0, end: 7.0, title: "مختبر الأمن السيبراني والشبكات", desc: "دراسة آليات الحماية، اختبارات الاختراق الأخلاقي، وتحليل المنافذ." },
+                { start: 14.0, end: 16.0, title: "اللغات والترجمة التقنية", desc: "تطوير المصطلحات الإنجليزية البرمجية المتقدمة." },
+                { start: 17.0, end: 19.0, title: "التدريب الرياضي والسباحة", desc: "تحسين التنفس وزيادة سعة التحمل العضلي." }
+            ],
+            special: {}
+        },
+        week4: {
+            name: "الأسبوع الرابع: تحسين الأرباح والتحسين المالي الرقمي",
+            schedule: [
+                { start: 5.0, end: 7.0, title: "تطوير منصات التجارة الرقمية", desc: "تحسين بوابات الدفع الإلكتروني المربوطة وإدارة مبيعات الكتب التقنية." },
+                { start: 11.0, end: 13.0, title: "جلسة مراجعة الكود والأداء العلمي", desc: "تحسين الـ Refactoring للأنظمة وتخفيف استهلاك الموارد للـ Scripts." },
+                { start: 17.0, end: 19.0, title: "كتلة الرياضة والقتال الجاد", desc: "محاكاة مواجهات تكتيكية لزيادة سرعة الاستجابة البدنية." }
+            ],
+            special: {}
+        },
+        week5: {
+            name: "الأسبوع الخامس: أسبوع التقييم والـ Level Up النهائي",
+            schedule: [
+                { start: 5.0, end: 8.0, title: "بروتوكول فحص النظام الشامل", desc: "إغلاق الثغرات البرمجية، ورفع التقارير النهائية للميثاق السيادي." },
+                { start: 14.0, end: 16.0, title: "القراءة الروحية والعلمية المستفيضة", desc: "تغذية العقل بمصادر العلوم الصافية ومراجعة الأهداف الفردية للنمو المالي." },
+                { start: 17.0, end: 19.0, title: "التدريب البدني الاحتفالي", desc: "تجاوز الحدود البدنية السابقة وتوثيق الإنجاز." }
+            ],
+            special: {}
+        }
+    },
+
+    init() {
+        // 1. التحقق من وجود البيانات في الذاكرة، إذا لم تكن موجودة يتم رفعها تلقائياً للمرة الأولى
+        if (!localStorage.getItem('sovereign_program_data')) {
+            this.saveProgramsToStorage(this.defaultPrograms);
+            console.log("⚡ [SovereignCharter]: تم حقن مصفوفة الأسابيع الخمسة بنجاح لأول مرة.");
+        }
+
+        // 2. تعيين أسبوع افتراضي نشط إذا لم يكن هناك أسبوع محدد مسبقاً
+        if (!localStorage.getItem('sovereign_active_program')) {
+            this.setActiveProgram('week1');
+        }
+        
+        this.renderControlInterface();
+    },
+
+    saveProgramsToStorage(data) {
+        localStorage.setItem('sovereign_program_data', JSON.stringify(data));
+    },
+
+    // الدالة السحرية للتبديل الفوري بين الأسابيع الخمسة من واجهة التحكم
+    setActiveProgram(programId) {
+        if (this.defaultPrograms[programId]) {
+            localStorage.setItem('sovereign_active_program', programId);
+            console.log(`✅ [SovereignCharter]: تم تبديل البرنامج النشط إلى: ${this.defaultPrograms[programId].name}`);
+            
+            // إشعار محرك النظام السيادي بإعادة الحساب الفورية إذا كان يعمل في نفس الصفحة
+            if (window.SovereignEngine && typeof SovereignEngine.runTimeScheduleEngine === 'function') {
+                SovereignEngine.runTimeScheduleEngine();
+            }
+            this.updateUIHighlight(programId);
+        } else {
+            console.error(`❌ [SovereignCharter]: المعرف البرمجي [${programId}] غير موجود في مصفوفة الأسابيع الخمسة.`);
+        }
+    },
+
+    // بناء واجهة تفاعلية مصغرة وسينمائية داخل صفحة الميثاق دون تخريب الهيكل العام
+    renderControlInterface() {
+        const container = document.getElementById('sovereign-weeks-control') || this.createFallbackUIContainer();
+        if (!container) return;
+
+        const activeWeek = localStorage.getItem('sovereign_active_program') || 'week1';
+        
+        let html = `
+            <div style="background: rgba(10, 10, 15, 0.95); border: 2px solid #00f0ff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); padding: 20px; border-radius: 8px; font-family: sans-serif; direction: rtl; color: #fff; margin: 20px 0;">
+                <h3 style="margin-top: 0; color: #bc00dd; text-shadow: 0 0 8px rgba(188, 0, 221, 0.6); display: flex; align-items: center; gap: 10px;">
+                    <span>🛡️ لوحة التحكم السيادية بالأسابيع</span>
+                </h3>
+                <p style="font-size: 13px; color: #aaa;">اختر الأسبوع الحالي لتحديث بروتوكولات المهام والـ Quest Popups التلقائية فوراً:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 15px;">
+        `;
+
+        for (let key in this.defaultPrograms) {
+            const isSelected = key === activeWeek;
+            const btnStyle = isSelected 
+                ? 'background: linear-gradient(135deg, #00f0ff, #bc00dd); color: #000; font-weight: bold; border: none; box-shadow: 0 0 10px #00f0ff;' 
+                : 'background: #1a1a24; color: #00f0ff; border: 1px solid #333; cursor: pointer;';
+
+            html += `
+                <button id="btn-${key}" onclick="SovereignCharter.setActiveProgram('${key}')" 
+                        style="${btnStyle} padding: 12px 10px; border-radius: 5px; font-size: 12px; transition: all 0.3s ease; cursor: pointer; text-align: center;">
+                    ${key.toUpperCase()}<br>
+                    <span style="font-size: 10px; opacity: 0.8; display: block; margin-top: 4px;">${key === 'week1' ? 'التأسيس' : key === 'week2' ? 'الهجوم' : key === 'week3' ? 'الأمن' : key === 'week4' ? 'الأرباح' : 'الـ Level Up'}</span>
+                </button>
+            `;
+        }
+
+        html += `
+                </div>
+                <div id="charter-status-text" style="margin-top: 15px; font-size: 12px; text-align: left; color: #00f0ff; opacity: 0.8;">
+                    البرنامج الحالي: ${this.defaultPrograms[activeWeek].name}
+                </div>
+            </div>
+        `;
+
+        container.innerHTML = html;
+    },
+
+    createFallbackUIContainer() {
+        const div = document.createElement('div');
+        div.id = 'sovereign-weeks-control';
+        // حقن الحاوية في أعلى الجسد أو منطقة المحتوى المفضلة لديك
+        const target = document.querySelector('.charter-container') || document.body;
+        target.prepend(div);
+        return div;
+    },
+
+    updateUIHighlight(activeProgramId) {
+        for (let key in this.defaultPrograms) {
+            const btn = document.getElementById(`btn-${key}`);
+            if (btn) {
+                if (key === activeProgramId) {
+                    btn.style.background = 'linear-gradient(135deg, #00f0ff, #bc00dd)';
+                    btn.style.color = '#000';
+                    btn.style.fontWeight = 'bold';
+                    btn.style.border = 'none';
+                    btn.style.boxShadow = '0 0 10px #00f0ff';
+                } else {
+                    btn.style.background = '#1a1a24';
+                    btn.style.color = '#00f0ff';
+                    btn.style.border = '1px solid #333';
+                    btn.style.boxShadow = 'none';
+                    btn.style.fontWeight = 'normal';
+                }
+            }
+        }
+        const statusText = document.getElementById('charter-status-text');
+        if (statusText) statusText.innerText = `البرنامج الحالي: ${this.defaultPrograms[activeProgramId].name}`;
+    }
+};
+
+// تشغيل محرك الميثاق فور تحميل الصفحة تلقائياً لضمان المزامنة الحية
+document.addEventListener('DOMContentLoaded', () => {
+    SovereignCharter.init();
+});
+
 </script>
 </body>
 </html>
