@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Math | Sovereign System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sys-dark': '#000000',
+                        'sys-cyan': '#00f0ff',
+                        'sys-purple': '#b026ff',
+                        'sys-white': '#ffffff',
+                        'sys-green': '#10b981',
+                        'sys-rose': '#e11d48',
+                        'sys-gold': '#ffd700',
+                        'rank-a': '#b026ff', /* Rank A Color */
+                    },
+                    fontFamily: {
+                        'cairo': ['Cairo', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --sys-cyan: #00f0ff;
+            --sys-purple: #b026ff;
+            --rank-a: #b026ff;
+            --sys-gold: #ffd700;
+            --sys-green: #10b981;
+            --sys-rose: #e11d48;
+        }
+
+        /* Scrollbar Fix */
+        html, body { scrollbar-width: thin; scrollbar-color: var(--rank-a) #000000; }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { width: 6px; }
+        html::-webkit-scrollbar-track, body::-webkit-scrollbar-track { background: #000000; }
+        html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--rank-a), var(--sys-cyan)); border-radius: 3px; }
+
+        /* Hidden Utility Fix */
+        .hidden { display: none !important; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #000000;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(rgba(176, 38, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(176, 38, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .bg-radial-glow {
+            background: 
+                radial-gradient(circle at 50% 30%, rgba(176, 38, 255, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(0, 240, 255, 0.04) 0%, transparent 50%);
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.02) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.5;
+        }
+
+        .neon-border-a {
+            border: 1px solid rgba(176, 38, 255, 0.3);
+            box-shadow: 0 0 20px rgba(176, 38, 255, 0.1), inset 0 0 20px rgba(176, 38, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .neon-border-a:hover {
+            border-color: rgba(176, 38, 255, 0.8);
+            box-shadow: 0 0 30px rgba(176, 38, 255, 0.3), 0 0 60px rgba(176, 38, 255, 0.15), inset 0 0 30px rgba(176, 38, 255, 0.15);
+        }
+
+        .sys-btn {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .sys-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        .sys-btn:hover::after { left: 100%; }
+
+        .glitch-text {
+            position: relative;
+            animation: glitch 3s infinite;
+        }
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 10px var(--rank-a), 0 0 20px var(--rank-a); }
+            50% { text-shadow: 0 0 20px var(--sys-cyan), 0 0 40px var(--sys-cyan), -2px 0 var(--rank-a), 2px 0 var(--sys-cyan); }
+        }
+
+        .particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .phase-transition {
+            animation: phaseIn 0.5s ease-out;
+        }
+        @keyframes phaseIn {
+            from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        /* Game Specific Styles */
+        .equation-box {
+            font-family: 'Orbitron', sans-serif;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(176, 38, 255, 0.4);
+            box-shadow: inset 0 0 30px rgba(176, 38, 255, 0.1), 0 0 20px rgba(176, 38, 255, 0.2);
+            border-radius: 16px;
+        }
+
+        .input-display {
+            font-family: 'Orbitron', sans-serif;
+            min-height: 80px;
+            border-bottom: 3px solid rgba(176, 38, 255, 0.5);
+            transition: all 0.2s ease;
+        }
+        .input-display.error {
+            border-bottom-color: var(--sys-rose);
+            color: var(--sys-rose);
+            text-shadow: 0 0 15px rgba(225, 29, 72, 0.6);
+            animation: shake 0.4s ease-in-out;
+        }
+        .input-display.success {
+            border-bottom-color: var(--sys-green);
+            color: var(--sys-green);
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        .num-pad-btn {
+            font-family: 'Orbitron', sans-serif;
+            background: rgba(176, 38, 255, 0.05);
+            border: 1px solid rgba(176, 38, 255, 0.2);
+            transition: all 0.1s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .num-pad-btn:hover {
+            background: rgba(176, 38, 255, 0.2);
+            border-color: rgba(176, 38, 255, 0.6);
+            box-shadow: 0 0 15px rgba(176, 38, 255, 0.3);
+            transform: scale(1.05);
+        }
+        .num-pad-btn:active { transform: scale(0.95); }
+
+        .btn-enter { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); color: var(--sys-green); }
+        .btn-enter:hover { background: rgba(16, 185, 129, 0.25); border-color: var(--sys-green); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        
+        .btn-del { background: rgba(225, 29, 72, 0.1); border-color: rgba(225, 29, 72, 0.4); color: var(--sys-rose); }
+        .btn-del:hover { background: rgba(225, 29, 72, 0.25); border-color: var(--sys-rose); box-shadow: 0 0 15px rgba(225, 29, 72, 0.4); }
+
+        .time-bar-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            overflow: hidden;
+            height: 12px;
+        }
+        .time-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--sys-cyan), var(--rank-a));
+            box-shadow: 0 0 10px var(--rank-a);
+            transition: width 0.1s linear, background-color 0.3s ease;
+        }
+        .time-bar-fill.warning {
+            background: linear-gradient(90deg, #ff9d00, var(--sys-rose));
+            box-shadow: 0 0 10px var(--sys-rose);
+        }
+
+        .stat-glow { text-shadow: 0 0 10px currentColor; }
+        
+        .floating-text {
+            position: absolute;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            z-index: 50;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-40px) scale(1.2); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-grid-pattern bg-radial-glow relative">
+    <canvas id="particles" class="particle-canvas"></canvas>
+    <div class="scanline"></div>
+
+    <header class="relative z-10 max-w-7xl mx-auto mb-4 p-4">
+        <div class="bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 flex flex-wrap justify-between items-center gap-4 neon-border-a">
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='dungeons.html'" class="sys-btn text-xs bg-black/80 px-4 py-2 border border-white/20 hover:border-rank-a hover:text-rank-a transition rounded-lg flex items-center gap-2 text-white/70">
+                    <span>↩</span> <span>العودة للزنازين</span>
+                </button>
+                <div class="flex flex-col">
+                    <span class="font-orbitron text-[10px] text-white/30 tracking-[0.3em] uppercase">Sovereign System</span>
+                    <h1 class="font-orbitron text-xl font-black tracking-widest text-rank-a uppercase glitch-text">⚡ QUANTUM MATH</h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6 flex-wrap justify-center">
+                <div class="flex flex-col items-center min-w-[80px]">
+                    <span class="font-orbitron text-[10px] text-white/40 tracking-wider uppercase">Level</span>
+                    <span id="currentLevel" class="font-orbitron text-2xl font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">1</span>
+                </div>
+                <div class="flex flex-col items-center min-w-[100px]">
+                    <span class="font-orbitron text-[10px] text-white/40 tracking-wider uppercase">XP</span>
+                    <div class="flex items-center gap-2">
+                        <span id="currentXP" class="font-orbitron text-lg font-bold text-white/80">0</span>
+                        <span class="text-white/30 text-xs">/</span>
+                        <span id="xpNeeded" class="font-orbitron text-xs text-white/40">100</span>
+                    </div>
+                    <div class="w-20 h-1 bg-white/5 rounded-full overflow-hidden mt-1">
+                        <div id="xpBar" class="h-full bg-rank-a rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center min-w-[60px]">
+                    <span class="font-orbitron text-[10px] text-white/40 tracking-wider uppercase">INT</span>
+                    <span id="stat-int" class="font-orbitron text-lg font-bold text-sys-purple drop-shadow-[0_0_8px_rgba(176,38,255,0.4)]">10</span>
+                </div>
+                <div class="flex flex-col items-center min-w-[60px]">
+                    <span class="font-orbitron text-[10px] text-white/40 tracking-wider uppercase">Gold</span>
+                    <span id="stat-gold" class="font-orbitron text-lg font-bold text-sys-gold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10 max-w-3xl mx-auto px-4 pb-10">
+
+        <div id="phase-menu" class="phase-transition">
+            <div class="text-center mb-8">
+                <div class="font-orbitron text-rank-a tracking-[0.4em] text-xs mb-3">RANK: A — MENTAL ACCELERATION</div>
+                <h2 class="font-orbitron text-4xl md:text-5xl font-black text-white mb-4 glitch-text">Quantum Math</h2>
+                <p class="font-cairo text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-4">
+                    قم بتنشيط معالجتك الكميّة. حل <span class="text-rank-a font-bold">10 معادلات رياضية</span> قبل نفاد الوقت المخصص. الصعوبة تتزايد مع كل إجابة صحيحة.
+                </p>
+                <div class="inline-flex gap-4 font-cairo text-xs text-white/40 bg-black/40 p-3 rounded-lg border border-white/10">
+                    <span><span class="text-sys-green">✓</span> إجابة صحيحة: +3 ثوانٍ</span>
+                    <span><span class="text-sys-rose">✗</span> إجابة خاطئة: -2 ثانية عقاب</span>
+                </div>
+            </div>
+
+            <div class="bg-black/60 border border-rank-a/20 rounded-2xl p-6 mb-8 max-w-md mx-auto neon-border-a">
+                <div class="font-orbitron text-[10px] text-rank-a/60 tracking-wider mb-4 text-center">المكافآت المتوقعة عند النصر</div>
+                <div class="flex justify-center gap-8">
+                    <div class="text-center">
+                        <div class="text-rank-a font-orbitron text-2xl font-bold stat-glow">+120</div>
+                        <div class="text-[10px] text-white/40 font-orbitron">XP</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sys-purple font-orbitron text-2xl font-bold stat-glow">+3</div>
+                        <div class="text-[10px] text-white/40 font-orbitron">INT</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sys-gold font-orbitron text-2xl font-bold stat-glow">+30</div>
+                        <div class="text-[10px] text-white/40 font-orbitron">GOLD</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button onclick="MathApp.startCountdown()" class="sys-btn px-12 py-5 bg-rank-a/10 border border-rank-a/50 text-rank-a hover:bg-rank-a hover:text-black transition rounded-xl text-lg font-bold shadow-[0_0_20px_rgba(176,38,255,0.2)]">
+                    INITIATE PROCESS
+                </button>
+            </div>
+        </div>
+
+        <div id="phase-countdown" class="hidden text-center py-32">
+            <div class="font-orbitron text-white/30 text-sm tracking-widest mb-8">CALIBRATING NEURAL SYNAPSES...</div>
+            <div id="countdown-number" class="font-orbitron text-8xl font-black text-rank-a drop-shadow-[0_0_40px_rgba(176,38,255,0.6)]">3</div>
+        </div>
+
+        <div id="phase-game" class="hidden max-w-md mx-auto">
+            
+            <div class="flex justify-between items-end mb-2 px-1">
+                <div class="font-orbitron">
+                    <span class="text-[10px] text-white/40 tracking-wider block mb-1">TARGET SECURED</span>
+                    <div class="text-2xl font-bold text-white"><span id="score-display" class="text-rank-a">0</span><span class="text-white/30 text-lg">/10</span></div>
+                </div>
+                <div class="font-orbitron text-right relative">
+                    <span class="text-[10px] text-white/40 tracking-wider block mb-1">TIME REMAINING</span>
+                    <div id="timer-text" class="text-3xl font-bold text-white">60.0</div>
+                    <div id="time-floating-container" class="absolute top-0 right-0 w-full h-full pointer-events-none"></div>
+                </div>
+            </div>
+
+            <div class="time-bar-container mb-6">
+                <div id="time-bar" class="time-bar-fill" style="width: 100%;"></div>
+            </div>
+
+            <div class="equation-box p-8 text-center mb-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+                <div id="equation-display" class="text-5xl md:text-6xl font-black text-white tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                    ? + ?
+                </div>
+            </div>
+
+            <div class="bg-black/60 border border-white/10 rounded-2xl p-5 shadow-lg backdrop-blur-sm">
+                
+                <div class="flex justify-center items-center mb-6">
+                    <div id="player-input" class="input-display flex items-center justify-center text-4xl font-bold text-sys-cyan tracking-widest min-w-[150px]">
+                        </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="MathApp.inputNum('7')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">7</button>
+                    <button onclick="MathApp.inputNum('8')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">8</button>
+                    <button onclick="MathApp.inputNum('9')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">9</button>
+                    
+                    <button onclick="MathApp.inputNum('4')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">4</button>
+                    <button onclick="MathApp.inputNum('5')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">5</button>
+                    <button onclick="MathApp.inputNum('6')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">6</button>
+                    
+                    <button onclick="MathApp.inputNum('1')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">1</button>
+                    <button onclick="MathApp.inputNum('2')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">2</button>
+                    <button onclick="MathApp.inputNum('3')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">3</button>
+                    
+                    <button onclick="MathApp.deleteNum()" class="num-pad-btn btn-del h-14 rounded-xl font-bold text-lg">DEL</button>
+                    <button onclick="MathApp.inputNum('0')" class="num-pad-btn h-14 rounded-xl text-white font-bold text-xl">0</button>
+                    <button onclick="MathApp.submitAnswer()" class="num-pad-btn btn-enter h-14 rounded-xl font-bold text-lg">ENT</button>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <p class="text-[10px] text-white/20 font-cairo">يمكنك استخدام لوحة المفاتيح والـ Enter للإدخال السريع</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="phase-results" class="hidden text-center py-10">
+            <div class="font-orbitron text-rank-a tracking-[0.4em] text-xs mb-4">DUNGEON CLEARED</div>
+            <h2 class="font-orbitron text-3xl font-black text-white mb-2 glitch-text">COMPUTATION COMPLETE</h2>
+            <p class="font-cairo text-white/50 text-sm mb-8">لقد عولجت البيانات الكميّة بنجاح فائق!</p>
+
+            <div class="bg-black/60 border border-rank-a/30 rounded-2xl p-6 max-w-md mx-auto mb-8 neon-border-a">
+                <div class="flex justify-center mb-6">
+                    <div class="bg-rank-a/20 text-rank-a font-orbitron text-lg px-8 py-2 border border-rank-a/50 shadow-[0_0_20px_rgba(176,38,255,0.4)] transform skew-x-12">
+                        <div class="-skew-x-12 font-bold tracking-widest">RANK: A</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-black/40 border border-white/5 rounded-xl p-3">
+                        <div class="font-orbitron text-[10px] text-rank-a mb-1">TIME LEFT</div>
+                        <div id="result-time" class="font-orbitron text-xl font-bold text-white">0.0s</div>
+                    </div>
+                    <div class="bg-black/40 border border-white/5 rounded-xl p-3">
+                        <div class="font-orbitron text-[10px] text-rank-a mb-1">EQUATIONS</div>
+                        <div class="font-orbitron text-xl font-bold text-sys-green">10/10</div>
+                    </div>
+                </div>
+
+                <div class="border-t border-white/10 pt-5">
+                    <div class="font-orbitron text-[10px] text-white/30 tracking-wider mb-4">REWARDS ACQUIRED</div>
+                    <div class="flex justify-center gap-8">
+                        <div class="text-center">
+                            <div class="text-rank-a font-orbitron text-3xl font-bold stat-glow">+120</div>
+                            <div class="text-[10px] text-white/40 font-orbitron">XP</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sys-purple font-orbitron text-3xl font-bold stat-glow">+3</div>
+                            <div class="text-[10px] text-white/40 font-orbitron">INT</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sys-gold font-orbitron text-3xl font-bold stat-glow">+30</div>
+                            <div class="text-[10px] text-white/40 font-orbitron">GOLD</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="level-up-banner" class="hidden mb-8">
+                <div class="bg-sys-gold/10 border border-sys-gold/40 rounded-xl p-4 max-w-md mx-auto shadow-[0_0_20px_rgba(255,215,0,0.2)]">
+                    <div class="font-orbitron text-sys-gold text-lg font-bold tracking-wider">⚡ LEVEL UP!</div>
+                    <div class="text-white/60 text-sm font-cairo mt-1">لقد ارتقيت إلى مستوى أعلى! +3 AP متاحة.</div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <button onclick="window.location.href='dungeons.html'" class="sys-btn px-6 py-3 bg-black border border-white/20 text-white/70 hover:border-rank-a hover:text-rank-a transition rounded-lg text-sm">
+                    العودة للقائمة
+                </button>
+                <button onclick="MathApp.showMenu()" class="sys-btn px-8 py-3 bg-rank-a/10 border border-rank-a/50 text-rank-a hover:bg-rank-a hover:text-black transition rounded-lg text-sm shadow-[0_0_15px_rgba(176,38,255,0.2)]">
+                    إعادة المحاولة
+                </button>
+            </div>
+        </div>
+
+        <div id="phase-failure" class="hidden text-center py-10">
+            <div class="font-orbitron text-sys-rose tracking-[0.4em] text-xs mb-4">DUNGEON FAILED</div>
+            <h2 class="font-orbitron text-3xl font-black text-sys-rose mb-2">SYSTEM OVERLOAD</h2>
+            <p id="fail-reason" class="font-cairo text-white/50 text-sm mb-8">لقد نفد الوقت قبل إكمال المعادلات المطلوبة.</p>
+
+            <div class="bg-black/60 border border-sys-rose/20 rounded-2xl p-6 max-w-md mx-auto mb-8">
+                <div class="font-orbitron text-[10px] text-white/30 tracking-wider mb-4">PARTIAL DATA EXTRACTED</div>
+                <div class="flex justify-center gap-8">
+                    <div class="text-center">
+                        <div id="fail-xp" class="text-white/60 font-orbitron text-2xl font-bold">+20</div>
+                        <div class="text-[10px] text-white/40 font-orbitron">XP</div>
+                    </div>
+                    <div class="text-center">
+                        <div id="fail-score" class="text-sys-rose font-orbitron text-2xl font-bold">4/10</div>
+                        <div class="text-[10px] text-white/40 font-orbitron">SCORE</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <button onclick="window.location.href='dungeons.html'" class="sys-btn px-6 py-3 bg-black border border-white/20 text-white/70 hover:border-rank-a hover:text-rank-a transition rounded-lg text-sm">
+                    العودة للزنازين
+                </button>
+                <button onclick="MathApp.startCountdown()" class="sys-btn px-8 py-3 bg-sys-rose/10 border border-sys-rose/50 text-sys-rose hover:bg-sys-rose hover:text-white transition rounded-lg text-sm shadow-[0_0_15px_rgba(225,29,72,0.2)]">
+                    المحاولة مجدداً
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+<script>
+// ==========================================
+// BACKGROUND PARTICLES
+// ==========================================
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = (Math.random() - 0.5) * 0.5;
+        this.opacity = Math.random() * 0.5 + 0.1;
+        // Mix of Purple and Cyan
+        this.color = Math.random() > 0.5 ? '176, 38, 255' : '0, 240, 255'; 
+    }
+    update() {
+        this.x += this.speedX; this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.color}, ${this.opacity})`;
+        ctx.fill();
+    }
+}
+for (let i = 0; i < 50; i++) particles.push(new Particle());
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ==========================================
+// PLAYER STATE (RPG SYSTEM SYNC)
+// ==========================================
+const PlayerState = {
+    data: { level: 1, xp: 0, ap: 0, stats: { int: 10 }, gold: 0, clearedDungeons: {} },
+
+    init() {
+        const saved = localStorage.getItem('monarch_system_data');
+        if (saved) {
+            this.data = { ...this.data, ...JSON.parse(saved) };
+            if (!this.data.stats) this.data.stats = { int: 10 };
+            if (!this.data.clearedDungeons) this.data.clearedDungeons = {};
+        }
+        this.updateUI();
+    },
+    save() {
+        localStorage.setItem('monarch_system_data', JSON.stringify(this.data));
+        this.updateUI();
+    },
+    updateUI() {
+        const lvl = this.data.level || 1;
+        const xp = this.data.xp || 0;
+        const need = lvl * 100;
+        const pct = Math.min((xp / need) * 100, 100);
+
+        document.getElementById('currentLevel').textContent = lvl;
+        document.getElementById('currentXP').textContent = xp;
+        document.getElementById('xpNeeded').textContent = need;
+        document.getElementById('xpBar').style.width = pct + '%';
+        document.getElementById('stat-int').textContent = this.data.stats?.int || 10;
+        document.getElementById('stat-gold').textContent = this.data.gold || 0;
+    },
+    reward(xp, int, gold) {
+        const oldLevel = this.data.level;
+        this.data.xp += xp;
+        this.data.stats.int += int;
+        this.data.gold += gold;
+        this.data.clearedDungeons.Math = (this.data.clearedDungeons.Math || 0) + 1;
+
+        let leveledUp = false;
+        while (this.data.xp >= this.data.level * 100) {
+            this.data.xp -= this.data.level * 100;
+            this.data.level++;
+            this.data.ap = (this.data.ap || 0) + 3;
+            leveledUp = true;
+        }
+        this.save();
+        return { leveledUp, oldLevel, newLevel: this.data.level };
+    },
+    partialReward(xp) {
+        this.data.xp += xp;
+        while (this.data.xp >= this.data.level * 100) {
+            this.data.xp -= this.data.level * 100;
+            this.data.level++;
+            this.data.ap = (this.data.ap || 0) + 3;
+        }
+        this.save();
+    }
+};
+
+// ==========================================
+// QUANTUM MATH ENGINE
+// ==========================================
+const MathApp = {
+    targetScore: 10,
+    score: 0,
+    timeLeft: 0,
+    maxTime: 60.0, // 60 seconds total
+    timerInterval: null,
+    isPlaying: false,
+    
+    currentAnswer: 0,
+    currentInput: "",
+    
+
+    showPhase(phase) {
+        ['menu', 'countdown', 'game', 'results', 'failure'].forEach(p => {
+            const el = document.getElementById('phase-' + p);
+            el.classList.add('hidden');
+            el.classList.remove('phase-transition');
+        });
+        const active = document.getElementById('phase-' + phase);
+        active.classList.remove('hidden');
+        // Small delay to trigger animation
+        setTimeout(() => active.classList.add('phase-transition'), 10);
+    },
+
+    showMenu() {
+        this.showPhase('menu');
+        if(this.timerInterval) clearInterval(this.timerInterval);
+    },
+
+    startCountdown() {
+        this.showPhase('countdown');
+        let count = 3;
+        const el = document.getElementById('countdown-number');
+        el.textContent = count;
+        
+        const interval = setInterval(() => {
+            count--;
+            if (count > 0) {
+                el.textContent = count;
+                this.playTone(400, 0.1);
+            } else {
+                clearInterval(interval);
+                this.playTone(800, 0.3, 'square');
+                this.startGame();
+            }
+        }, 1000);
+        this.playTone(400, 0.1);
+    },
+
+    startGame() {
+        this.score = 0;
+        this.timeLeft = this.maxTime;
+        this.currentInput = "";
+        this.isPlaying = true;
+        
+        this.updateHUD();
+        this.generateEquation();
+        this.showPhase('game');
+        
+        this.lastFrameTime = performance.now();
+        this.timerInterval = requestAnimationFrame((t) => this.gameLoop(t));
+    },
+
+    gameLoop(timestamp) {
+        if (!this.isPlaying) return;
+
+        const deltaTime = (timestamp - this.lastFrameTime) / 1000; // in seconds
+        this.lastFrameTime = timestamp;
+
+        this.timeLeft -= deltaTime;
+        if (this.timeLeft <= 0) {
+            this.timeLeft = 0;
+            this.updateTimerUI();
+            this.gameOver(false);
+            return;
+        }
+
+        this.updateTimerUI();
+        this.timerInterval = requestAnimationFrame((t) => this.gameLoop(t));
+    },
+
+    generateEquation() {
+        let a, b, operator, eqString;
+        
+        // Difficulty Scales with Score (0 to 10)
+        if (this.score < 3) {
+            // Level 1: Simple Addition/Subtraction (1 to 20)
+            a = Math.floor(Math.random() * 20) + 1;
+            b = Math.floor(Math.random() * 20) + 1;
+            if (Math.random() > 0.5) {
+                operator = '+';
+                this.currentAnswer = a + b;
+            } else {
+                operator = '-';
+                if (b > a) [a, b] = [b, a]; // Ensure positive result
+                this.currentAnswer = a - b;
+            }
+        } 
+        else if (this.score < 7) {
+            // Level 2: Multiplication (1-10) or Clean Division
+            if (Math.random() > 0.5) {
+                a = Math.floor(Math.random() * 10) + 2;
+                b = Math.floor(Math.random() * 10) + 2;
+                operator = '×';
+                this.currentAnswer = a * b;
+            } else {
+                b = Math.floor(Math.random() * 10) + 2;
+                this.currentAnswer = Math.floor(Math.random() * 10) + 2;
+                a = b * this.currentAnswer; // ensures exact division
+                operator = '÷';
+            }
+        } 
+        else {
+            // Level 3: Larger Addition/Subtraction or Harder Multiplication
+            const rand = Math.random();
+            if (rand < 0.4) {
+                a = Math.floor(Math.random() * 50) + 20;
+                b = Math.floor(Math.random() * 50) + 20;
+                operator = '+';
+                this.currentAnswer = a + b;
+            } else if (rand < 0.8) {
+                a = Math.floor(Math.random() * 80) + 20;
+                b = Math.floor(Math.random() * 80) + 20;
+                operator = '-';
+                if (b > a) [a, b] = [b, a];
+                this.currentAnswer = a - b;
+            } else {
+                a = Math.floor(Math.random() * 15) + 3;
+                b = Math.floor(Math.random() * 15) + 3;
+                operator = '×';
+                this.currentAnswer = a * b;
+            }
+        }
+
+        eqString = `${a} ${operator} ${b}`;
+        document.getElementById('equation-display').textContent = eqString;
+        this.currentInput = "";
+        this.updateInputUI();
+    },
+
+    inputNum(n) {
+        if (!this.isPlaying) return;
+        if (this.currentInput.length < 5) {
+            this.currentInput += n;
+            this.updateInputUI();
+            this.playTone(300 + (parseInt(n)*20), 0.05);
+        }
+    },
+
+    deleteNum() {
+        if (!this.isPlaying || this.currentInput.length === 0) return;
+        this.currentInput = this.currentInput.slice(0, -1);
+        this.updateInputUI();
+        this.playTone(200, 0.05);
+    },
+
+    submitAnswer() {
+        if (!this.isPlaying || this.currentInput === "") return;
+
+        const pInput = parseInt(this.currentInput);
+        const inputEl = document.getElementById('player-input');
+
+        if (pInput === this.currentAnswer) {
+            // Correct
+            this.score++;
+            this.timeLeft = Math.min(this.timeLeft + 3, this.maxTime); // Add 3 seconds, cap at max
+            this.showFloatingText('+3s', 'sys-green');
+            this.playTone(600, 0.1, 'sine');
+            
+            inputEl.classList.remove('error');
+            inputEl.classList.add('success');
+            
+            this.updateHUD();
+
+            if (this.score >= this.targetScore) {
+                setTimeout(() => this.gameOver(true), 300);
+            } else {
+                setTimeout(() => {
+                    inputEl.classList.remove('success');
+                    this.generateEquation();
+                }, 200);
+            }
+
+        } else {
+            // Wrong
+            this.timeLeft -= 2; // Penalty
+            this.showFloatingText('-2s', 'sys-rose');
+            this.playTone(150, 0.2, 'sawtooth');
+
+            inputEl.classList.remove('success');
+            inputEl.classList.add('error');
+            setTimeout(() => {
+                inputEl.classList.remove('error');
+                this.currentInput = "";
+                this.updateInputUI();
+            }, 400);
+        }
+    },
+
+    updateInputUI() {
+        document.getElementById('player-input').textContent = this.currentInput || "_";
+    },
+
+    updateHUD() {
+        document.getElementById('score-display').textContent = this.score;
+    },
+
+    updateTimerUI() {
+        document.getElementById('timer-text').textContent = this.timeLeft.toFixed(1);
+        const pct = (this.timeLeft / this.maxTime) * 100;
+        const bar = document.getElementById('time-bar');
+        bar.style.width = `${pct}%`;
+        
+        if (this.timeLeft <= 10) {
+            document.getElementById('timer-text').classList.add('text-sys-rose');
+            bar.classList.add('warning');
+        } else {
+            document.getElementById('timer-text').classList.remove('text-sys-rose');
+            bar.classList.remove('warning');
+        }
+    },
+
+    showFloatingText(text, colorClass) {
+        const container = document.getElementById('time-floating-container');
+        const el = document.createElement('div');
+        el.textContent = text;
+        el.className = `floating-text text-xl text-${colorClass}`;
+        
+        // Random slight offset
+        const offsetX = (Math.random() - 0.5) * 20;
+        el.style.right = `calc(50% + ${offsetX}px)`;
+        el.style.top = '100%';
+
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 1000);
+    },
+
+    gameOver(won) {
+        this.isPlaying = false;
+        cancelAnimationFrame(this.timerInterval);
+
+        if (won) {
+            const xpReward = 120;
+            const intReward = 3;
+            const goldReward = 30;
+
+            const result = PlayerState.reward(xpReward, intReward, goldReward);
+
+            document.getElementById('result-time').textContent = this.timeLeft.toFixed(1) + 's';
+            
+            if (result.leveledUp) {
+                const banner = document.getElementById('level-up-banner');
+                banner.classList.remove('hidden');
+                banner.querySelector('.font-orbitron').textContent = `⚡ LEVEL UP! ${result.oldLevel} → ${result.newLevel}`;
+            } else {
+                document.getElementById('level-up-banner').classList.add('hidden');
+            }
+
+            this.showPhase('results');
+            this.playTone(523.25, 0.1); setTimeout(() => this.playTone(659.25, 0.1), 100); setTimeout(() => this.playTone(783.99, 0.3), 200);
+            // استدعاء نظام المزامنة لمنح اللاعب الجوائز وتحديث المستوى
+PlayerSync.addRewards(100, 50);MathApp
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#b026ff', '#00f0ff', '#ffffff'] });
+        } else {
+            // Partial rewards based on score
+            const partialXP = this.score * 5;
+            PlayerState.partialReward(partialXP);
+
+            document.getElementById('fail-score').textContent = `${this.score}/10`;
+            document.getElementById('fail-xp').textContent = `+${partialXP}`;
+            this.showPhase('failure');
+            // استدعاء نظام المزامنة لمنح اللاعب الجوائز وتحديث المستوى
+PlayerSync.addRewards(100, 50);
+        }
+    },
+ 
+
+    // Audio Context for UI Sounds
+    audioCtx: null,
+    playTone(freq, duration, type='sine') {
+        if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + duration);
+        osc.start(this.audioCtx.currentTime);
+        osc.stop(this.audioCtx.currentTime + duration);
+    }
+};
+
+// ==========================================
+// KEYBOARD LISTENER
+// ==========================================
+document.addEventListener('keydown', (e) => {
+    if (!MathApp.isPlaying) return;
+    
+    if (e.key >= '0' && e.key <= '9') {
+        MathApp.inputNum(e.key);
+    } else if (e.key === 'Backspace' || e.key === 'Delete') {
+        MathApp.deleteNum();
+    } else if (e.key === 'Enter') {
+        MathApp.submitAnswer();
+    }
+});
+
+// Initialization
+window.addEventListener('DOMContentLoaded', () => {
+    PlayerState.init();
+});
+// ==========================================
+// SOVEREIGN SYSTEM DATA SYNC (LOCALSTORAGE)
+// ==========================================
+const PlayerSync = {
+    // 1. جلب البيانات الحالية من النظام أو وضع قيم افتراضية إذا كانت فارغة
+    loadData() {
+        const defaultData = { 
+            level: 1, 
+            xp: 0, 
+            gold: 0, 
+            stats: { int: 10 }, 
+            clearedDungeons: { Memory: 0, Hanoi: 0, Sudoku: 0, Math: 0, Chess: 0, NBack: 0 } 
+        };
+        const local = localStorage.getItem('monarch_system_data');
+        return local ? JSON.parse(local) : defaultData;
+    },
+
+    // 2. حفظ البيانات الجديدة في المتصفح
+    saveData(data) {
+        localStorage.setItem('monarch_system_data', JSON.stringify(data));
+    },
+
+    // 3. إضافة المكافآت وحساب الارتقاء بالمستوى (Level Up)
+    addRewards(xpGained, goldGained) {
+        let data = this.loadData();
+        
+        data.xp = (data.xp || 0) + xpGained;
+        data.gold = (data.gold || 0) + goldGained;
+        
+        // بناءً على معادلة النظام: الخبرة المطلوبة = المستوى الحالي × 100
+        let xpNeeded = data.level * 100;
+        while (data.xp >= xpNeeded) {
+            data.xp -= xpNeeded;
+            data.level = (data.level || 1) + 1;
+            
+            // زيادة تلقائية في نقطة الذكاء (INT) كمكافأة ارتقاء ذهني
+            if (!data.stats) data.stats = { int: 10 };
+            data.stats.int = (data.stats.int || 10) + 1;
+            
+            xpNeeded = data.level * 100; // تحديث متطلبات المستوى الجديد
+        }
+
+        // تسجيل إحصائيات إنهاء زنزانة الرياضيات
+        if (!data.clearedDungeons) data.clearedDungeons = {};
+        data.clearedDungeons.Math = (data.clearedDungeons.Math || 0) + 1;
+
+        this.saveData(data);
+    }
+};
+</script>
+</body>
+</html>

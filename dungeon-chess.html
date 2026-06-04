@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grandmaster's Maze | Sovereign System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Chess.js for strict rule validation and move generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sys-dark': '#000000',
+                        'sys-cyan': '#00f0ff',
+                        'sys-purple': '#b026ff',
+                        'rank-a': '#b026ff',
+                        'sys-gold': '#ffd700',
+                        'sys-green': '#10b981',
+                        'sys-rose': '#e11d48',
+                        'board-dark': 'rgba(176, 38, 255, 0.15)',
+                        'board-light': 'rgba(255, 255, 255, 0.05)',
+                    },
+                    fontFamily: {
+                        'cairo': ['Cairo', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --rank-a: #b026ff;
+            --sys-cyan: #00f0ff;
+        }
+
+        /* Scrollbar */
+        html, body { scrollbar-width: thin; scrollbar-color: var(--rank-a) #000000; overflow-x: hidden; }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #000000;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(rgba(176, 38, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(176, 38, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .bg-radial-glow {
+            background: radial-gradient(circle at 50% 50%, rgba(176, 38, 255, 0.1) 0%, transparent 60%);
+        }
+
+        .scanline {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.02) 50%);
+            background-size: 100% 4px; pointer-events: none; z-index: 9999; opacity: 0.5;
+        }
+
+        .neon-border-a {
+            border: 1px solid rgba(176, 38, 255, 0.3);
+            box-shadow: 0 0 20px rgba(176, 38, 255, 0.1), inset 0 0 20px rgba(176, 38, 255, 0.05);
+        }
+
+        .sys-btn {
+            font-family: 'Orbitron', sans-serif; letter-spacing: 0.15em; text-transform: uppercase;
+            position: relative; overflow: hidden; transition: all 0.3s;
+        }
+        .sys-btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transition: left 0.5s;
+        }
+        .sys-btn:hover::after { left: 100%; }
+
+        .glitch-text { animation: glitch 3s infinite; }
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 10px var(--rank-a); }
+            50% { text-shadow: 0 0 20px var(--sys-cyan), -2px 0 var(--rank-a), 2px 0 var(--sys-cyan); }
+        }
+
+        .particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .phase-transition { animation: phaseIn 0.5s ease-out; }
+        @keyframes phaseIn {
+            from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        /* Chess Board Styles */
+        #chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            border: 2px solid rgba(176, 38, 255, 0.5);
+            box-shadow: 0 0 30px rgba(176, 38, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .square {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+        
+        @media (max-width: 640px) { .square { font-size: 1.8rem; } }
+
+        .square.dark { background-color: var(--board-dark); }
+        .square.light { background-color: var(--board-light); }
+        
+        .square.selected {
+            background-color: rgba(0, 240, 255, 0.3) !important;
+            box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.8);
+        }
+        
+        .square.highlight::after {
+            content: '';
+            position: absolute;
+            width: 25%;
+            height: 25%;
+            background-color: rgba(0, 240, 255, 0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+        }
+        
+        .square.highlight.capture::after {
+            width: 80%;
+            height: 80%;
+            background-color: transparent;
+            border: 3px solid rgba(225, 29, 72, 0.7);
+            box-shadow: inset 0 0 10px rgba(225, 29, 72, 0.5);
+        }
+
+        .piece {
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+        .piece.white { color: #ffffff; text-shadow: 0 0 10px rgba(255,255,255,0.8); }
+        .piece.black { color: #111111; text-shadow: 0 0 5px rgba(176,38,255,0.8), -1px -1px 0 #b026ff, 1px -1px 0 #b026ff, -1px 1px 0 #b026ff, 1px 1px 0 #b026ff; }
+        
+        .square:hover .piece { transform: scale(1.1); }
+
+        .ai-thinking {
+            animation: pulse-border 1.5s infinite;
+        }
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(176, 38, 255, 0.5); }
+            50% { border-color: rgba(225, 29, 72, 0.8); box-shadow: 0 0 20px rgba(225, 29, 72, 0.5); }
+        }
+
+        .hud-panel {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-grid-pattern bg-radial-glow relative">
+    <canvas id="particles" class="particle-canvas"></canvas>
+    <div class="scanline"></div>
+
+    <!-- Header Unified -->
+    <header class="relative z-10 max-w-7xl mx-auto mb-4 p-4">
+        <div class="bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 flex flex-wrap justify-between items-center gap-4 neon-border-a">
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='dungeons.html'" class="sys-btn text-xs bg-black/80 px-4 py-2 border border-white/20 hover:border-rank-a hover:text-rank-a transition rounded-lg flex items-center gap-2 text-white/70">
+                    <span>↩</span> <span>العودة للزنازين</span>
+                </button>
+                <div class="flex flex-col">
+                    <span class="font-orbitron text-[10px] text-white/30 tracking-[0.3em] uppercase">Sovereign System</span>
+                    <h1 class="font-orbitron text-xl font-black tracking-widest text-rank-a uppercase glitch-text">♟️ CHESS MAZE</h1>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="flex items-center gap-6 flex-wrap justify-center">
+                <div class="flex flex-col items-center min-w-[80px]">
+                    <span class="font-orbitron text-[10px] text-white/40 tracking-wider uppercase">Level</span>
+                    <span id="currentLevel" class="font-orbitron text-2xl font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">1</span>
+                </div>
+                <div class="flex flex-col items-center min-w-[100px]">
+                    <span class="font-orbitron text-[10px] text-white/40 tracking-wider uppercase">XP</span>
+                    <div class="flex items-center gap-2">
+                        <span id="currentXP" class="font-orbitron text-lg font-bold text-white/80">0</span>
+                        <span class="text-white/30 text-xs">/</span>
+                        <span id="xpNeeded" class="font-orbitron text-xs text-white/40">100</span>
+                    </div>
+                    <div class="w-20 h-1 bg-white/5 rounded-full overflow-hidden mt-1">
+                        <div id="xpBar" class="h-full bg-rank-a rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center min-w-[60px]">
+                    <span class="font-orbitron text-[10px] text-white/40 tracking-wider uppercase">INT</span>
+                    <span id="stat-int" class="font-orbitron text-lg font-bold text-sys-purple drop-shadow-[0_0_8px_rgba(176,38,255,0.4)]">10</span>
+                </div>
+                <div class="flex flex-col items-center min-w-[60px]">
+                    <span class="font-orbitron text-[10px] text-white/40 tracking-wider uppercase">Gold</span>
+                    <span id="stat-gold" class="font-orbitron text-lg font-bold text-sys-gold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10 max-w-4xl mx-auto px-4 pb-10">
+
+        <!-- Phase 1: Menu -->
+        <div id="phase-menu" class="phase-transition">
+            <div class="text-center mb-8">
+                <div class="font-orbitron text-rank-a tracking-[0.4em] text-xs mb-3">RANK: A — STRATEGIC DOMINANCE</div>
+                <h2 class="font-orbitron text-4xl md:text-5xl font-black text-white mb-4 glitch-text">Grandmaster's Maze</h2>
+                <p class="font-cairo text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-4">
+                    مرحباً بك في ساحة العقل. الخصم أماماك هو كيان ذكاء اصطناعي (AI) يعتمد على خوارزميات التوقع. 
+                    <span class="text-rank-a font-bold">اهزم الملك الأسود لفك القفل.</span>
+                </p>
+            </div>
+
+            <!-- Rewards Preview -->
+            <div class="bg-black/60 border border-rank-a/20 rounded-2xl p-6 mb-8 max-w-md mx-auto neon-border-a">
+                <div class="font-orbitron text-[10px] text-rank-a/60 tracking-wider mb-4 text-center">المكافآت المتوقعة عند النصر</div>
+                <div class="flex justify-center gap-8">
+                    <div class="text-center">
+                        <div class="text-rank-a font-orbitron text-2xl font-bold stat-glow">+150</div>
+                        <div class="text-[10px] text-white/40 font-orbitron">XP</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sys-purple font-orbitron text-2xl font-bold stat-glow">+3</div>
+                        <div class="text-[10px] text-white/40 font-orbitron">INT</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sys-gold font-orbitron text-2xl font-bold stat-glow">+40</div>
+                        <div class="text-[10px] text-white/40 font-orbitron">GOLD</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button onclick="GameEngine.initGame()" class="sys-btn px-12 py-5 bg-rank-a/10 border border-rank-a/50 text-rank-a hover:bg-rank-a hover:text-black transition rounded-xl text-lg font-bold shadow-[0_0_20px_rgba(176,38,255,0.2)]">
+                    ENTER THE MAZE
+                </button>
+            </div>
+        </div>
+
+        <!-- Phase 2: Game -->
+        <div id="phase-game" class="hidden flex flex-col md:flex-row gap-6 justify-center items-start">
+            
+            <!-- Left: HUD & History -->
+            <div class="w-full md:w-64 flex flex-col gap-4">
+                <div class="hud-panel rounded-xl p-4">
+                    <div class="font-orbitron text-[10px] text-white/40 tracking-wider mb-2">OPPONENT STATUS</div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-8 h-8 rounded bg-sys-rose/20 border border-sys-rose/50 flex items-center justify-center text-sys-rose font-bold text-xl">
+                            ♚
+                        </div>
+                        <div>
+                            <div class="font-orbitron text-white text-sm font-bold">Shadow AI</div>
+                            <div id="ai-status" class="font-orbitron text-xs text-sys-rose">Awaiting Move...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hud-panel rounded-xl p-4 flex-1 h-48 md:h-auto overflow-y-auto">
+                    <div class="font-orbitron text-[10px] text-white/40 tracking-wider mb-2">MOVE HISTORY</div>
+                    <div id="move-history" class="font-orbitron text-xs text-white/60 space-y-1">
+                        <!-- History appended here -->
+                    </div>
+                </div>
+                
+                <div class="hud-panel rounded-xl p-4">
+                    <div class="font-orbitron text-[10px] text-white/40 tracking-wider mb-2">YOUR STATUS</div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded bg-sys-cyan/20 border border-sys-cyan/50 flex items-center justify-center text-white font-bold text-xl">
+                            ♔
+                        </div>
+                        <div>
+                            <div class="font-orbitron text-white text-sm font-bold">Player [White]</div>
+                            <div id="player-status" class="font-orbitron text-xs text-sys-cyan">Your Turn</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: The Board -->
+            <div class="w-full max-w-[450px]">
+                <div id="chessboard" class="hud-panel">
+                    <!-- JS Generated Board -->
+                </div>
+                <div class="text-center mt-3 font-cairo text-white/30 text-xs">
+                    * النقر لتحديد القطعة، ثم النقر على المربع الوجهة للتحريك. الترقية تكون للوزير تلقائياً.
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: Results (Win) -->
+        <div id="phase-results" class="hidden text-center py-10">
+            <div class="font-orbitron text-rank-a tracking-[0.4em] text-xs mb-4">DUNGEON CLEARED</div>
+            <h2 class="font-orbitron text-4xl font-black text-white mb-2 glitch-text">CHECKMATE</h2>
+            <p class="font-cairo text-white/50 text-sm mb-8">لقد هزمت الذكاء الاصطناعي وتجاوزت المتاهة بنجاح!</p>
+
+            <div class="bg-black/60 border border-rank-a/30 rounded-2xl p-6 max-w-md mx-auto mb-8 neon-border-a">
+                <div class="border-t border-white/10 pt-5">
+                    <div class="font-orbitron text-[10px] text-white/30 tracking-wider mb-4">REWARDS ACQUIRED</div>
+                    <div class="flex justify-center gap-8">
+                        <div class="text-center">
+                            <div class="text-rank-a font-orbitron text-3xl font-bold stat-glow">+150</div>
+                            <div class="text-[10px] text-white/40 font-orbitron">XP</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sys-purple font-orbitron text-3xl font-bold stat-glow">+3</div>
+                            <div class="text-[10px] text-white/40 font-orbitron">INT</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sys-gold font-orbitron text-3xl font-bold stat-glow">+40</div>
+                            <div class="text-[10px] text-white/40 font-orbitron">GOLD</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Level Up Banner -->
+            <div id="level-up-banner" class="hidden mb-8">
+                <div class="bg-sys-gold/10 border border-sys-gold/40 rounded-xl p-4 max-w-md mx-auto shadow-[0_0_20px_rgba(255,215,0,0.2)]">
+                    <div class="font-orbitron text-sys-gold text-lg font-bold tracking-wider">⚡ LEVEL UP!</div>
+                    <div class="text-white/60 text-sm font-cairo mt-1">لقد ارتقيت إلى مستوى أعلى! +3 AP متاحة.</div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <button onclick="window.location.href='dungeons.html'" class="sys-btn px-6 py-3 bg-black border border-white/20 text-white/70 hover:border-rank-a hover:text-rank-a transition rounded-lg text-sm">
+                    العودة للزنازين
+                </button>
+            </div>
+        </div>
+
+        <!-- Phase 4: Failure -->
+        <div id="phase-failure" class="hidden text-center py-10">
+            <div class="font-orbitron text-sys-rose tracking-[0.4em] text-xs mb-4">DUNGEON FAILED</div>
+            <h2 id="fail-title" class="font-orbitron text-4xl font-black text-sys-rose mb-2">CHECKMATE</h2>
+            <p id="fail-reason" class="font-cairo text-white/50 text-sm mb-8">لقد هزمك الكيان الأسود.</p>
+
+            <div class="flex justify-center gap-4">
+                <button onclick="window.location.href='dungeons.html'" class="sys-btn px-6 py-3 bg-black border border-white/20 text-white/70 hover:border-rank-a hover:text-rank-a transition rounded-lg text-sm">
+                    العودة للقائمة
+                </button>
+                <button onclick="GameEngine.showMenu()" class="sys-btn px-8 py-3 bg-sys-rose/10 border border-sys-rose/50 text-sys-rose hover:bg-sys-rose hover:text-white transition rounded-lg text-sm shadow-[0_0_15px_rgba(225,29,72,0.2)]">
+                    المحاولة مجدداً
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+<script>
+// ==========================================
+// BACKGROUND PARTICLES
+// ==========================================
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.5 + 0.1;
+    }
+    update() {
+        this.x += this.speedX; this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(176, 38, 255, ${this.opacity})`;
+        ctx.fill();
+    }
+}
+for (let i = 0; i < 40; i++) particles.push(new Particle());
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ==========================================
+// SYSTEM STATE (RPG SYNC)
+// ==========================================
+const PlayerState = {
+    data: { level: 1, xp: 0, ap: 0, stats: { int: 10 }, gold: 0, clearedDungeons: {} },
+    init() {
+        const saved = localStorage.getItem('monarch_system_data');
+        if (saved) {
+            this.data = { ...this.data, ...JSON.parse(saved) };
+            if (!this.data.stats) this.data.stats = { int: 10 };
+            if (!this.data.clearedDungeons) this.data.clearedDungeons = {};
+        }
+        this.updateUI();
+    },
+    save() {
+        localStorage.setItem('monarch_system_data', JSON.stringify(this.data));
+        this.updateUI();
+    },
+    updateUI() {
+        const lvl = this.data.level || 1; const xp = this.data.xp || 0;
+        const need = lvl * 100; const pct = Math.min((xp / need) * 100, 100);
+        document.getElementById('currentLevel').textContent = lvl;
+        document.getElementById('currentXP').textContent = xp;
+        document.getElementById('xpNeeded').textContent = need;
+        document.getElementById('xpBar').style.width = pct + '%';
+        document.getElementById('stat-int').textContent = this.data.stats?.int || 10;
+        document.getElementById('stat-gold').textContent = this.data.gold || 0;
+    },
+    reward(xp, int, gold) {
+        const oldLevel = this.data.level;
+        this.data.xp += xp;
+        this.data.stats.int += int;
+        this.data.gold += gold;
+        this.data.clearedDungeons.Chess = (this.data.clearedDungeons.Chess || 0) + 1;
+
+        let leveledUp = false;
+        while (this.data.xp >= this.data.level * 100) {
+            this.data.xp -= this.data.level * 100;
+            this.data.level++;
+            this.data.ap = (this.data.ap || 0) + 3;
+            leveledUp = true;
+        }
+        this.save();
+        return { leveledUp, oldLevel, newLevel: this.data.level };
+    }
+};
+
+// ==========================================
+// CHESS ENGINE & UI LOGIC
+// ==========================================
+const PIECE_SYMBOLS = {
+    'p': '♟', 'n': '♞', 'b': '♝', 'r': '♜', 'q': '♛', 'k': '♚',
+    'P': '♙', 'N': '♘', 'B': '♗', 'R': '♖', 'Q': '♕', 'K': '♔'
+};
+
+const GameEngine = {
+    game: null,
+    boardEl: null,
+    selectedSquare: null,
+    validMoves: [],
+    playerColor: 'w',
+    isAiThinking: false,
+    moveCount: 1,
+
+    showPhase(phase) {
+        ['menu', 'game', 'results', 'failure'].forEach(p => {
+            const el = document.getElementById('phase-' + p);
+            el.classList.add('hidden');
+            el.classList.remove('phase-transition');
+        });
+        const active = document.getElementById('phase-' + phase);
+        active.classList.remove('hidden');
+        setTimeout(() => active.classList.add('phase-transition'), 10);
+    },
+
+    showMenu() {
+        this.showPhase('menu');
+    },
+
+    initGame() {
+        this.game = new Chess();
+        this.boardEl = document.getElementById('chessboard');
+        this.selectedSquare = null;
+        this.validMoves = [];
+        this.moveCount = 1;
+        document.getElementById('move-history').innerHTML = '';
+        
+        this.buildBoardUI();
+        this.updateBoardUI();
+        this.showPhase('game');
+        this.updateStatus();
+    },
+
+    // 1. Build the Grid visually once
+    buildBoardUI() {
+        this.boardEl.innerHTML = '';
+        const files = ['a','b','c','d','e','f','g','h'];
+        
+        // Board is rendered from 8 to 1 (top to bottom)
+        for (let r = 8; r >= 1; r--) {
+            for (let c = 0; c < 8; c++) {
+                const squareId = files[c] + r;
+                const isDark = (r + c) % 2 !== 0; // standard chess board pattern
+
+                const sqEl = document.createElement('div');
+                sqEl.className = `square ${isDark ? 'dark' : 'light'}`;
+                sqEl.dataset.square = squareId;
+                
+                sqEl.addEventListener('click', () => this.handleSquareClick(squareId));
+                this.boardEl.appendChild(sqEl);
+            }
+        }
+    },
+
+    // 2. Update pieces on the grid
+    updateBoardUI() {
+        const board = this.game.board(); // Returns 2D array [8][8] from a8 to h1
+        const files = ['a','b','c','d','e','f','g','h'];
+        
+        // Reset highlights
+        document.querySelectorAll('.square').forEach(sq => {
+            sq.innerHTML = '';
+            sq.classList.remove('selected', 'highlight', 'capture');
+        });
+
+        // Place Pieces
+        for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+                const piece = board[r][c];
+                if (piece) {
+                    // map r (0-7) to rank (8-1)
+                    const sqId = files[c] + (8 - r);
+                    const sqEl = document.querySelector(`[data-square="${sqId}"]`);
+                    
+                    const pEl = document.createElement('span');
+                    pEl.className = `piece ${piece.color === 'w' ? 'white' : 'black'}`;
+                    const char = piece.color === 'w' ? piece.type.toUpperCase() : piece.type.toLowerCase();
+                    pEl.textContent = PIECE_SYMBOLS[char];
+                    
+                    sqEl.appendChild(pEl);
+                }
+            }
+        }
+
+        // Apply Selection & Highlights
+        if (this.selectedSquare) {
+            document.querySelector(`[data-square="${this.selectedSquare}"]`).classList.add('selected');
+            this.validMoves.forEach(move => {
+                const destEl = document.querySelector(`[data-square="${move.to}"]`);
+                destEl.classList.add('highlight');
+                if (move.flags.includes('c') || move.flags.includes('e')) { // capture or en passant
+                    destEl.classList.add('capture');
+                }
+            });
+        }
+    },
+
+    // 3. Handle Player Input
+    handleSquareClick(sqId) {
+        if (this.isAiThinking || this.game.game_over()) return;
+
+        // Is it a valid move click?
+        const move = this.validMoves.find(m => m.to === sqId);
+        
+        if (move) {
+            // Execute move
+            this.game.move({
+                from: this.selectedSquare,
+                to: sqId,
+                promotion: 'q' // Auto promote to queen for simplicity
+            });
+            
+            this.playTone(300, 0.1); // Move sound
+            this.logMove(move.san, 'White');
+            
+            this.selectedSquare = null;
+            this.validMoves = [];
+            this.updateBoardUI();
+            this.checkGameState();
+            
+            if (!this.game.game_over()) {
+                this.triggerAI();
+            }
+        } else {
+            // Select piece
+            const piece = this.game.get(sqId);
+            if (piece && piece.color === this.playerColor) {
+                this.selectedSquare = sqId;
+                // Get valid moves for this piece
+                this.validMoves = this.game.moves({ square: sqId, verbose: true });
+                this.updateBoardUI();
+                this.playTone(500, 0.05); // Select sound
+            } else {
+                // Deselect
+                this.selectedSquare = null;
+                this.validMoves = [];
+                this.updateBoardUI();
+            }
+        }
+    },
+
+    triggerAI() {
+        this.isAiThinking = true;
+        this.updateStatus();
+        this.boardEl.classList.add('ai-thinking');
+        
+        // Use setTimeout to allow UI to render the "Thinking" state before blocking main thread
+        setTimeout(() => {
+            const bestMove = ChessAI.getBestMove(this.game);
+            if (bestMove) {
+                this.game.move(bestMove);
+                this.playTone(200, 0.15, 'triangle');
+                this.logMove(this.game.history()[this.game.history().length-1], 'Black');
+            }
+            
+            this.isAiThinking = false;
+            this.boardEl.classList.remove('ai-thinking');
+            this.updateBoardUI();
+            this.checkGameState();
+            this.updateStatus();
+        }, 100);
+    },
+
+    checkGameState() {
+        if (this.game.game_over()) {
+            if (this.game.in_checkmate()) {
+                if (this.game.turn() === 'b') {
+                    // White wins
+                    this.gameWon();
+                } else {
+                    // Black wins
+                    this.gameLost("CHECKMATE: SYSTEM OVERLOAD");
+                }
+            } else if (this.game.in_draw() || this.game.in_stalemate() || this.game.in_threefold_repetition()) {
+                this.gameLost("DRAW: NEURAL STALEMATE");
+            }
+        }
+    },
+
+    updateStatus() {
+        const aiStatus = document.getElementById('ai-status');
+        const pStatus = document.getElementById('player-status');
+        
+        if (this.game.game_over()) {
+            aiStatus.textContent = "TERMINATED";
+            pStatus.textContent = "DONE";
+            return;
+        }
+
+        if (this.isAiThinking) {
+            aiStatus.textContent = "Calculating Matrix...";
+            aiStatus.className = "font-orbitron text-xs text-sys-cyan animate-pulse";
+            pStatus.textContent = "Awaiting Input";
+            pStatus.className = "font-orbitron text-xs text-white/40";
+        } else {
+            aiStatus.textContent = "Awaiting Move...";
+            aiStatus.className = "font-orbitron text-xs text-sys-rose/50";
+            
+            if (this.game.in_check()) {
+                pStatus.textContent = "WARNING: CHECK";
+                pStatus.className = "font-orbitron text-xs text-sys-rose animate-pulse";
+                this.playTone(150, 0.3, 'sawtooth');
+            } else {
+                pStatus.textContent = "Your Turn";
+                pStatus.className = "font-orbitron text-xs text-sys-cyan";
+            }
+        }
+    },
+
+    logMove(san, color) {
+        const historyEl = document.getElementById('move-history');
+        const moveDiv = document.createElement('div');
+        
+        if (color === 'White') {
+            moveDiv.innerHTML = `<span class="text-white/40">${this.moveCount}.</span> <span class="text-sys-cyan">${san}</span>`;
+        } else {
+            moveDiv.innerHTML = `<span class="text-transparent">0.</span> <span class="text-sys-rose">${san}</span>`;
+            this.moveCount++;
+        }
+        
+        historyEl.appendChild(moveDiv);
+        historyEl.scrollTop = historyEl.scrollHeight;
+    },
+
+    gameWon() {
+        const result = PlayerState.reward(150, 3, 40);
+        
+        if (result.leveledUp) {
+            const banner = document.getElementById('level-up-banner');
+            banner.classList.remove('hidden');
+            banner.querySelector('.font-orbitron').textContent = `⚡ LEVEL UP! ${result.oldLevel} → ${result.newLevel}`;
+        }
+        
+        this.showPhase('results');
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, colors: ['#b026ff', '#ffd700', '#ffffff'] });
+        this.playTone(523.25, 0.1); setTimeout(() => this.playTone(659.25, 0.1), 100); setTimeout(() => this.playTone(783.99, 0.4), 200);
+    },
+
+    gameLost(reason) {
+        document.getElementById('fail-title').textContent = reason.split(':')[0];
+        document.getElementById('fail-reason').textContent = reason.split(':')[1] || "لقد تم هزيمتك.";
+        this.showPhase('failure');
+        this.playTone(150, 0.5, 'sawtooth');
+    },
+
+    audioCtx: null,
+    playTone(freq, duration, type='sine') {
+        try {
+            if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.connect(gain); gain.connect(this.audioCtx.destination);
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + duration);
+            osc.start(); osc.stop(this.audioCtx.currentTime + duration);
+        } catch(e) {}
+    }
+};
+
+// ==========================================
+// CUSTOM MINIMAX AI ENGINE (Rank A Difficulty)
+// ==========================================
+const ChessAI = {
+    // Piece values for evaluation
+    pieceValues: { 'p': 10, 'n': 30, 'b': 30, 'r': 50, 'q': 90, 'k': 900 },
+    
+    // Position weights (simplified center control for black)
+    positionWeights: [
+        [ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 5,  5,  5,  5,  5,  5,  5,  5],
+        [ 1,  2,  3,  4,  4,  3,  2,  1],
+        [ 0,  1,  3,  5,  5,  3,  1,  0],
+        [ 0,  1,  4,  6,  6,  4,  1,  0],
+        [ 1,  2,  3,  4,  4,  3,  2,  1],
+        [ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0,  0]
+    ],
+
+    evaluateBoard(game) {
+        let totalEvaluation = 0;
+        const board = game.board(); // 2D array
+
+        for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+                const piece = board[r][c];
+                if (piece) {
+                    const isWhite = piece.color === 'w';
+                    const value = this.pieceValues[piece.type];
+                    // Add positional bonus for Black (AI) to encourage center play
+                    const positional = isWhite ? 0 : this.positionWeights[r][c]; 
+                    
+                    if (isWhite) {
+                        totalEvaluation -= value; // White is minimizing for Black's perspective
+                    } else {
+                        totalEvaluation += (value + (positional * 0.1)); // Black maximizes
+                    }
+                }
+            }
+        }
+        return totalEvaluation;
+    },
+
+    minimax(game, depth, alpha, beta, isMaximizingPlayer) {
+        if (depth === 0 || game.game_over()) {
+            return this.evaluateBoard(game);
+        }
+
+        const moves = game.moves();
+
+        if (isMaximizingPlayer) {
+            let maxEval = -Infinity;
+            for (let i = 0; i < moves.length; i++) {
+                game.move(moves[i]);
+                const ev = this.minimax(game, depth - 1, alpha, beta, false);
+                game.undo();
+                maxEval = Math.max(maxEval, ev);
+                alpha = Math.max(alpha, ev);
+                if (beta <= alpha) break; // Prune
+            }
+            return maxEval;
+        } else {
+            let minEval = Infinity;
+            for (let i = 0; i < moves.length; i++) {
+                game.move(moves[i]);
+                const ev = this.minimax(game, depth - 1, alpha, beta, true);
+                game.undo();
+                minEval = Math.min(minEval, ev);
+                beta = Math.min(beta, ev);
+                if (beta <= alpha) break; // Prune
+            }
+            return minEval;
+        }
+    },
+
+    getBestMove(game) {
+        const moves = game.moves();
+        if (moves.length === 0) return null;
+
+        let bestMove = null;
+        let bestValue = -Infinity;
+        
+        // Depth 3 provides a solid challenge without lagging the browser too much
+        const depth = 3; 
+
+        // Sort moves to optimize Alpha-Beta pruning (captures first)
+        moves.sort((a, b) => {
+            return (b.includes('x') ? 1 : 0) - (a.includes('x') ? 1 : 0);
+        });
+
+        for (let i = 0; i < moves.length; i++) {
+            game.move(moves[i]);
+            // Black just moved, so next it's White's turn (Minimizing player for Black's perspective)
+            const boardValue = this.minimax(game, depth - 1, -Infinity, Infinity, false);
+            game.undo();
+            
+            if (boardValue > bestValue) {
+                bestValue = boardValue;
+                bestMove = moves[i];
+            }
+        }
+        
+        // Fallback to random move if something fails
+        if (!bestMove) {
+            bestMove = moves[Math.floor(Math.random() * moves.length)];
+        }
+        return bestMove;
+    }
+};
+
+// Initialize
+window.addEventListener('DOMContentLoaded', () => {
+    PlayerState.init();
+});
+// ==========================================
+// SOVEREIGN SYSTEM DATA SYNC (CHESS DUNGEON)
+// ==========================================
+const PlayerSync = {
+    
+    loadData() {
+        const defaultData = { 
+            level: 1, 
+            xp: 0, 
+            gold: 0, 
+            stats: { int: 10 }, 
+            clearedDungeons: { Memory: 0, Hanoi: 0, Sudoku: 0, Math: 0, Chess: 0, NBack: 0 } 
+        };
+        const local = localStorage.getItem('monarch_system_data');
+        return local ? JSON.parse(local) : defaultData;
+        // منح جوائز الرتبة S لتجاوز متاهة الشطرنج
+PlayerSync.addRewards(150, 75);
+    },
+   
+
+    saveData(data) {
+        localStorage.setItem('monarch_system_data', JSON.stringify(data));
+    },
+
+    addRewards(xpGained, goldGained) {
+        let data = this.loadData();
+        
+        data.xp = (data.xp || 0) + xpGained;
+        data.gold = (data.gold || 0) + goldGained;
+        
+        let xpNeeded = data.level * 100;
+        while (data.xp >= xpNeeded) {
+            data.xp -= xpNeeded;
+            data.level = (data.level || 1) + 1;
+            
+            if (!data.stats) data.stats = { int: 10 };
+            data.stats.int = (data.stats.int || 10) + 1; // زيادة الذكاء عند الارتقاء
+            
+            xpNeeded = data.level * 100;
+        }
+
+        // تسجيل إنهاء زنزانة الشطرنج والمتاهة بنجاح
+        if (!data.clearedDungeons) data.clearedDungeons = {};
+        data.clearedDungeons.Chess = (data.clearedDungeons.Chess || 0) + 1;
+
+        this.saveData(data);
+        // منح جوائز الرتبة S لتجاوز متاهة الشطرنج
+PlayerSync.addRewards(150, 75);
+    }
+};
+</script>
+</body>
+</html>
