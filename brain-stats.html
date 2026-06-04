@@ -149,6 +149,7 @@
             <a href="operational-charter.html" class="px-4 py-2 text-xs sys-font sl-panel rounded hover:bg-[var(--sys-cyan)] hover:text-black transition duration-300 text-slate-300 border border-slate-800">📜 CHARTER</a>
             <a href="monarch-ai.html" class="px-4 py-2 text-xs sys-font sl-panel rounded hover:bg-[var(--sys-cyan)] hover:text-black transition duration-300 text-slate-300 border border-slate-800">🤖 MONARCH AI</a>
             <a href="system-logs.html" class="px-4 py-2 text-xs sys-font sl-panel rounded hover:bg-[var(--sys-cyan)] hover:text-black transition duration-300 text-slate-300 border border-slate-800">📊 SYSTEM LOGS</a>
+              <a href="dungeons.html" class="px-4 py-2 text-xs sys-font sl-panel rounded hover:bg-[var(--sys-purple)] hover:text-white transition duration-300 text-slate-300 border border-slate-800">🏰 DUNGEONS</a>
         </nav>
 
         <main class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -202,6 +203,13 @@
                         <span class="text-[var(--sys-cyan)] font-bold sys-font text-xs block mb-1">[SYSTEM: SOVEREIGN AUTONOMY ACTIVATED]</span>
                         <span class="text-white text-sm font-bold">الآن يمكنك تدبر أمورك بنفسك وقراراتك. هذا هو التحسين الأخير للنظام.</span>
                     </div>
+                    <div class="bg-slate-900/80 backdrop-blur border border-slate-800 p-6 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] mt-6 animate-system-pop">
+    <div class="border-b border-slate-800 pb-3 mb-4 flex justify-between items-center">
+        <h3 class="text-sm font-black tracking-widest text-[var(--sys-purple)] sys-font uppercase">⚔️ DUNGEON RECORDS // سجل التطهير</h3>
+        <span class="text-[10px] text-slate-500 font-mono uppercase tracking-wider">Sovereign Protocol</span>
+    </div>
+    
+    
                 </div>
 
                 <div class="sl-panel p-6 animate-system-pop" style="animation-delay: 0.3s;">
@@ -277,6 +285,29 @@
 
                     </div>
                 </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="bg-slate-950/60 p-3 rounded border border-slate-900 flex justify-between items-center">
+            <span class="text-xs text-slate-400 font-medium">♟️ متاهة الشطرنج (Rank S)</span>
+            <span id="stat-count-chess" class="text-sm font-black text-[var(--sys-purple)]">0</span>
+        </div>
+        <div class="bg-slate-950/60 p-3 rounded border border-slate-900 flex justify-between items-center">
+            <span class="text-xs text-slate-400 font-medium">⚡ الرياضيات الكمية (Rank A)</span>
+            <span id="stat-count-math" class="text-sm font-black text-purple-400">0</span>
+        </div>
+        <div class="bg-slate-950/60 p-3 rounded border border-slate-900 flex justify-between items-center">
+            <span class="text-xs text-slate-400 font-medium">🧩 سرداب السودوكو (Rank A)</span>
+            <span id="stat-count-sudoku" class="text-sm font-black text-cyan-400">0</span>
+        </div>
+        <div class="bg-slate-950/60 p-3 rounded border border-slate-900 flex justify-between items-center">
+            <span class="text-xs text-slate-400 font-medium">🗼 برج هانوي (Rank B)</span>
+            <span id="stat-count-hanoi" class="text-sm font-black text-emerald-400">0</span>
+        </div>
+        <div class="bg-slate-950/60 p-3 rounded border border-slate-900 flex justify-between items-center">
+            <span class="text-xs text-slate-400 font-medium">🧠 مصفوفة الذاكرة (Rank B)</span>
+            <span id="stat-count-memory" class="text-sm font-black text-amber-400">0</span>
+        </div>
+    </div>
+</div>
             </div>
 
             <div class="lg:col-span-4 space-y-6">
@@ -310,6 +341,7 @@
             Sovereign Core Intellect Layer | Cognitive Stats Engine v8.0 | No Penalties Enforced
         </footer>
     </div>
+    
 
     <script>
         // ==========================================
@@ -945,6 +977,26 @@ const Utils = {
             ProgramManager.init();
             BrainStatsEngine.init();
         });
+        // دالة تحديث عدادات الزنازن المطهّرة في صفحة الإحصائيات
+function renderDungeonClearedStats() {
+    const localData = localStorage.getItem('monarch_system_data');
+    if (!localData) return;
+    
+    const data = JSON.parse(localData);
+    const clears = data.clearedDungeons || {};
+
+    // حقن قيم الفوز داخل الواجهة، وإذا كانت فارغة نضع 0
+    if(document.getElementById('stat-count-chess'))   document.getElementById('stat-count-chess').innerText = clears.Chess || 0;
+    if(document.getElementById('stat-count-math'))    document.getElementById('stat-count-math').innerText = clears.Math || 0;
+    if(document.getElementById('stat-count-sudoku'))  document.getElementById('stat-count-sudoku').innerText = clears.Sudoku || 0;
+    if(document.getElementById('stat-count-hanoi'))   document.getElementById('stat-count-hanoi').innerText = clears.Hanoi || 0;
+    if(document.getElementById('stat-count-memory'))  document.getElementById('stat-count-memory').innerText = clears.Memory || 0;
+}
+
+// تشغيل الدالة تلقائياً عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(renderDungeonClearedStats, 100); // تأخير بسيط لضمان استقرار تحميل البيانات
+});
     </script>
 </body>
 </html>
