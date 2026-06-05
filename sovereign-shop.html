@@ -228,6 +228,7 @@
                 <a href="system-logs.html" class="px-3 py-1.5 text-xs font-mono rounded hover:bg-sys-cyan hover:text-black border border-white/5 transition duration-300 text-slate-300">📊 LOGS</a>
                 <a href="sovereign-shop.html" class="px-3 py-1.5 text-xs font-mono bg-amber-950/40 border border-sys-gold text-sys-gold rounded font-bold shadow-[0_0_10px_rgba(255,215,0,0.15)]">🔮 SHOP</a>
             </nav>
+           
 
             <!-- Live Player Stats Bar -->
             <div class="w-full grid grid-cols-3 gap-4 mt-2 pt-2 border-t border-white/5">
@@ -251,6 +252,7 @@
             </div>
         </div>
     </header>
+    
 
     <!-- Main Content Grid -->
     <main class="relative z-10 max-w-7xl mx-auto px-4 pb-20 grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -295,6 +297,14 @@
 
         <!-- Left/Main: Products Sections (Secret Links & Titles) -->
         <div class="lg:col-span-3 space-y-8">
+            <!-- شريط بحث الروابط -->
+<div class="mb-4">
+    <input type="text" 
+           id="links-search" 
+           placeholder="🔍 ابحث في الروابط السرية..." 
+           class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-cyan focus:outline-none transition-colors"
+           oninput="ShopSystem.filterLinks(this.value)">
+</div>
             
             <!-- Section 1: Secret Links Archive -->
             <div>
@@ -309,6 +319,15 @@
                     <!-- Dynamic Generation via JS -->
                 </div>
             </div>
+             
+<!-- شريط بحث الألقاب -->
+<div class="mb-4">
+    <input type="text" 
+           id="titles-search" 
+           placeholder="🔍 ابحث في الألقاب السيادية..." 
+           class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-purple focus:outline-none transition-colors"
+           oninput="ShopSystem.filterTitles(this.value)">
+</div>
 
             <!-- Section 2: Sovereign Titles Shop -->
             <div>
@@ -326,6 +345,7 @@
 
         </div>
     </main>
+    
 
     <!-- Custom Alert Container -->
     <div id="custom-alert" class="fixed bottom-5 left-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border-2 rounded-xl p-4 max-w-sm flex items-start gap-3 shadow-2xl">
@@ -1072,15 +1092,66 @@ const ShopSystem = {
         purchasedLinks: [],
         purchasedTitles: [],
         equippedTitle: ""
+        
     },
+    // ==========================================
+// SEARCH SYSTEM
+// ==========================================
+
+filterLinks(query) {
+    const container = document.getElementById('links-grid');
+    const items = container.querySelectorAll('.shop-card');
+    const lowerQuery = query.toLowerCase().trim();
+    
+    items.forEach(item => {
+        const name = item.querySelector('h3')?.textContent || '';
+        const desc = item.querySelector('p')?.textContent || '';
+        const match = name.toLowerCase().includes(lowerQuery) || 
+                      desc.toLowerCase().includes(lowerQuery);
+        item.style.display = match ? '' : 'none';
+    });
+},
+
+filterTitles(query) {
+    const container = document.getElementById('titles-grid');
+    const items = container.querySelectorAll('.shop-card');
+    const lowerQuery = query.toLowerCase().trim();
+    
+    items.forEach(item => {
+        const nameAr = item.querySelector('.font-cairo.font-bold')?.textContent || '';
+        const nameEn = item.querySelector('.font-orbitron')?.textContent || '';
+        const desc = item.querySelector('p')?.textContent || '';
+        const match = nameAr.toLowerCase().includes(lowerQuery) || 
+                      nameEn.toLowerCase().includes(lowerQuery) ||
+                      desc.toLowerCase().includes(lowerQuery);
+        item.style.display = match ? '' : 'none';
+    });
+},
 
     init() {
-        this.loadState();
-        this.setRandomQuote();
-        document.getElementById('current-day-label').textContent = `${DAYS_EN[currentDayIndex]} (${DAYS_AR[currentDayIndex]})`;
-        this.renderShop();
-    },
+    this.loadState();
+    this.setRandomQuote();
+    document.getElementById('current-day-label').textContent = `${DAYS_EN[currentDayIndex]} (${DAYS_AR[currentDayIndex]})`;
+    this.renderShop();
+    
+    // ✅ إضافة: تحديث الفهرس عند التحميل
+    this.updateTitlesIndexForMain();
+    
+    // ✅ إضافة: الاستماع للمزامنة من الصفحات الأخرى
+    this.initBroadcastListener();
+},
 
+initBroadcastListener() {
+    if (typeof BroadcastChannel !== 'undefined') {
+        const bc = new BroadcastChannel('sovereign_sync');
+        bc.onmessage = (event) => {
+            if (event.data.type === 'GOLD_UPDATED' || event.data.type === 'TITLE_EQUIPPED') {
+                this.loadState();
+                this.renderShop();
+            }
+        };
+    }
+},
     loadState() {
         const saved = localStorage.getItem('monarch_system_data');
         if (saved) {
@@ -1266,11 +1337,32 @@ const ShopSystem = {
     },
 
     equipTitle(id) {
-        this.playerData.equippedTitle = id;
-        this.saveState();
-        this.renderShop();
-        this.showAlert("🔮 تم تجهيز اللقب", "تغيرت هالة لوحة القيادة إلى السمة المجهزة الجديدة.", "sys-cyan");
-    },
+    this.playerData.equippedTitle = id;
+    this.saveState();
+    
+    // ✅ تحديث فهرس الألقاب للصفحة الرئيسية
+    this.updateTitlesIndexForMain();
+    
+    this.renderShop();
+    this.showAlert("🔮 تم تجهيز اللقب", "تغيرت هالة لوحة القيادة إلى السمة المجهزة الجديدة.", "sys-cyan");
+},
+
+// ✅ دالة جديدة: تحديث الفهرس المشترك
+updateTitlesIndexForMain() {
+    const minimalIndex = SOVEREIGN_TITLES_DATA.map(t => ({
+        id: t.id,
+        nameAr: t.nameAr,
+        nameEn: t.nameEn,
+        reqLevel: t.reqLevel
+    }));
+    localStorage.setItem('sovereign_titles_index', JSON.stringify(minimalIndex));
+    
+    // ✅ إشعار الصفحات الأخرى بالتغيير (BroadcastChannel إن وُجد)
+    if (typeof BroadcastChannel !== 'undefined') {
+        const bc = new BroadcastChannel('sovereign_sync');
+        bc.postMessage({ type: 'TITLE_EQUIPPED', titleId: this.playerData.equippedTitle });
+    }
+},
 
     showAlert(title, desc, borderColorClass) {
         const alertBox = document.getElementById('custom-alert');
