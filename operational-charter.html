@@ -183,54 +183,504 @@
         <a href="operational-charter.html" class="px-4 py-2 text-xs sys-font bg-cyan-950/40 border border-[var(--sys-cyan)] text-[var(--sys-cyan)] rounded font-bold shadow-[0_0_10px_rgba(0,240,255,0.1)]">📜 CHARTER</a>
           <a href="dungeons.html" class="px-4 py-2 text-xs sys-font sl-panel rounded hover:bg-[var(--sys-purple)] hover:text-white transition duration-300 text-slate-300 border border-slate-800">🏰 DUNGEONS</a>
     </nav>
+<div class="sl-panel p-5 animate-system-pop" style="
+    animation-delay: 0.2s;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.98));
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 16px;
+    box-shadow: 
+        0 0 0 1px rgba(6, 182, 212, 0.05), 
+        0 20px 60px rgba(0, 0, 0, 0.5), 
+        0 0 40px rgba(6, 182, 212, 0.03),
+        0 0 80px rgba(6, 182, 212, 0.02);
+    position: relative;
+    overflow: hidden;
+">
+    <!-- Panel neon border glow -->
+    <div style="
+    position: absolute;
+    inset: -1px;
+    border-radius: 16px;
+    padding: 1px;
+    background: linear-gradient(135deg,
+        transparent 30%,
+        rgba(6, 182, 212, 0.6) 45%,
+        rgba(168, 85, 247, 0.6) 55%,
+        transparent 70%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: border-shimmer 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(0.5px);
+"></div>
 
-    <div class="sl-panel p-5 animate-system-pop" style="animation-delay: 0.2s;">
-        <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
-            <h2 class="text-sm font-black text-white sys-font tracking-widest uppercase">Operational Protocol Selector</h2>
-            <span class="text-[10px] text-slate-500 sys-font uppercase">Active Directive</span>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <button onclick="Charter.switch('week1')" id="btn-week1" class="sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
-                <div>
-                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-cyan)] block uppercase">📜 Mind Games Protocol Active SYSTEM v8.0 — Infinity</span>
-                    <span class="text-[10px] text-slate-400">Integrated Operations Charter (Levels 1-450)</span>
-                </div>
-                <span class="sys-font text-[10px] bg-cyan-950 text-[var(--sys-cyan)] px-2 py-0.5 border border-[var(--sys-cyan)]">CORE</span>
-            </button>
-            <button onclick="Charter.switch('week2')" id="btn-week2" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
-                <div>
-                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">🌌 SYSTEM v9.0 — Infinity</span>
-                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 450→600)</span>
-                </div>
-                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
-            </button>
-            <button onclick="Charter.switch('week3')" id="btn-week3" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
-                <div>
-                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">🌩️​ SYSTEM v10.0 — Infinity</span>
-                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 600→800)</span>
-                </div>
-                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
-            </button>
-            <button onclick="Charter.switch('week4')" id="btn-week4" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
-                <div>
-                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">😈​⚠️​​​ SYSTEM v11.0 — Infinity</span>
-                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 800→1000)</span>
-                </div>
-                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
-            </button>
-            <button onclick="Charter.switch('week5')" id="btn-week5" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group">
-                <div>
-                    <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase">☠️​‼️​🌪️​​ SYSTEM v1000.0 — Infinity</span>
-                    <span class="text-[10px] text-slate-400">System Update 8.0 (Levels 1000→∞)</span>
-                </div>
-                <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]">INFINITY</span>
-            </button>
-        </div>
-        <div id="infinity-message" class="hidden mt-4 p-3 bg-cyan-950/40 border border-[var(--sys-cyan)] rounded animate-pulse text-center">
-            <span class="text-[var(--sys-cyan)] font-bold sys-font text-xs block mb-1">[SYSTEM: SOVEREIGN AUTONOMY ACTIVATED]</span>
-            <span class="text-white text-sm font-bold">You are now fully autonomous. This is the final system optimization.</span>
-        </div>
+    <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3" style="
+        border-color: rgba(6, 182, 212, 0.3) !important;
+        position: relative;
+        box-shadow: 0 1px 0 rgba(6, 182, 212, 0.1);
+    ">
+        <h2 class="text-sm font-black text-white sys-font tracking-widest uppercase" style="
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5), 0 0 20px rgba(6, 182, 212, 0.3), 0 0 30px rgba(6, 182, 212, 0.1);
+            letter-spacing: 0.15em;
+        ">Operational Protocol Selector</h2>
+        <span class="text-[10px] text-slate-500 sys-font uppercase" style="
+            position: relative;
+            padding: 4px 12px;
+            background: rgba(6, 182, 212, 0.15);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            border-radius: 6px;
+            color: #22d3ee !important;
+            font-size: 9px !important;
+            letter-spacing: 0.2em;
+            animation: badge-pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2), inset 0 0 10px rgba(6, 182, 212, 0.1);
+        ">Active Directive</span>
     </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <!-- Week 1 Button - CYAN -->
+        <button onclick="activateBtn('btn-week1','cyan'); Charter.switch('week1')" id="btn-week1" class="sl-btn w-full text-left p-4 rounded flex justify-between items-center group" style="
+            position: relative;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(6, 182, 212, 0.15);
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            cursor: pointer;
+            animation-delay: 0.1s;
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.05);
+        " onmouseover="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)'; this.style.borderColor='rgba(6, 182, 212, 0.6)'; this.style.boxShadow='0 10px 40px rgba(6, 182, 212, 0.25), 0 0 30px rgba(6, 182, 212, 0.15), 0 0 60px rgba(6, 182, 212, 0.08), inset 0 1px 0 rgba(6, 182, 212, 0.2)';}" onmouseout="if(!this.dataset.active){this.style.transform=''; this.style.borderColor='rgba(6, 182, 212, 0.15)'; this.style.boxShadow='0 4px 20px rgba(6, 182, 212, 0.05)';}" onmousedown="this.style.transform='translateY(-1px) scale(0.99)';" onmouseup="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)';}">
+            <div style="
+                position: absolute;
+                top: 0; left: -100%;
+                width: 100%; height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.06), transparent);
+                transition: left 0.6s ease;
+                pointer-events: none;
+                z-index: 1;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.left='100%';" onmouseout="this.style.left='-100%';"></div>
+            <div class="orb" style="
+                position: absolute;
+                top: 50%; left: 50%;
+                width: 200px; height: 200px;
+                background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.opacity='1';" onmouseout="this.style.opacity='0';"></div>
+            <div style="
+                position: absolute;
+                top: 0; left: 0;
+                width: 8px; height: 8px;
+                border-top: 1px solid #22d3ee;
+                border-left: 1px solid #22d3ee;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(34, 211, 238, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(34, 211, 238, 0.5)';"></div>
+            <div style="
+                position: absolute;
+                bottom: 0; right: 0;
+                width: 8px; height: 8px;
+                border-bottom: 1px solid #22d3ee;
+                border-right: 1px solid #22d3ee;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(34, 211, 238, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(34, 211, 238, 0.5)';"></div>
+
+            <div style="position: relative; z-index: 3;">
+                <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-cyan)] block uppercase" style="
+                    transition: all 0.3s ease;
+                    text-shadow: 0 0 5px rgba(6, 182, 212, 0.2);
+                " onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#22d3ee'; this.style.textShadow='0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(34, 211, 238, 0.2)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='0 0 5px rgba(6, 182, 212, 0.2)';}">📜 Mind Games Protocol Active SYSTEM v8.0 — Infinity</span>
+                <span class="text-[10px] text-slate-400" style="
+                    transition: all 0.3s ease 0.1s;
+                " onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#67e8f9'; this.style.textShadow='0 0 8px rgba(103, 232, 249, 0.5)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='';}">Integrated Operations Charter (Levels 1-450)</span>
+            </div>
+            <span class="sys-font text-[10px] bg-cyan-950 text-[var(--sys-cyan)] px-2 py-0.5 border border-[var(--sys-cyan)]" style="
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(6, 182, 212, 0.08)) !important;
+                border-color: rgba(34, 211, 238, 0.5) !important;
+                color: #22d3ee !important;
+                text-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+                box-shadow: 0 0 10px rgba(6, 182, 212, 0.15);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(34, 211, 238, 0.2)'; this.style.transform='scale(1.05)'; this.style.borderColor='rgba(34, 211, 238, 0.8)';}" onmouseout="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 10px rgba(6, 182, 212, 0.15)'; this.style.transform=''; this.style.borderColor='rgba(34, 211, 238, 0.5)';}">CORE</span>
+        </button>
+
+        <!-- Week 2 Button - PURPLE -->
+        <button onclick="activateBtn('btn-week2','purple'); Charter.switch('week2')" id="btn-week2" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group" style="
+            position: relative;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            cursor: pointer;
+            animation-delay: 0.2s;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.05);
+        " onmouseover="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)'; this.style.borderColor='rgba(168, 85, 247, 0.6)'; this.style.boxShadow='0 10px 40px rgba(168, 85, 247, 0.25), 0 0 30px rgba(168, 85, 247, 0.15), 0 0 60px rgba(168, 85, 247, 0.08), inset 0 1px 0 rgba(168, 85, 247, 0.2)';}" onmouseout="if(!this.dataset.active){this.style.transform=''; this.style.borderColor='rgba(168, 85, 247, 0.15)'; this.style.boxShadow='0 4px 20px rgba(168, 85, 247, 0.05)';}" onmousedown="this.style.transform='translateY(-1px) scale(0.99)';" onmouseup="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)';}">
+            <div style="
+                position: absolute;
+                top: 0; left: -100%;
+                width: 100%; height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(192, 132, 252, 0.06), transparent);
+                transition: left 0.6s ease;
+                pointer-events: none;
+                z-index: 1;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.left='100%';" onmouseout="this.style.left='-100%';"></div>
+            <div class="orb" style="
+                position: absolute;
+                top: 50%; left: 50%;
+                width: 200px; height: 200px;
+                background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.opacity='1';" onmouseout="this.style.opacity='0';"></div>
+            <div style="
+                position: absolute;
+                top: 0; left: 0;
+                width: 8px; height: 8px;
+                border-top: 1px solid #c084fc;
+                border-left: 1px solid #c084fc;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(192, 132, 252, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(192, 132, 252, 0.5)';"></div>
+            <div style="
+                position: absolute;
+                bottom: 0; right: 0;
+                width: 8px; height: 8px;
+                border-bottom: 1px solid #c084fc;
+                border-right: 1px solid #c084fc;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(192, 132, 252, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(192, 132, 252, 0.5)';"></div>
+
+            <div style="position: relative; z-index: 3;">
+                <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase" style="transition: all 0.3s ease; text-shadow: 0 0 5px rgba(168, 85, 247, 0.2);" onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#c084fc'; this.style.textShadow='0 0 10px rgba(192, 132, 252, 0.8), 0 0 20px rgba(192, 132, 252, 0.4), 0 0 40px rgba(192, 132, 252, 0.2)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='0 0 5px rgba(168, 85, 247, 0.2)';}">🌌 SYSTEM v9.0 — Infinity</span>
+                <span class="text-[10px] text-slate-400" style="transition: all 0.3s ease 0.1s;" onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#d8b4fe'; this.style.textShadow='0 0 8px rgba(216, 180, 254, 0.5)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='';}">System Update 8.0 (Levels 450→600)</span>
+            </div>
+            <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]" style="
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(168, 85, 247, 0.08)) !important;
+                border-color: rgba(192, 132, 252, 0.5) !important;
+                color: #c084fc !important;
+                text-shadow: 0 0 8px rgba(192, 132, 252, 0.6);
+                box-shadow: 0 0 10px rgba(168, 85, 247, 0.15);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 20px rgba(192, 132, 252, 0.4), 0 0 40px rgba(192, 132, 252, 0.2)'; this.style.transform='scale(1.05)'; this.style.borderColor='rgba(192, 132, 252, 0.8)';}" onmouseout="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 10px rgba(168, 85, 247, 0.15)'; this.style.transform=''; this.style.borderColor='rgba(192, 132, 252, 0.5)';}">INFINITY</span>
+        </button>
+
+        <!-- Week 3 Button - PURPLE -->
+        <button onclick="activateBtn('btn-week3','purple'); Charter.switch('week3')" id="btn-week3" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group" style="
+            position: relative;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            cursor: pointer;
+            animation-delay: 0.3s;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.05);
+        " onmouseover="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)'; this.style.borderColor='rgba(168, 85, 247, 0.6)'; this.style.boxShadow='0 10px 40px rgba(168, 85, 247, 0.25), 0 0 30px rgba(168, 85, 247, 0.15), 0 0 60px rgba(168, 85, 247, 0.08), inset 0 1px 0 rgba(168, 85, 247, 0.2)';}" onmouseout="if(!this.dataset.active){this.style.transform=''; this.style.borderColor='rgba(168, 85, 247, 0.15)'; this.style.boxShadow='0 4px 20px rgba(168, 85, 247, 0.05)';}" onmousedown="this.style.transform='translateY(-1px) scale(0.99)';" onmouseup="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)';}">
+            <div style="
+                position: absolute;
+                top: 0; left: -100%;
+                width: 100%; height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(192, 132, 252, 0.06), transparent);
+                transition: left 0.6s ease;
+                pointer-events: none;
+                z-index: 1;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.left='100%';" onmouseout="this.style.left='-100%';"></div>
+            <div class="orb" style="
+                position: absolute;
+                top: 50%; left: 50%;
+                width: 200px; height: 200px;
+                background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.opacity='1';" onmouseout="this.style.opacity='0';"></div>
+            <div style="
+                position: absolute;
+                top: 0; left: 0;
+                width: 8px; height: 8px;
+                border-top: 1px solid #c084fc;
+                border-left: 1px solid #c084fc;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(192, 132, 252, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(192, 132, 252, 0.5)';"></div>
+            <div style="
+                position: absolute;
+                bottom: 0; right: 0;
+                width: 8px; height: 8px;
+                border-bottom: 1px solid #c084fc;
+                border-right: 1px solid #c084fc;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(192, 132, 252, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(192, 132, 252, 0.5)';"></div>
+
+            <div style="position: relative; z-index: 3;">
+                <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase" style="transition: all 0.3s ease; text-shadow: 0 0 5px rgba(168, 85, 247, 0.2);" onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#c084fc'; this.style.textShadow='0 0 10px rgba(192, 132, 252, 0.8), 0 0 20px rgba(192, 132, 252, 0.4), 0 0 40px rgba(192, 132, 252, 0.2)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='0 0 5px rgba(168, 85, 247, 0.2)';}">🌩️​ SYSTEM v10.0 — Infinity</span>
+                <span class="text-[10px] text-slate-400" style="transition: all 0.3s ease 0.1s;" onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#d8b4fe'; this.style.textShadow='0 0 8px rgba(216, 180, 254, 0.5)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='';}">System Update 8.0 (Levels 600→800)</span>
+            </div>
+            <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]" style="
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(168, 85, 247, 0.08)) !important;
+                border-color: rgba(192, 132, 252, 0.5) !important;
+                color: #c084fc !important;
+                text-shadow: 0 0 8px rgba(192, 132, 252, 0.6);
+                box-shadow: 0 0 10px rgba(168, 85, 247, 0.15);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 20px rgba(192, 132, 252, 0.4), 0 0 40px rgba(192, 132, 252, 0.2)'; this.style.transform='scale(1.05)'; this.style.borderColor='rgba(192, 132, 252, 0.8)';}" onmouseout="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 10px rgba(168, 85, 247, 0.15)'; this.style.transform=''; this.style.borderColor='rgba(192, 132, 252, 0.5)';}">INFINITY</span>
+        </button>
+
+        <!-- Week 4 Button - PURPLE -->
+        <button onclick="activateBtn('btn-week4','purple'); Charter.switch('week4')" id="btn-week4" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group" style="
+            position: relative;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            cursor: pointer;
+            animation-delay: 0.4s;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.05);
+        " onmouseover="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)'; this.style.borderColor='rgba(168, 85, 247, 0.6)'; this.style.boxShadow='0 10px 40px rgba(168, 85, 247, 0.25), 0 0 30px rgba(168, 85, 247, 0.15), 0 0 60px rgba(168, 85, 247, 0.08), inset 0 1px 0 rgba(168, 85, 247, 0.2)';}" onmouseout="if(!this.dataset.active){this.style.transform=''; this.style.borderColor='rgba(168, 85, 247, 0.15)'; this.style.boxShadow='0 4px 20px rgba(168, 85, 247, 0.05)';}" onmousedown="this.style.transform='translateY(-1px) scale(0.99)';" onmouseup="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)';}">
+            <div style="
+                position: absolute;
+                top: 0; left: -100%;
+                width: 100%; height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(192, 132, 252, 0.06), transparent);
+                transition: left 0.6s ease;
+                pointer-events: none;
+                z-index: 1;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.left='100%';" onmouseout="this.style.left='-100%';"></div>
+            <div class="orb" style="
+                position: absolute;
+                top: 50%; left: 50%;
+                width: 200px; height: 200px;
+                background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.opacity='1';" onmouseout="this.style.opacity='0';"></div>
+            <div style="
+                position: absolute;
+                top: 0; left: 0;
+                width: 8px; height: 8px;
+                border-top: 1px solid #c084fc;
+                border-left: 1px solid #c084fc;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(192, 132, 252, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(192, 132, 252, 0.5)';"></div>
+            <div style="
+                position: absolute;
+                bottom: 0; right: 0;
+                width: 8px; height: 8px;
+                border-bottom: 1px solid #c084fc;
+                border-right: 1px solid #c084fc;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(192, 132, 252, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(192, 132, 252, 0.5)';"></div>
+
+            <div style="position: relative; z-index: 3;">
+                <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase" style="transition: all 0.3s ease; text-shadow: 0 0 5px rgba(168, 85, 247, 0.2);" onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#c084fc'; this.style.textShadow='0 0 10px rgba(192, 132, 252, 0.8), 0 0 20px rgba(192, 132, 252, 0.4), 0 0 40px rgba(192, 132, 252, 0.2)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='0 0 5px rgba(168, 85, 247, 0.2)';}">😈​⚠️​​​ SYSTEM v11.0 — Infinity</span>
+                <span class="text-[10px] text-slate-400" style="transition: all 0.3s ease 0.1s;" onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#d8b4fe'; this.style.textShadow='0 0 8px rgba(216, 180, 254, 0.5)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='';}">System Update 8.0 (Levels 800→1000)</span>
+            </div>
+            <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]" style="
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(168, 85, 247, 0.08)) !important;
+                border-color: rgba(192, 132, 252, 0.5) !important;
+                color: #c084fc !important;
+                text-shadow: 0 0 8px rgba(192, 132, 252, 0.6);
+                box-shadow: 0 0 10px rgba(168, 85, 247, 0.15);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 20px rgba(192, 132, 252, 0.4), 0 0 40px rgba(192, 132, 252, 0.2)'; this.style.transform='scale(1.05)'; this.style.borderColor='rgba(192, 132, 252, 0.8)';}" onmouseout="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 10px rgba(168, 85, 247, 0.15)'; this.style.transform=''; this.style.borderColor='rgba(192, 132, 252, 0.5)';}">INFINITY</span>
+        </button>
+
+        <!-- Week 5 Button - PURPLE -->
+        <button onclick="activateBtn('btn-week5','purple'); Charter.switch('week5')" id="btn-week5" class="sl-btn-purple sl-btn w-full text-left p-4 rounded flex justify-between items-center group" style="
+            position: relative;
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            cursor: pointer;
+            animation-delay: 0.5s;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.05);
+        " onmouseover="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)'; this.style.borderColor='rgba(168, 85, 247, 0.6)'; this.style.boxShadow='0 10px 40px rgba(168, 85, 247, 0.25), 0 0 30px rgba(168, 85, 247, 0.15), 0 0 60px rgba(168, 85, 247, 0.08), inset 0 1px 0 rgba(168, 85, 247, 0.2)';}" onmouseout="if(!this.dataset.active){this.style.transform=''; this.style.borderColor='rgba(168, 85, 247, 0.15)'; this.style.boxShadow='0 4px 20px rgba(168, 85, 247, 0.05)';}" onmousedown="this.style.transform='translateY(-1px) scale(0.99)';" onmouseup="if(!this.dataset.active){this.style.transform='translateY(-3px) scale(1.01)';}">
+            <div style="
+                position: absolute;
+                top: 0; left: -100%;
+                width: 100%; height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(192, 132, 252, 0.06), transparent);
+                transition: left 0.6s ease;
+                pointer-events: none;
+                z-index: 1;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.left='100%';" onmouseout="this.style.left='-100%';"></div>
+            <div class="orb" style="
+                position: absolute;
+                top: 50%; left: 50%;
+                width: 200px; height: 200px;
+                background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            " onmouseover="if(!this.parentElement.dataset.active)this.style.opacity='1';" onmouseout="this.style.opacity='0';"></div>
+            <div style="
+                position: absolute;
+                top: 0; left: 0;
+                width: 8px; height: 8px;
+                border-top: 1px solid #c084fc;
+                border-left: 1px solid #c084fc;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(192, 132, 252, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(192, 132, 252, 0.5)';"></div>
+            <div style="
+                position: absolute;
+                bottom: 0; right: 0;
+                width: 8px; height: 8px;
+                border-bottom: 1px solid #c084fc;
+                border-right: 1px solid #c084fc;
+                transition: all 0.4s ease;
+                pointer-events: none;
+                z-index: 2;
+                box-shadow: 0 0 6px rgba(192, 132, 252, 0.5);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.width='100%'; this.style.height='100%'; this.style.opacity='0.5'; this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.3)';}" onmouseout="this.style.width='8px'; this.style.height='8px'; this.style.opacity='1'; this.style.boxShadow='0 0 6px rgba(192, 132, 252, 0.5)';"></div>
+
+            <div style="position: relative; z-index: 3;">
+                <span class="sys-font text-sm font-black text-white group-hover:text-[var(--sys-purple)] block uppercase" style="transition: all 0.3s ease; text-shadow: 0 0 5px rgba(168, 85, 247, 0.2);" onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#c084fc'; this.style.textShadow='0 0 10px rgba(192, 132, 252, 0.8), 0 0 20px rgba(192, 132, 252, 0.4), 0 0 40px rgba(192, 132, 252, 0.2)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='0 0 5px rgba(168, 85, 247, 0.2)';}">☠️​‼️​🌪️​​ SYSTEM v1000.0 — Infinity</span>
+                <span class="text-[10px] text-slate-400" style="transition: all 0.3s ease 0.1s;" onmouseover="if(!this.parentElement.parentElement.dataset.active){this.style.color='#d8b4fe'; this.style.textShadow='0 0 8px rgba(216, 180, 254, 0.5)';}" onmouseout="if(!this.parentElement.parentElement.dataset.active){this.style.color=''; this.style.textShadow='';}">System Update 8.0 (Levels 1000→∞)</span>
+            </div>
+            <span class="sys-font text-[10px] bg-purple-950 text-[var(--sys-purple)] px-2 py-0.5 border border-[var(--sys-purple)]" style="
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(168, 85, 247, 0.08)) !important;
+                border-color: rgba(192, 132, 252, 0.5) !important;
+                color: #c084fc !important;
+                text-shadow: 0 0 8px rgba(192, 132, 252, 0.6);
+                box-shadow: 0 0 10px rgba(168, 85, 247, 0.15);
+            " onmouseover="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 20px rgba(192, 132, 252, 0.4), 0 0 40px rgba(192, 132, 252, 0.2)'; this.style.transform='scale(1.05)'; this.style.borderColor='rgba(192, 132, 252, 0.8)';}" onmouseout="if(!this.parentElement.dataset.active){this.style.boxShadow='0 0 10px rgba(168, 85, 247, 0.15)'; this.style.transform=''; this.style.borderColor='rgba(192, 132, 252, 0.5)';}">INFINITY</span>
+        </button>
+    </div>
+
+    <div id="infinity-message" class="hidden mt-4 p-3 bg-cyan-950/40 border border-[var(--sys-cyan)] rounded animate-pulse text-center" style="
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.08)) !important;
+        border: 1px solid rgba(34, 211, 238, 0.4) !important;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.1), 0 0 40px rgba(6, 182, 212, 0.05), inset 0 0 20px rgba(6, 182, 212, 0.05);
+    ">
+        <div style="
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.15), transparent);
+            animation: infinity-shimmer 3s ease-in-out infinite;
+            pointer-events: none;
+        "></div>
+        <span class="text-[var(--sys-cyan)] font-bold sys-font text-xs block mb-1" style="
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.4), 0 0 30px rgba(34, 211, 238, 0.2);
+            color: #22d3ee !important;
+        ">[SYSTEM: SOVEREIGN AUTONOMY ACTIVATED]</span>
+        <span class="text-white text-sm font-bold" style="
+            position: relative; z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        ">You are now fully autonomous. This is the final system optimization.</span>
+    </div>
+</div>
+
+<script>
+function activateBtn(activeId, color) {
+    const ids = ['btn-week1','btn-week2','btn-week3','btn-week4','btn-week5'];
+    ids.forEach(function(id) {
+        var btn = document.getElementById(id);
+        if (!btn) return;
+        var orb = btn.querySelector('.orb');
+        var title = btn.querySelector('.sys-font.text-sm');
+        var sub = btn.querySelector('.text-slate-400');
+        var badge = btn.querySelector('.sys-font.text\[10px\]');
+
+        if (id === activeId) {
+            btn.dataset.active = '1';
+            if (color === 'cyan') {
+                btn.style.borderColor = 'rgba(34, 211, 238, 0.9)';
+                btn.style.boxShadow = '0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(34, 211, 238, 0.25), 0 0 80px rgba(34, 211, 238, 0.1), inset 0 0 20px rgba(34, 211, 238, 0.15), 0 10px 40px rgba(6, 182, 212, 0.3)';
+                btn.style.background = 'linear-gradient(145deg, rgba(6, 182, 212, 0.15), rgba(15, 23, 42, 0.95))';
+                if (title) { title.style.color = '#22d3ee'; title.style.textShadow = '0 0 15px rgba(34, 211, 238, 1), 0 0 30px rgba(34, 211, 238, 0.6), 0 0 50px rgba(34, 211, 238, 0.3)'; }
+                if (sub) { sub.style.color = '#67e8f9'; sub.style.textShadow = '0 0 10px rgba(103, 232, 249, 0.6)'; }
+                if (badge) { badge.style.boxShadow = '0 0 25px rgba(34, 211, 238, 0.5), 0 0 50px rgba(34, 211, 238, 0.2)'; badge.style.borderColor = 'rgba(34, 211, 238, 0.9)'; badge.style.transform = 'scale(1.1)'; }
+                if (orb) { orb.style.opacity = '0.6'; }
+            } else {
+                btn.style.borderColor = 'rgba(192, 132, 252, 0.9)';
+                btn.style.boxShadow = '0 0 20px rgba(192, 132, 252, 0.4), 0 0 40px rgba(192, 132, 252, 0.25), 0 0 80px rgba(192, 132, 252, 0.1), inset 0 0 20px rgba(192, 132, 252, 0.15), 0 10px 40px rgba(168, 85, 247, 0.3)';
+                btn.style.background = 'linear-gradient(145deg, rgba(168, 85, 247, 0.15), rgba(15, 23, 42, 0.95))';
+                if (title) { title.style.color = '#c084fc'; title.style.textShadow = '0 0 15px rgba(192, 132, 252, 1), 0 0 30px rgba(192, 132, 252, 0.6), 0 0 50px rgba(192, 132, 252, 0.3)'; }
+                if (sub) { sub.style.color = '#d8b4fe'; sub.style.textShadow = '0 0 10px rgba(216, 180, 254, 0.6)'; }
+                if (badge) { badge.style.boxShadow = '0 0 25px rgba(192, 132, 252, 0.5), 0 0 50px rgba(192, 132, 252, 0.2)'; badge.style.borderColor = 'rgba(192, 132, 252, 0.9)'; badge.style.transform = 'scale(1.1)'; }
+                if (orb) { orb.style.opacity = '0.6'; }
+            }
+        } else {
+            delete btn.dataset.active;
+            btn.style.borderColor = (id === 'btn-week1') ? 'rgba(6, 182, 212, 0.15)' : 'rgba(168, 85, 247, 0.15)';
+            btn.style.boxShadow = (id === 'btn-week1') ? '0 4px 20px rgba(6, 182, 212, 0.05)' : '0 4px 20px rgba(168, 85, 247, 0.05)';
+            btn.style.background = 'linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9))';
+            btn.style.transform = '';
+            if (title) { title.style.color = ''; title.style.textShadow = (id === 'btn-week1') ? '0 0 5px rgba(6, 182, 212, 0.2)' : '0 0 5px rgba(168, 85, 247, 0.2)'; }
+            if (sub) { sub.style.color = ''; sub.style.textShadow = ''; }
+            if (badge) { badge.style.boxShadow = (id === 'btn-week1') ? '0 0 10px rgba(6, 182, 212, 0.15)' : '0 0 10px rgba(168, 85, 247, 0.15)'; badge.style.borderColor = ''; badge.style.transform = ''; }
+            if (orb) { orb.style.opacity = '0'; }
+        }
+    });
+}
+</script>
+
+<style>
+@keyframes border-shimmer { 0%,100%{opacity:0.3;transform:rotate(0deg)} 50%{opacity:1;transform:rotate(180deg)} }
+@keyframes badge-pulse { 0%,100%{box-shadow:0 0 5px rgba(34,211,238,0.2),0 0 10px rgba(34,211,238,0.1)} 50%{box-shadow:0 0 15px rgba(34,211,238,0.4),0 0 30px rgba(34,211,238,0.2)} }
+@keyframes infinity-shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+</style>
 
     <div class="sl-panel p-5 animate-system-pop" style="animation-delay: 0.3s; border-color: rgba(16, 185, 129, 0.4);">
         <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
