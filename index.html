@@ -108,6 +108,48 @@
     display: none; /* مخفي افتراضياً */
     transition: all 0.3s ease;
 }
+.monarch-title-badgi {
+    color: #bb86fc; /* لون أرجواني سيادي */
+    text-shadow: 0 0 8px rgba(187, 134, 252, 0.8);
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-left: 10px;
+    padding: 3px 10px;
+    
+    
+    
+    letter-spacing: 1px;
+    
+    
+}
+.monarch-title-badgie {
+    color: #dcc300; /* لون أرجواني سيادي */
+    text-shadow: 0 0 8px rgba(172, 141, 0, 0.8);
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-left: 10px;
+    padding: 3px 10px;
+    
+    
+    
+    letter-spacing: 1px;
+    
+    
+}
+.monarch-title-badgiex {
+    color: #dedede; /* لون أرجواني سيادي */
+    text-shadow: 0 0 8px rgb(133, 133, 133);
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-left: 10px;
+    padding: 3px 10px;
+    
+    
+    
+    letter-spacing: 1px;
+    
+    
+}
 
 /* صنف (Class) يضاف برمجياً لإظهار اللقب */
 .monarch-title-badge.active {
@@ -139,7 +181,16 @@
     });
 </script>
 
-<div class="fixed top-6 right-6 z-50 flex gap-4 items-center">
+<div class="fixed top-6 left-6 z-50 flex gap-4 items-center color: #dedede; /* لون أرجواني سيادي */
+    text-shadow: 0 0 8px rgb(133, 133, 133);
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-left: 10px;
+    padding: 3px 10px;
+    
+    
+    
+    letter-spacing: 1px;">
     <button onclick="SoundEffects.toggleMusic(1)" class="w-10 h-10 flex items-center justify-center bg-slate-900/80 backdrop-blur border border-slate-700 hover:border-[var(--sys-cyan)] text-[var(--sys-cyan)] rounded-full transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]">
         <span id="musicIcon1" class="text-lg animate-pulse">🎵</span>
     </button>
@@ -147,14 +198,12 @@
         <span id="musicIcon2" class="text-lg animate-pulse">🎼</span>
     </button>
     <a href="https://aissaouimohamad62-glitch.github.io/proto/" target="_blank" class="px-4 py-2 bg-slate-900/80 backdrop-blur border border-slate-700 hover:border-[var(--sys-cyan)] text-white text-xs font-black uppercase tracking-widest rounded flex items-center gap-2 shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-all">
-        <span>PORTFOLIO</span> <span class="text-[var(--sys-cyan)]">📍</span>
+        <span>𝐏𝐎𝐑𝐓𝐅𝐎𝐋𝐈𝐎</span> <span class="text-[var(--sys-cyan)]">📍</span>
     </a>
     <a href="https://aissaouimohamad62-glitch.github.io/booksoverhaul.dz/" target="_blank" class="px-4 py-2 bg-slate-900/80 backdrop-blur border border-slate-700 hover:border-[var(--sys-cyan)] text-white text-xs font-black uppercase tracking-widest rounded flex items-center gap-2 shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-all">
-        <span>LIBRARY</span> <span class="text-[var(--sys-cyan)]">📒</span>
+        <span>𝐋𝐈𝐁𝐑𝐀𝐑𝐘</span> <span class="text-[var(--sys-cyan)]">📒</span>
     </a>
-    <a href="dungeons.html" target="_self" class="px-4 py-2 bg-slate-900/80 backdrop-blur border border-slate-700 hover:border-[var(--sys-purple)] text-white text-xs font-black uppercase tracking-widest rounded flex items-center gap-2 shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-all">
-        <span>DUNGEONS</span> <span class="text-[var(--sys-purple)]">🌋</span>
-    </a>
+    
 </div>
 
 <div class="max-w-[1400px] mx-auto grid grid-cols-1 xl:grid-cols-12 gap-6 relative z-10 mt-16" dir="ltr">
@@ -176,13 +225,13 @@
 
                 <div class="flex items-start justify-center gap-6 mb-6">
                     <div class="text-center">
-                        <div class="sys-font text-5xl font-black text-white leading-none drop-shadow-[0_0_15px_rgba(0,240,255,0.6)]" id="currentLevel">1</div>
-                        <div class="sys-font text-[10px] tracking-[0.2em] text-[var(--sys-cyan)] font-bold mt-1">LEVEL</div>
+                        <div class="sys-font text-5xl font-black text-white leading-none drop-shadow-[0_0_15px_rgba(0,240,255,0.6)]" id="currentLevel">𝟏</div>
+                        <div class="sys-font text-[10px] tracking-[0.2em] text-[var(--sys-cyan)] font-bold mt-1">𝐋𝐄𝐕𝐄𝐋</div>
                     </div>
                     
                     <div class="pt-2 text-left">
                         <div class="flex items-center gap-2 mb-1">
-                            <span class="sys-font text-[10px] text-[var(--sys-purple)] font-bold uppercase">JOB</span>
+                            <span class="sys-font text-[10px] text-[var(--sys-purple)] font-bold uppercase">𝐉𝐎𝐁 : </span>
                             <!-- حاوية عرض اللقب المجهز -->
 <span id="monarch-active-title" class="monarch-title-badge"></span>
                         </div>
@@ -194,7 +243,8 @@
                 </div>
                 <div class="text-center">
                         <div class="sys-font text-5xl font-black text-white leading-none drop-shadow-[0_0_15px_rgba(0,240,255,0.6)]" id="currentLevel"></div>
-                        <div class="sys-font text-[14px] tracking-[0.2em] text-[var(--sys-cyan)] font-bold mt-1"> <Div style="color: #00a8ff; color: #00a8ff;"> 𝔸𝕀𝕊𝕊𝔸𝕆𝕌𝕀 𝕄𝕆ℍ𝔸𝕄𝔸𝔻 𝔸𝔹𝔻𝔸𝕃𝕃𝔸ℍ </Div><br><DIv style="color: #9d4edd;"> 𝕆𝕎𝔸𝕀𝕊  </DIv></div>
+                        <div class="sys-font text-[14px] tracking-[0.2em] text-[var(--sys-cyan)] font-bold mt-1">  𝐀𝐈𝐒𝐒𝐀𝐎𝐔𝐈 𝐌𝐎𝐇𝐀𝐌𝐀𝐃 𝐀𝐁𝐃𝐀𝐋𝐋𝐀𝐇 </div>
+                        <DIv class="monarch-title-badgi" > 𝐎𝐖𝐀𝐈𝐒 </DIv>
                     </div>
 <br>
                 <div class="space-y-3 mb-6 px-2">
@@ -237,50 +287,50 @@
                         <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('str')">
                             <div class="flex items-center gap-2">
                                 <span class="text-red-400 text-xs">⚔️</span>
-                                <span class="sys-font text-sm font-bold text-white">STR</span>
+                                <span class="monarch-title-badgie">𝑺𝑻𝑹 </span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <span id="stat-str" class="sys-font text-lg font-black text-white">10</span>
+                                <span id="stat-str" class="monarch-title-badgiex">10</span>
                                 <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
                             </div>
                         </div>
                         <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('vit')">
                             <div class="flex items-center gap-2">
                                 <span class="text-emerald-400 text-xs">🛡️</span>
-                                <span class="sys-font text-sm font-bold text-white">VIT</span>
+                                <span class="monarch-title-badgie">𝐕𝐈𝐓 </span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <span id="stat-vit" class="sys-font text-lg font-black text-white">10</span>
+                                <span id="stat-vit" class="monarch-title-badgiex">10</span>
                                 <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
                             </div>
                         </div>
                         <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('agi')">
                             <div class="flex items-center gap-2">
                                 <span class="text-sky-400 text-xs">⚡</span>
-                                <span class="sys-font text-sm font-bold text-white">AGI</span>
+                                <span class="monarch-title-badgie">𝐀𝐆𝐈 </span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <span id="stat-agi" class="sys-font text-lg font-black text-white">10</span>
+                                <span id="stat-agi" class="monarch-title-badgiex">10</span>
                                 <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+7</span>
                             </div>
                         </div>
                         <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('int')">
                             <div class="flex items-center gap-2">
                                 <span class="text-[var(--sys-cyan)] text-xs">🧠</span>
-                                <span class="sys-font text-sm font-bold text-white">INT</span>
+                                <span class="monarch-title-badgie">𝐈𝐍𝐓 </span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <span id="stat-int" class="sys-font text-lg font-black text-white">10</span>
+                                <span id="stat-int" class="monarch-title-badgiex">10</span>
                                 <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
                             </div>
                         </div>
                         <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('sen')">
                             <div class="flex items-center gap-2">
                                 <span class="text-[var(--sys-purple)] text-xs">👁️</span>
-                                <span class="sys-font text-sm font-bold text-white">PER</span>
+                                <span class="monarch-title-badgie">𝐏𝐄𝐑 </span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <span id="stat-sen" class="sys-font text-lg font-black text-white">10</span>
+                                <span id="stat-sen" class="monarch-title-badgiex">10</span>
                                 <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
                             </div>
                         </div>
@@ -2144,4 +2194,5 @@ window.Router = Router;
 </script>
 </body>
 </html>
+
 
