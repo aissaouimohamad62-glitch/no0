@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام العاهل - مواقيت الصلاة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --system-blue: #00e5ff;
+            --system-dark: rgba(10, 14, 23, 0.95);
+            --system-border: #0077ff;
+            --system-glow: 0 0 15px rgba(0, 229, 255, 0.5);
+            --system-text: #e0f7fa;
+            --danger-red: #ff3366;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            background-image: radial-gradient(circle at center, #0a1128 0%, #000000 100%);
+            color: var(--system-text);
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .system-window {
+            background: var(--system-dark);
+            border: 2px solid var(--system-border);
+            border-radius: 8px;
+            box-shadow: var(--system-glow), inset 0 0 20px rgba(0, 119, 255, 0.2);
+            width: 90%;
+            max-width: 450px;
+            padding: 25px;
+            position: relative;
+            backdrop-filter: blur(5px);
+            animation: systemOpen 0.5s ease-out forwards;
+        }
+
+        @keyframes systemOpen {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .system-header {
+            text-align: center;
+            font-family: 'Share Tech Mono', 'Cairo', monospace;
+            font-size: 1.2rem;
+            color: var(--system-blue);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            text-shadow: 0 0 8px var(--system-blue);
+        }
+
+        .quest-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .countdown-container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--system-blue);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .countdown-time {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 2.5rem;
+            color: var(--system-blue);
+            text-shadow: var(--system-glow);
+            direction: ltr;
+        }
+
+        .prayer-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+
+        .prayer-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+            border-right: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .prayer-item.next-prayer {
+            background: rgba(0, 229, 255, 0.1);
+            border-right: 3px solid var(--system-blue);
+            box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.1);
+            color: var(--system-blue);
+            font-weight: bold;
+        }
+
+        .qibla-section {
+            text-align: center;
+            border-top: 1px solid rgba(0, 229, 255, 0.3);
+            padding-top: 20px;
+        }
+
+        .compass-container {
+            width: 120px;
+            height: 120px;
+            border: 2px dashed var(--system-blue);
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+            transition: transform 0.5s ease-out;
+        }
+
+        .compass-arrow {
+            position: absolute;
+            top: 10px;
+            left: calc(50% - 4px);
+            width: 8px;
+            height: 50px;
+            background: var(--danger-red);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            box-shadow: 0 0 10px var(--danger-red);
+        }
+
+        .center-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: var(--system-blue);
+            border-radius: 50%;
+            box-shadow: var(--system-glow);
+        }
+
+        /* نافذة الإشعار المنبثقة (عند دخول الوقت) */
+        .system-notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 0, 0, 0.9);
+            border: 2px solid var(--danger-red);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.6);
+            font-weight: bold;
+            transition: top 0.5s ease;
+            z-index: 1000;
+        }
+
+        .system-notification.show {
+            top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="system-notification" id="alert-box">
+        [تنبيه النظام]: حان الآن وقت الصلاة!
+    </div>
+
+    <div class="system-window">
+        <div class="system-header">[ SYSTEM . REQUIREMENT ]</div>
+        <div class="quest-title">المهمة اليومية: إقامة الصلاة</div>
+        
+        <div class="countdown-container">
+            <div class="countdown-label" id="next-prayer-name">جاري تحديد الموقع...</div>
+            <div class="countdown-time" id="countdown">--:--:--</div>
+        </div>
+
+        <ul class="prayer-list" id="prayer-list">
+            <li class="prayer-item"><span>الفجر</span><span id="time-fajr">--:--</span></li>
+            <li class="prayer-item"><span>الظهر</span><span id="time-dhuhr">--:--</span></li>
+            <li class="prayer-item"><span>العصر</span><span id="time-asr">--:--</span></li>
+            <li class="prayer-item"><span>المغرب</span><span id="time-maghrib">--:--</span></li>
+            <li class="prayer-item"><span>العشاء</span><span id="time-isha">--:--</span></li>
+        </ul>
+
+        <div class="qibla-section">
+            <div class="system-header" style="font-size: 1rem;">[ QIBLA . NAVIGATOR ]</div>
+            <div class="compass-container" id="compass">
+                <div class="compass-arrow"></div>
+                <div class="center-dot"></div>
+            </div>
+            <div style="font-size: 0.85rem; color: #aaa;">قم بتدوير الجهاز لتحديد القبلة (يتطلب هاتف ذكي)</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://api.aladhan.com/v1/timings";
+        let prayerTimes = {};
+        let qiblaDirection = 0;
+        let countdownInterval;
+
+        // إعدادات التنبيه الصوتي
+        const athanAudio = new Audio('https://media.blubrry.com/muslim_central_athan/audio.muslimcentral.com/athan/makkah.mp3');
+
+        // أسماء الصلوات بالإنجليزية والعربية للربط مع الـ API
+        const prayers = [
+            { id: 'Fajr', ar: 'الفجر', domId: 'time-fajr' },
+            { id: 'Dhuhr', ar: 'الظهر', domId: 'time-dhuhr' },
+            { id: 'Asr', ar: 'العصر', domId: 'time-asr' },
+            { id: 'Maghrib', ar: 'المغرب', domId: 'time-maghrib' },
+            { id: 'Isha', ar: 'العشاء', domId: 'time-isha' }
+        ];
+
+        // 1. تحديد موقع المستخدم
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    fetchPrayerData(lat, lon);
+                    calculateQibla(lat, lon);
+                    initCompass();
+                },
+                (error) => {
+                    document.getElementById('next-prayer-name').innerText = "فشل في تحديد الموقع. يرجى تفعيل الـ GPS.";
+                }
+            );
+        }
+
+        // 2. جلب البيانات من Aladhan API
+        async function fetchPrayerData(lat, lon) {
+            try {
+                // استخدام التاريخ الحالي
+                const timestamp = Math.floor(Date.now() / 1000);
+                const response = await fetch(`${API_URL}/${timestamp}?latitude=${lat}&longitude=${lon}&method=2`);
+                const data = await response.json();
+                
+                prayerTimes = data.data.timings;
+                
+                // تحديث واجهة المستخدم
+                prayers.forEach(p => {
+                    document.getElementById(p.domId).innerText = prayerTimes[p.id];
+                });
+
+                startSystem(prayerTimes);
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        // 3. منطق العداد التنازلي وتحديد الصلاة القادمة
+        function startSystem(timings) {
+            clearInterval(countdownInterval);
+            
+            countdownInterval = setInterval(() => {
+                const now = new Date();
+                const currentTime = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+                
+                let nextPrayer = null;
+                let minDiff = Infinity;
+
+                // إزالة التنسيق النشط من الجميع
+                document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('next-prayer'));
+
+                for (let p of prayers) {
+                    const [hours, minutes] = timings[p.id].split(':').map(Number);
+                    const prayerTime = hours * 60 + minutes;
+                    
+                    let diff = prayerTime - currentTime;
+                    
+                    // إذا مر وقت الصلاة، نحسبها لليوم التالي
+                    if (diff < 0) {
+                        diff += 24 * 60; 
+                    }
+
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        nextPrayer = { ...p, time: timings[p.id], diffObj: diff };
+                    }
+                }
+
+                if (nextPrayer) {
+                    // تفعيل الستايل للصلاة القادمة
+                    const listItem = document.getElementById(nextPrayer.domId).parentElement;
+                    listItem.classList.add('next-prayer');
+
+                    // تحديث النص
+                    document.getElementById('next-prayer-name').innerText = `الوقت المتبقي لصلاة ${nextPrayer.ar}`;
+
+                    // تحويل الدقائق المتبقية إلى ساعات ودقائق وثواني
+                    const hrs = Math.floor(minDiff / 60);
+                    const mins = Math.floor(minDiff % 60);
+                    const secs = Math.floor((minDiff * 60) % 60);
+
+                    document.getElementById('countdown').innerText = 
+                        `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                    // إطلاق التنبيه إذا وصل العداد إلى الصفر (تقريباً)
+                    if (hrs === 0 && mins === 0 && secs === 0) {
+                        triggerSystemAlert(nextPrayer.ar);
+                    }
+                }
+            }, 1000);
+        }
+
+        // 4. إشعار النظام المكتمل (Web Notification + Audio + UI Alert)
+        function triggerSystemAlert(prayerName) {
+            // تشغيل الصوت
+            athanAudio.play().catch(e => console.log("المتصفح يمنع التشغيل التلقائي للصوت."));
+            
+            // إظهار النافذة المنبثقة في الـ UI
+            const alertBox = document.getElementById('alert-box');
+            alertBox.innerText = `[تنبيه النظام]: حان الآن موعد أذان ${prayerName}`;
+            alertBox.classList.add('show');
+            setTimeout(() => alertBox.classList.remove('show'), 15000);
+
+            // إشعارات المتصفح
+            if (Notification.permission === "granted") {
+                new Notification("نظام العاهل", {
+                    body: `حان الآن وقت صلاة ${prayerName}`,
+                    icon: "https://cdn-icons-png.flaticon.com/512/1151/1151025.png"
+                });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+        }
+
+        // 5. حساب القبلة برمجياً بناءً على إحداثيات مكة
+        function calculateQibla(lat, lon) {
+            const makkahLat = 21.422487;
+            const makkahLon = 39.826206;
+            
+            // تحويل الدرجات إلى راديان (للحسابات الرياضية)
+            const toRad = (deg) => (deg * Math.PI) / 180;
+            const toDeg = (rad) => (rad * 180) / Math.PI;
+
+            const phiK = toRad(makkahLat);
+            const lambdaK = toRad(makkahLon);
+            const phi = toRad(lat);
+            const lambda = toRad(lon);
+
+            const y = Math.sin(lambdaK - lambda);
+            const x = Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda);
+            
+            let qibla = toDeg(Math.atan2(y, x));
+            qiblaDirection = (qibla + 360) % 360; // التأكد من أن الزاوية موجبة بين 0 و 360
+        }
+
+        // 6. تشغيل البوصلة (يتطلب هاتف ذكي يدعم DeviceOrientation API)
+        function initCompass() {
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', function(event) {
+                    let alpha = event.alpha; // دوران الجهاز حول محور Z
+                    let webkitAlpha = event.webkitCompassHeading; // خاص بأجهزة Apple
+                    
+                    let heading = webkitAlpha || (360 - alpha);
+                    if (heading) {
+                        // حساب الزاوية النهائية للبوصلة لتشير إلى القبلة
+                        let finalAngle = qiblaDirection - heading;
+                        document.getElementById('compass').style.transform = `rotate(${finalAngle}deg)`;
+                    }
+                });
+            }
+        }
+
+        // طلب صلاحيات الإشعارات عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            if ("Notification" in window && Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+        });
+    </script>
+</body>
+</html>
