@@ -57,6 +57,20 @@
             text-transform: uppercase;
             text-shadow: 0 0 8px var(--system-blue);
         }
+         .monarch-title-badge {
+    color: #bb86fc; /* لون أرجواني سيادي */
+    text-shadow: 0 0 8px rgba(187, 134, 252, 0.8);
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-left: 10px;
+    padding: 3px 10px;
+    border: 1px solid #bb86fc;
+    border-radius: 6px;
+    background: rgba(187, 134, 252, 0.1);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    
+}
 
         .quest-title {
             font-size: 1.5rem;
@@ -174,6 +188,7 @@
         .system-notification.show {
             top: 20px;
         }
+      
     </style>
 </head>
 <body>
@@ -183,10 +198,12 @@
     </div>
 
     <div class="system-window">
-        <div class="system-header">[ SYSTEM . REQUIREMENT ]</div>
-        <button onclick="window.location.href='index.html'" class="system-header">
+        <button onclick="window.location.href='index.html'" class="monarch-title-badge" >
                     <span>↩</span> <span> 🏠 DASHBOARD العودة للرئيسية</span>
                 </button>
+                <br> <br>
+        <div class="system-header">[ SYSTEM . REQUIREMENT ]</div>
+        
         <div class="quest-title">المهمة اليومية: إقامة الصلاة</div>
         
         <div class="countdown-container">
