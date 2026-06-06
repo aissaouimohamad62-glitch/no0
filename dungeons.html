@@ -243,6 +243,20 @@
     background: radial-gradient(circle, transparent 30%, rgba(0, 0, 0, 0.85) 100%);
     pointer-events: none;
 }
+.monarch-title-badgi {
+    color: #bb86fc; /* لون أرجواني سيادي */
+    text-shadow: 0 0 8px rgba(187, 134, 252, 0.8);
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-left: 10px;
+    padding: 3px 10px;
+    
+    
+    
+    letter-spacing: 1px;
+    
+    
+}
     </style>
 <base target="_blank">
 <base target="_blank">
@@ -261,18 +275,16 @@
     <header class="relative z-10 max-w-7xl mx-auto mb-8 p-4">
         <div class="bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl p-4 flex flex-wrap justify-between items-center gap-4 neon-border">
             <div class="flex items-center gap-4">
-                <button onclick="window.location.href='index.html'" class="sys-btn text-xs bg-black/80 px-4 py-2 border border-white/20 hover:border-sys-cyan hover:text-sys-cyan transition rounded-lg flex items-center gap-2 text-white/70">
-                    <span>↩</span> <span> 🏠 DASHBOARD العودة للرئيسية</span>
-                </button>
+                
                 <div class="flex flex-col">
                     <span class="font-orbitron text-[10px] text-white/30 tracking-[0.3em] uppercase">Sovereign System</span>
                     <h1 class="font-orbitron text-xl font-black tracking-widest text-sys-cyan uppercase glitch-text">🧠 BRAIN DUNGEONS</h1>
                 </div>
             </div>
             <nav class="flex flex-wrap gap-2 justify-center md:justify-start">
-            <a href="index.html" class="px-4 py-2 text-xs font-mono sovereign-panel rounded hover:bg-[var(--sys-cyan)] hover:text-black transition duration-300 text-slate-300">
-                🏠 DASHBOARD
-            </a>
+            <button onclick="window.location.href='index.html'" class="monarch-title-badgei" >
+                    <span>↩</span> <span> 🏠 DASHBOARD العودة للرئيسية</span>
+                </button>
             <a href="active-quests.html" class="px-4 py-2 text-xs font-mono bg-cyan-950/40 border border-[var(--sys-cyan)] text-[var(--sys-cyan)] rounded font-bold shadow-[0_0_10px_rgba(0,240,255,0.1)]">
                 ⚔️ ACTIVE QUESTS
             </a>
