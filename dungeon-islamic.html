@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign System | زنزانة الثقافة الإسلامية المظلمة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sys-dark': '#000000',
+                        'sys-cyan': '#00f0ff',
+                        'sys-purple': '#b026ff',
+                        'sys-gold': '#ffd700',
+                        'sys-rose': '#e11d48',
+                        'sys-green': '#10b981',
+                    },
+                    fontFamily: {
+                        'cairo': ['Cairo', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --sys-cyan: #00f0ff;
+            --sys-purple: #b026ff;
+            --danger: #e11d48;
+            --success: #10b981;
+            --bg-dark: #05050a;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-dark);
+            color: #e2e8f0;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(176, 38, 255, 0.015) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .neon-border {
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1), inset 0 0 15px rgba(0, 240, 255, 0.05);
+            background: rgba(5, 10, 20, 0.85);
+            backdrop-filter: blur(10px);
+        }
+
+        .sys-btn {
+            background: linear-gradient(180deg, rgba(0, 240, 255, 0.05) 0%, rgba(5, 10, 25, 0.8) 100%);
+            border: 1px solid var(--sys-cyan);
+            color: var(--sys-cyan);
+            transition: all 0.3s;
+        }
+
+        .sys-btn:hover:not(:disabled) {
+            box-shadow: 0 0 20px rgba(0,240,255,0.4);
+            background: rgba(0,240,255,0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-correct { background: var(--success) !important; color: white !important; border-color: var(--success) !important; box-shadow: 0 0 20px rgba(16, 185, 129, 0.5) !important; }
+        .btn-wrong { background: var(--danger) !important; color: white !important; border-color: var(--danger) !important; box-shadow: 0 0 20px rgba(225, 29, 72, 0.5) !important; }
+
+        .timer-bar-container { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .timer-bar-fill { height: 100%; width: 100%; background: var(--sys-cyan); transition: width 0.1s linear, background-color 0.3s; box-shadow: 0 0 10px var(--sys-cyan); }
+        
+        .nav-btn {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            transition: all 0.3s;
+        }
+        .nav-btn:hover { border-color: var(--sys-cyan); box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
+
+        .floor-glow {
+            text-shadow: 0 0 15px var(--sys-purple), 0 0 30px var(--sys-purple);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-x-hidden">
+
+    <nav class="absolute top-4 left-1/2 transform -translate-x-1/2 flex flex-wrap gap-3 w-full max-w-4xl px-4 justify-center z-50">
+        <button onclick="window.location.href='index.html'" class="nav-btn px-4 py-2 text-xs md:text-sm text-slate-300 rounded font-bold font-orbitron flex items-center gap-2">
+            <span class="text-sys-cyan">↩</span> <span>🏠 DASHBOARD العودة للرئيسية</span>
+        </button>
+        <button onclick="window.location.href='dungeons.html'" class="nav-btn px-4 py-2 text-xs md:text-sm text-sys-purple rounded font-bold font-orbitron flex items-center gap-2 hover:border-sys-purple shadow-[0_0_10px_rgba(176,38,255,0.1)]">
+            <span>⛩️</span> <span>العودة لصفحة الزنازن</span>
+        </button>
+    </nav>
+
+    <header class="absolute top-20 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4 z-40">
+        <div class="grid grid-cols-3 gap-2 md:gap-4 bg-black/60 border border-sys-cyan/30 rounded-lg p-3 backdrop-blur-md shadow-[0_0_20px_rgba(0,240,255,0.1)]">
+            <div class="text-center border-l border-white/10">
+                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest block">Player Level</span>
+                <span id="global-level" class="text-lg md:text-xl font-black text-sys-purple drop-shadow-[0_0_5px_rgba(176,38,255,0.5)]">LVL --</span>
+            </div>
+            <div class="text-center border-l border-white/10">
+                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest block">Gold</span>
+                <span id="global-gold" class="text-lg md:text-xl font-black text-amber-500 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">0 G</span>
+            </div>
+            <div class="text-center flex flex-col justify-center px-2">
+                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest block mb-1">XP Progress</span>
+                <div class="w-full bg-slate-900 h-2 md:h-3 rounded overflow-hidden border border-slate-700 relative">
+                    <div id="global-xp-bar" class="bg-gradient-to-r from-sys-cyan to-blue-500 h-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <span id="global-xp-text" class="text-[10px] font-bold text-slate-400 mt-1">0/0</span>
+            </div>
+        </div>
+    </header>
+
+    <div id="start-screen" class="neon-border p-8 rounded-xl max-w-xl w-full text-center z-10 mt-32 animate-[fadeIn_0.5s_ease-out]">
+        <div class="font-orbitron text-sys-cyan text-xs tracking-[0.3em] uppercase mb-2">[ System Notification ]</div>
+        <h1 class="text-3xl font-black text-white mb-2 drop-shadow-[0_0_10px_rgba(0,240,255,0.5)]">زنزانة الثقافة اللانهائية</h1>
+        <div class="text-sys-purple font-bold text-lg mb-4 floor-glow">Floor <span id="display-floor-start">1</span></div>
+        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+            زنزانة تعتمد على البقاء (Survival Mode).<br> 
+            كل طابق يحتوي على أسئلة أكثر من سابقه. أجب على <span class="text-emerald-400 font-bold">80%</span> بشكل صحيح للعبور للطابق التالي ومضاعفة جوائزك.<br>
+            <span class="text-rose-500 font-bold">تحذير:</span> الفشل يعني طردك وعودتك للطابق الأول!
+        </p>
+        <button class="sys-btn w-full py-4 font-black text-lg tracking-widest rounded uppercase shadow-[0_0_20px_rgba(0,240,255,0.2)]" onclick="startFloor()">[ اقتحام الطابق ]</button>
+    </div>
+
+    <div id="quiz-screen" class="neon-border p-6 md:p-8 rounded-xl max-w-xl w-full z-10 mt-32 hidden">
+        <div class="flex justify-between items-center mb-4">
+            <div class="font-orbitron text-sys-purple text-xs md:text-sm font-bold tracking-widest uppercase">
+                Floor <span id="current-floor-ui">1</span> <span class="text-slate-500 mx-2">|</span> Q <span id="q-number">1</span>/<span id="q-total">5</span>
+            </div>
+            <div class="text-xs text-sys-cyan font-bold bg-sys-cyan/10 px-3 py-1 border border-sys-cyan/30 rounded">INT Check</div>
+        </div>
+        
+        <div class="timer-bar-container mb-6"><div id="timer-bar" class="timer-bar-fill"></div></div>
+        
+        <h2 id="question" class="text-xl md:text-2xl font-bold text-white mb-8 leading-relaxed min-h-[80px]">...</h2>
+        
+        <div id="options" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            </div>
+    </div>
+
+    <div id="result-screen" class="neon-border p-8 rounded-xl max-w-xl w-full text-center z-10 mt-32 hidden">
+        <div id="result-status-title" class="font-orbitron text-xs tracking-[0.3em] uppercase mb-2">...</div>
+        <h2 class="text-4xl font-black text-white mb-2" id="floor-result-msg">...</h2>
+        <p class="text-slate-400 text-sm mb-6" id="feedback-msg">...</p>
+        
+        <div id="rewards-box" class="bg-black/50 border border-sys-cyan/30 rounded p-4 mb-6 text-left hidden">
+            <div class="text-[10px] text-sys-cyan font-orbitron mb-2 uppercase tracking-widest border-b border-sys-cyan/20 pb-2">Floor Loot Extracted:</div>
+            <div class="flex flex-col gap-2 font-orbitron text-sm font-bold mt-2">
+                <div class="flex justify-between"><span class="text-white">Experience Points</span><span class="text-emerald-400" id="reward-xp">+0 XP</span></div>
+                <div class="flex justify-between"><span class="text-white">Sovereign Gold</span><span class="text-yellow-500" id="reward-gold">+0 G</span></div>
+                <div class="flex justify-between"><span class="text-white">Intelligence Stat</span><span class="text-sys-cyan" id="reward-int">+0 INT</span></div>
+            </div>
+        </div>
+
+        <button id="next-action-btn" class="sys-btn w-full py-4 font-black text-lg rounded uppercase tracking-widest" onclick="handleNextAction()">[ المتابعة ]</button>
+    </div>
+<script src="questions.js"></script>
+    <script>
+        const questionBank = myDungeonQuestions; // الجديد
+        // ==========================================
+        // 1. قاعدة البيانات القابلة للتوسع (Massive Question Bank)
+        // يمكنك إضافة آلاف الأسئلة هنا بنفس التنسيق
+        // ==========================================
+       
+        // ==========================================
+        // 2. نظام الطوابق والتقدم (Floor Progression System)
+        // ==========================================
+        let currentFloor = parseInt(localStorage.getItem('islamic_dungeon_floor')) || 1;
+        let currentStageQuestions = [];
+        let currentQIndex = 0;
+        let score = 0;
+        let timeLeft = 200; // 20 ثانية (200 * 100ms)
+        let timerInterval;
+
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const timerBar = document.getElementById('timer-bar');
+
+        // تهيئة الشاشة الافتتاحية
+        document.getElementById('display-floor-start').innerText = currentFloor;
+
+        function startFloor() {
+            // حساب عدد الأسئلة للطابق الحالي (يبدأ بـ 5 وكل طابق يزيد سؤالين)
+            const numQuestions = 3 + (currentFloor * 2);
+            
+            // سحب أسئلة عشوائية من بنك الأسئلة
+            currentStageQuestions = [...questionBank].sort(() => 0.5 - Math.random()).slice(0, numQuestions);
+            
+            currentQIndex = 0;
+            score = 0;
+
+            document.getElementById('current-floor-ui').innerText = currentFloor;
+            document.getElementById('q-total').innerText = currentStageQuestions.length;
+
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            clearInterval(timerInterval);
+            timeLeft = 200; // 20 ثانية للرد (وقت ممتد كما طلبت)
+            timerBar.style.width = '100%';
+            timerBar.style.backgroundColor = 'var(--sys-cyan)';
+            
+            document.getElementById('q-number').innerText = currentQIndex + 1;
+            document.getElementById('question').innerText = currentStageQuestions[currentQIndex].q;
+            
+            const optsDiv = document.getElementById('options');
+            optsDiv.innerHTML = '';
+            
+            currentStageQuestions[currentQIndex].options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'sys-btn py-4 px-4 rounded font-bold text-sm text-right leading-relaxed';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optsDiv.appendChild(btn);
+            });
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft -= 1; // ينقص درجة كل 100 ملي ثانية
+                timerBar.style.width = Math.max(0, (timeLeft/200)*100) + '%';
+                
+                if(timeLeft <= 60) timerBar.style.backgroundColor = 'var(--danger)'; // آخر 6 ثواني خطر
+                if(timeLeft <= 0) { 
+                    clearInterval(timerInterval); 
+                    checkAnswer(-1, null); 
+                }
+            }, 100);
+        }
+
+        function checkAnswer(selected, btnNode) {
+            clearInterval(timerInterval);
+            const correct = currentStageQuestions[currentQIndex].answer;
+            const buttons = document.getElementById('options').children;
+
+            for(let b of buttons) b.disabled = true;
+
+            if (selected === correct) {
+                if(btnNode) btnNode.classList.add('btn-correct');
+                score++;
+            } else {
+                if(btnNode) btnNode.classList.add('btn-wrong');
+                buttons[correct].classList.add('btn-correct');
+            }
+            setTimeout(nextQuestion, 1200);
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < currentStageQuestions.length) {
+                loadQuestion();
+            } else {
+                evaluateFloor();
+            }
+        }
+
+        // ==========================================
+        // 3. تقييم الطابق ونظام الغنائم (Loot & Sync)
+        // ==========================================
+        function evaluateFloor() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            
+            const totalQ = currentStageQuestions.length;
+            const passingScore = Math.ceil(totalQ * 0.8); // 80% للنجاح
+            const success = score >= passingScore;
+
+            const titleEl = document.getElementById('result-status-title');
+            const msgEl = document.getElementById('floor-result-msg');
+            const feedEl = document.getElementById('feedback-msg');
+            const btnEl = document.getElementById('next-action-btn');
+            const rewardsBox = document.getElementById('rewards-box');
+
+            if (success) {
+                // الفوز بالطابق
+                titleEl.innerText = "[ FLOOR CLEARED ]";
+                titleEl.className = "font-orbitron text-emerald-400 text-xs tracking-[0.3em] uppercase mb-2";
+                msgEl.innerText = `تم اختراق الطابق ${currentFloor}`;
+                msgEl.style.color = "var(--sys-cyan)";
+                feedEl.innerText = `أداء استثنائي! أجبت على ${score}/${totalQ} بشكل صحيح.`;
+                btnEl.innerText = "[ اقتحام الطابق التالي ]";
+                
+                // حساب الجوائز (تتضاعف مع الطوابق)
+                const earnedXP = 100 + (currentFloor * 50);
+                const earnedGold = 20 + (currentFloor * 10);
+                const earnedInt = (currentFloor % 3 === 0) ? 2 : 1; // +INT إضافي كل 3 طوابق
+
+                document.getElementById('reward-xp').innerText = `+${earnedXP} XP`;
+                document.getElementById('reward-gold').innerText = `+${earnedGold} G`;
+                document.getElementById('reward-int').innerText = `+${earnedInt} INT`;
+                rewardsBox.classList.remove('hidden');
+
+                // تحديث الـ State و LocalStorage
+                currentFloor++;
+                localStorage.setItem('islamic_dungeon_floor', currentFloor);
+                injectRewardsToGlobalSystem(earnedXP, earnedGold, earnedInt);
+
+                if(typeof confetti === 'function') confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#00f0ff', '#10b981'] });
+
+            } else {
+                // الخسارة والموت (Permadeath)
+                titleEl.innerText = "[ SYSTEM FATAL ERROR ]";
+                titleEl.className = "font-orbitron text-rose-500 text-xs tracking-[0.3em] uppercase mb-2 animate-pulse";
+                msgEl.innerText = "فشل ذريع!";
+                msgEl.style.color = "var(--danger)";
+                feedEl.innerHTML = `أجبت على ${score}/${totalQ} فقط.<br>النظام يعاقبك بإعادتك إلى الطابق الأول.`;
+                btnEl.innerText = "[ إعادة بناء النظام (طابق 1) ]";
+                btnEl.style.borderColor = "var(--danger)";
+                btnEl.style.color = "var(--danger)";
+                rewardsBox.classList.add('hidden');
+
+                // إعادة الضبط
+                currentFloor = 1;
+                localStorage.setItem('islamic_dungeon_floor', currentFloor);
+            }
+        }
+
+        function handleNextAction() {
+            // إعادة تحميل الشاشة للبدء من جديد
+            location.reload();
+        }
+
+        // ==========================================
+        // 4. دمج وحقن البيانات مع لوحة التحكم الرئيسية (index.html)
+        // ==========================================
+        function injectRewardsToGlobalSystem(xp, gold, int) {
+            try {
+                let systemData = JSON.parse(localStorage.getItem('monarch_system_data')) || { level: 1, xp: 0, gold: 0, stats: {int: 10} };
+                
+                systemData.xp = (systemData.xp || 0) + xp;
+                systemData.gold = (systemData.gold || 0) + gold;
+                if(!systemData.stats) systemData.stats = {};
+                systemData.stats.int = (systemData.stats.int || 10) + int;
+
+                // منطق رفع المستوى (Level Up)
+                let xpNeeded = (systemData.level || 1) * 100;
+                while (systemData.xp >= xpNeeded) {
+                    systemData.xp -= xpNeeded;
+                    systemData.level = (systemData.level || 1) + 1;
+                    xpNeeded = systemData.level * 100;
+                    if(typeof confetti === 'function') setTimeout(() => { confetti({ particleCount: 300, spread: 150, origin: { y: 0.3 }}); }, 500);
+                }
+
+                localStorage.setItem('monarch_system_data', JSON.stringify(systemData));
+                
+                // تحديث الواجهة العلوية فوراً
+                updateGlobalUI(systemData);
+
+            } catch(e) { console.error("فشل في تحديث بيانات النظام", e); }
+        }
+
+        function updateGlobalUI(data = null) {
+            if (!data) {
+                const localData = localStorage.getItem('monarch_system_data');
+                data = localData ? JSON.parse(localData) : { level: 1, xp: 0, gold: 0 };
+            }
+            const currentLevel = data.level || 1;
+            const currentXP = data.xp || 0;
+            const currentGold = data.gold || 0;
+            const xpNeeded = currentLevel * 100;
+            const xpPercentage = Math.min((currentXP / xpNeeded) * 100, 100);
+
+            document.getElementById('global-level').innerText = `LVL ${currentLevel}`;
+            document.getElementById('global-gold').innerText = `${currentGold.toLocaleString()} G`;
+            document.getElementById('global-xp-text').innerText = `${currentXP}/${xpNeeded} XP`;
+            document.getElementById('global-xp-bar').style.width = `${xpPercentage}%`;
+        }
+
+        // تشغيل التحديث فوراً عند فتح الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            updateGlobalUI();
+            document.getElementById('display-floor-start').innerText = currentFloor;
+        });
+
+    </script>
+    
+</body>
+</html>
