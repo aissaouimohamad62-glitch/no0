@@ -1792,5 +1792,15 @@ const Milestone = {
     }
 };
     </script>
+    <script>
+    // تفعيل الهالة السيادية المحفوظة فور تحميل الصفحة
+    const savedAura = localStorage.getItem('sovereign_aura_color');
+    if(savedAura) {
+        document.documentElement.style.setProperty('--sys-cyan', savedAura);
+        document.documentElement.style.setProperty('--sys-cyan-glow', savedAura + '99');
+        // للاندماج المطلق يمكنك توحيد اللونين الأساسيين
+        // document.documentElement.style.setProperty('--sys-purple', savedAura); 
+    }
+</script>
 </body>
 </html>
