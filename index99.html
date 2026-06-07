@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام العاهل - مواقيت الصلاة</title>
+    <title>نظام العاهل - مواقيت الصلاة (مسعد - الجلفة)</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
+        /* تم الحفاظ على التصميم الأساسي كما هو */
         :root {
             --system-blue: #00e5ff;
             --system-dark: rgba(10, 14, 23, 0.95);
@@ -58,19 +59,18 @@
             text-shadow: 0 0 8px var(--system-blue);
         }
          .monarch-title-badge {
-    color: #bb86fc; /* لون أرجواني سيادي */
-    text-shadow: 0 0 8px rgba(187, 134, 252, 0.8);
-    font-size: 0.85rem;
-    font-weight: bold;
-    margin-left: 10px;
-    padding: 3px 10px;
-    border: 1px solid #bb86fc;
-    border-radius: 6px;
-    background: rgba(187, 134, 252, 0.1);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    
-}
+            color: #bb86fc;
+            text-shadow: 0 0 8px rgba(187, 134, 252, 0.8);
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-left: 10px;
+            padding: 3px 10px;
+            border: 1px solid #bb86fc;
+            border-radius: 6px;
+            background: rgba(187, 134, 252, 0.1);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
         .quest-title {
             font-size: 1.5rem;
@@ -168,7 +168,6 @@
             box-shadow: var(--system-glow);
         }
 
-        /* نافذة الإشعار المنبثقة (عند دخول الوقت) */
         .system-notification {
             position: fixed;
             top: -100px;
@@ -188,23 +187,19 @@
         .system-notification.show {
             top: 20px;
         }
-      
     </style>
 </head>
 <body>
-   
 
     <div class="system-notification" id="alert-box">
         [تنبيه النظام]: حان الآن وقت الصلاة!
     </div>
 
     <div class="system-window">
-        
         <button onclick="window.location.href='index.html'" class="monarch-title-badge" >
-                    <span>↩</span> <span> 🏠 DASHBOARD العودة للرئيسية</span>
-                </button>
-        
-                <br> <br>
+            <span>↩</span> <span> 🏠 DASHBOARD العودة للرئيسية</span>
+        </button>
+        <br> <br>
         <div class="system-header">[ SYSTEM . REQUIREMENT ]</div>
         
         <div class="quest-title">المهمة اليومية: إقامة الصلاة</div>
@@ -238,10 +233,12 @@
         let qiblaDirection = 0;
         let countdownInterval;
 
-        // إعدادات التنبيه الصوتي
+        // إحداثيات مسعد - الجلفة الافتراضية
+        const MESSAAD_LAT = 34.1543;
+        const MESSAAD_LON = 3.5026;
+
         const athanAudio = new Audio('https://media.blubrry.com/muslim_central_athan/audio.muslimcentral.com/athan/makkah.mp3');
 
-        // أسماء الصلوات بالإنجليزية والعربية للربط مع الـ API
         const prayers = [
             { id: 'Fajr', ar: 'الفجر', domId: 'time-fajr' },
             { id: 'Dhuhr', ar: 'الظهر', domId: 'time-dhuhr' },
@@ -250,33 +247,41 @@
             { id: 'Isha', ar: 'العشاء', domId: 'time-isha' }
         ];
 
-        // 1. تحديد موقع المستخدم
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    fetchPrayerData(lat, lon);
-                    calculateQibla(lat, lon);
-                    initCompass();
-                },
-                (error) => {
-                    document.getElementById('next-prayer-name').innerText = "فشل في تحديد الموقع. يرجى تفعيل الـ GPS.";
-                }
-            );
+        // 1. تحديد موقع المستخدم مع إضافة مسعد كبديل في حالة الفشل
+        function initLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        fetchPrayerData(lat, lon);
+                        calculateQibla(lat, lon);
+                        initCompass();
+                    },
+                    (error) => {
+                        // في حال رفض الـ GPS أو فشله، نستخدم إحداثيات مسعد مباشرة
+                        document.getElementById('next-prayer-name').innerText = "تم استخدام موقع مسعد الافتراضي";
+                        fetchPrayerData(MESSAAD_LAT, MESSAAD_LON);
+                        calculateQibla(MESSAAD_LAT, MESSAAD_LON);
+                        initCompass();
+                    }
+                );
+            } else {
+                fetchPrayerData(MESSAAD_LAT, MESSAAD_LON);
+                calculateQibla(MESSAAD_LAT, MESSAAD_LON);
+            }
         }
 
-        // 2. جلب البيانات من Aladhan API
+        // 2. جلب البيانات باستخدام طريقة حساب وزارة الشؤون الدينية الجزائرية (method=21)
         async function fetchPrayerData(lat, lon) {
             try {
-                // استخدام التاريخ الحالي
                 const timestamp = Math.floor(Date.now() / 1000);
-                const response = await fetch(`${API_URL}/${timestamp}?latitude=${lat}&longitude=${lon}&method=2`);
+                // تم تعديل method=2 إلى method=21 المخصصة للجزائر
+                const response = await fetch(`${API_URL}/${timestamp}?latitude=${lat}&longitude=${lon}&method=21`);
                 const data = await response.json();
                 
                 prayerTimes = data.data.timings;
                 
-                // تحديث واجهة المستخدم
                 prayers.forEach(p => {
                     document.getElementById(p.domId).innerText = prayerTimes[p.id];
                 });
@@ -299,7 +304,6 @@
                 let nextPrayer = null;
                 let minDiff = Infinity;
 
-                // إزالة التنسيق النشط من الجميع
                 document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('next-prayer'));
 
                 for (let p of prayers) {
@@ -308,7 +312,6 @@
                     
                     let diff = prayerTime - currentTime;
                     
-                    // إذا مر وقت الصلاة، نحسبها لليوم التالي
                     if (diff < 0) {
                         diff += 24 * 60; 
                     }
@@ -320,14 +323,11 @@
                 }
 
                 if (nextPrayer) {
-                    // تفعيل الستايل للصلاة القادمة
                     const listItem = document.getElementById(nextPrayer.domId).parentElement;
                     listItem.classList.add('next-prayer');
 
-                    // تحديث النص
                     document.getElementById('next-prayer-name').innerText = `الوقت المتبقي لصلاة ${nextPrayer.ar}`;
 
-                    // تحويل الدقائق المتبقية إلى ساعات ودقائق وثواني
                     const hrs = Math.floor(minDiff / 60);
                     const mins = Math.floor(minDiff % 60);
                     const secs = Math.floor((minDiff * 60) % 60);
@@ -335,7 +335,6 @@
                     document.getElementById('countdown').innerText = 
                         `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
-                    // إطلاق التنبيه إذا وصل العداد إلى الصفر (تقريباً)
                     if (hrs === 0 && mins === 0 && secs === 0) {
                         triggerSystemAlert(nextPrayer.ar);
                     }
@@ -343,18 +342,15 @@
             }, 1000);
         }
 
-        // 4. إشعار النظام المكتمل (Web Notification + Audio + UI Alert)
+        // 4. إشعار النظام المكتمل
         function triggerSystemAlert(prayerName) {
-            // تشغيل الصوت
             athanAudio.play().catch(e => console.log("المتصفح يمنع التشغيل التلقائي للصوت."));
             
-            // إظهار النافذة المنبثقة في الـ UI
             const alertBox = document.getElementById('alert-box');
             alertBox.innerText = `[تنبيه النظام]: حان الآن موعد أذان ${prayerName}`;
             alertBox.classList.add('show');
             setTimeout(() => alertBox.classList.remove('show'), 15000);
 
-            // إشعارات المتصفح
             if (Notification.permission === "granted") {
                 new Notification("نظام العاهل", {
                     body: `حان الآن وقت صلاة ${prayerName}`,
@@ -365,12 +361,11 @@
             }
         }
 
-        // 5. حساب القبلة برمجياً بناءً على إحداثيات مكة
+        // 5. حساب القبلة
         function calculateQibla(lat, lon) {
             const makkahLat = 21.422487;
             const makkahLon = 39.826206;
             
-            // تحويل الدرجات إلى راديان (للحسابات الرياضية)
             const toRad = (deg) => (deg * Math.PI) / 180;
             const toDeg = (rad) => (rad * 180) / Math.PI;
 
@@ -383,19 +378,18 @@
             const x = Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda);
             
             let qibla = toDeg(Math.atan2(y, x));
-            qiblaDirection = (qibla + 360) % 360; // التأكد من أن الزاوية موجبة بين 0 و 360
+            qiblaDirection = (qibla + 360) % 360;
         }
 
-        // 6. تشغيل البوصلة (يتطلب هاتف ذكي يدعم DeviceOrientation API)
+        // 6. تشغيل البوصلة
         function initCompass() {
             if (window.DeviceOrientationEvent) {
                 window.addEventListener('deviceorientation', function(event) {
-                    let alpha = event.alpha; // دوران الجهاز حول محور Z
-                    let webkitAlpha = event.webkitCompassHeading; // خاص بأجهزة Apple
+                    let alpha = event.alpha;
+                    let webkitAlpha = event.webkitCompassHeading;
                     
                     let heading = webkitAlpha || (360 - alpha);
                     if (heading) {
-                        // حساب الزاوية النهائية للبوصلة لتشير إلى القبلة
                         let finalAngle = qiblaDirection - heading;
                         document.getElementById('compass').style.transform = `rotate(${finalAngle}deg)`;
                     }
@@ -403,22 +397,20 @@
             }
         }
 
-        // طلب صلاحيات الإشعارات عند التحميل
+        // التهيئة عند التحميل
         document.addEventListener('DOMContentLoaded', () => {
             if ("Notification" in window && Notification.permission !== "granted") {
                 Notification.requestPermission();
             }
+            initLocation(); // تشغيل دالة تحديد الموقع عند التحميل
         });
     </script>
     <script>
-    // تفعيل الهالة السيادية المحفوظة فور تحميل الصفحة
     const savedAura = localStorage.getItem('sovereign_aura_color');
     if(savedAura) {
         document.documentElement.style.setProperty('--sys-cyan', savedAura);
         document.documentElement.style.setProperty('--sys-cyan-glow', savedAura + '99');
-        // للاندماج المطلق يمكنك توحيد اللونين الأساسيين
-        // document.documentElement.style.setProperty('--sys-purple', savedAura); 
     }
-</script>
+    </script>
 </body>
 </html>
