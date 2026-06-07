@@ -151,10 +151,10 @@
     
     letter-spacing: 1px;">
     <button onclick="SoundEffects.toggleMusic(1)" class="w-10 h-10 flex items-center justify-center bg-slate-900/80 backdrop-blur border border-slate-700 hover:border-[var(--sys-cyan)] text-[var(--sys-cyan)] rounded-full transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-        <span id="musicIcon1" class="text-lg animate-pulse">🎵</span>
+        <span id="sfx-click" class="text-lg animate-pulse">🎵</span>
     </button>
     <button onclick="SoundEffects.toggleMusic(2)" class="w-10 h-10 flex items-center justify-center bg-slate-900/80 backdrop-blur border border-slate-700 hover:border-[var(--sys-cyan)] text-[var(--sys-cyan)] rounded-full transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-        <span id="musicIcon2" class="text-lg animate-pulse">🎼</span>
+        <span id="sfx-success" class="text-lg animate-pulse">🎼</span>
     </button>
     <a href="https://aissaouimohamad62-glitch.github.io/proto/" target="_blank" class="px-4 py-2 bg-slate-900/80 backdrop-blur border border-slate-700 hover:border-[var(--sys-cyan)] text-white text-xs font-black uppercase tracking-widest rounded flex items-center gap-2 shadow-[0_0_10px_rgba(0,0,0,0.5)] transition-all">
         <span>𝐏𝐎𝐑𝐓𝐅𝐎𝐋𝐈𝐎</span> <span class="text-[var(--sys-cyan)]">📍</span>
@@ -1461,6 +1461,77 @@ function activateBtn(activeId, color) {
 document.addEventListener('DOMContentLoaded', () => {
     // تخزين مصفوفة الجداول الكبيرة في التخزين المحلي فوراً للمزامنة عبر النوافذ التابعة
     localStorage.setItem('sovereign_program_data', JSON.stringify(PROGRAM_DATA));
+    
+    // تشغيل المحرك الرئيسي والتبديل
+    Charter.init();
+    
+    // تحديث الكتلة النشطة والوقت التلقائي كل دقيقة
+    setInterval(() => Charter.renderToday(), 60000);
+});
+// ==========================================
+// SOUND & AUDIO ENGINE
+// ==========================================
+const SoundEffects = {
+    musicPlaying: false,
+    
+    init() {
+        this.bgMusic = document.getElementById('bg-music');
+        this.clickSfx = document.getElementById('sfx-click');
+        this.successSfx = document.getElementById('sfx-success');
+
+        // ضبط مستوى الصوت (0.3 يعني 30% لكي لا يزعجك أثناء التركيز)
+        if(this.bgMusic) this.bgMusic.volume = 0.3;
+        if(this.clickSfx) this.clickSfx.volume = 0.5;
+        if(this.successSfx) this.successSfx.volume = 0.6;
+    },
+
+    toggleMusic() {
+        if (!this.bgMusic) return;
+        const btn = document.getElementById('music-toggle-btn');
+        const icon = document.getElementById('music-icon');
+        const text = document.getElementById('music-text');
+
+        if (this.musicPlaying) {
+            this.bgMusic.pause();
+            this.musicPlaying = false;
+            if(icon) icon.textContent = '🔈';
+            if(text) text.textContent = 'SYSTEM MUSIC: OFF';
+            if(btn) {
+                btn.classList.remove('border-[var(--sys-cyan)]', 'text-[var(--sys-cyan)]', 'shadow-[0_0_15px_rgba(0,240,255,0.3)]');
+                btn.classList.add('border-slate-700', 'text-slate-400');
+            }
+        } else {
+            this.bgMusic.play().catch(e => console.log("Audio play blocked by browser:", e));
+            this.musicPlaying = true;
+            if(icon) icon.textContent = '🔊';
+            if(text) text.textContent = 'SYSTEM MUSIC: ON';
+            if(btn) {
+                btn.classList.remove('border-slate-700', 'text-slate-400');
+                btn.classList.add('border-[var(--sys-cyan)]', 'text-[var(--sys-cyan)]', 'shadow-[0_0_15px_rgba(0,240,255,0.3)]');
+            }
+        }
+    },
+
+    playSystemClick() {
+        if (this.clickSfx) {
+            this.clickSfx.currentTime = 0;
+            this.clickSfx.play().catch(e => {});
+        }
+    },
+
+    playSuccess() {
+        if (this.successSfx) {
+            this.successSfx.currentTime = 0;
+            this.successSfx.play().catch(e => {});
+        }
+    }
+};
+document.addEventListener('DOMContentLoaded', () => {
+    // تخزين مصفوفة الجداول الكبيرة في التخزين المحلي
+    localStorage.setItem('sovereign_program_data', JSON.stringify(PROGRAM_DATA));
+    
+    // تهيئة النظام الصوتي
+    SoundEffects.init();
     
     // تشغيل المحرك الرئيسي والتبديل
     Charter.init();
