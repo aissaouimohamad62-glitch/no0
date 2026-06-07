@@ -342,7 +342,38 @@
                     <!-- Dynamic Generation via JS -->
                 </div>
             </div>
-             
+             <div class="mt-8">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">🧪</span>
+            <h2 class="text-lg font-black text-white font-cairo">الجرعات واللفائف السيادية</h2>
+        </div>
+        <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-green/10 text-sys-green rounded border border-sys-green/20">CONSUMABLES</span>
+    </div>
+    <div id="consumables-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+</div>
+
+<div class="mt-8">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">🎟️</span>
+            <h2 class="text-lg font-black text-white font-cairo">التراخيص والرخص الواقعية</h2>
+        </div>
+        <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-orange/10 text-sys-orange rounded border border-sys-orange/20">VOUCHERS</span>
+    </div>
+    <div id="vouchers-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+</div>
+
+<div class="mt-8">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">✨</span>
+            <h2 class="text-lg font-black text-white font-cairo">الهالات والمظهر السيادي</h2>
+        </div>
+        <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-cyan/10 text-sys-cyan rounded border border-sys-cyan/20">AURAS</span>
+    </div>
+    <div id="auras-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+</div>
 <!-- شريط بحث الألقاب -->
 <div class="mb-4">
     <input type="text" 
@@ -497,7 +528,23 @@ const SECRET_LINKS_DATA = [
     { id: "link-w98", name: "مخطط السيادة المطلقة والإتقان الكوني (Absolute Sovereign Mastery Blueprint)", week: 98, reqLevel: 98, basePrice: 185000, discPrice: 18500, day: 1, url: "link-w98.html", desc: "الملف الاستراتيجي النهائي: دمج كل شيء — برمجة، بدن، روح، عقل — في نظام سيادي واحد لا يُقهر." },
     { id: "link-w99", name: "بوابة اللانهاية والسيادة المطلقة (Infinity & Absolute Sovereignty Gateway)", week: 99, reqLevel: 99, basePrice: 200000, discPrice: 20000, day: 2, url: "link-w99.html", desc: "البوابة النهائية: أنت الآن تتحكم في النظام، تختار برامجك بنفسك، وتدبر أمورك باستقلالية تامة — اللانهاية." }
 ];
-
+const SYSTEM_ITEMS_DATA = {
+    consumables: [
+        { id: "cons-xp", nameAr: "لفافة مضاعف الخبرة", nameEn: "Double XP Scroll", reqLevel: 1, price: 500, desc: "تضاعف نقاط الخبرة المكتسبة (x2) لمدة 24 ساعة.", type: "xp_boost" },
+        { id: "cons-elixir", nameAr: "إكسير التعافي", nameEn: "Fatigue Reset Elixir", reqLevel: 1, price: 300, desc: "يصفر شريط الإرهاق ويملأ طاقتك الذهنية لتجاوز يوم مرهق.", type: "fatigue_reset" },
+        { id: "cons-ap", nameAr: "بلورة السمات النقية", nameEn: "Pure AP Gem", reqLevel: 5, price: 2000, desc: "تستهلك فوراً وتمنحك نقطة سمات حرة (+1 AP).", type: "free_ap" }
+    ],
+    vouchers: [
+        { id: "vch-rest", nameAr: "تصريح استراحة المحارب", nameEn: "Entertainment Pass", reqLevel: 1, price: 150, desc: "رخصة شرعية للعب أو مشاهدة أنمي لمدة ساعة دون عقوبة.", icon: "🎮" },
+        { id: "vch-cheat", nameAr: "تصريح الغش الغذائي", nameEn: "Cheat Meal Ticket", reqLevel: 2, price: 800, desc: "وجبة غش واحدة معفاة من تأثيرات نظامك الصارم.", icon: "🍔" },
+        { id: "vch-skip", nameAr: "تصريح التخطي الطارئ", nameEn: "Quest Skip Token", reqLevel: 1, price: 200, desc: "يسمح بتأجيل مهمة كبرى للغد دون خسارة سلسلة إنجازاتك.", icon: "⏩" }
+    ],
+    auras: [
+        { id: "aura-blood", nameAr: "هالة الغضب", nameEn: "Blood Monarch Aura", reqLevel: 10, price: 1500, desc: "توهج أحمر قاني يغلف لوحات النظام.", color: "#e11d48" },
+        { id: "aura-gold", nameAr: "هالة الإمبراطور", nameEn: "Golden Sovereign Aura", reqLevel: 15, price: 3000, desc: "توهج ذهبي ملكي يدل على السلطة المطلقة.", color: "#ffd700" },
+        { id: "aura-emerald", nameAr: "هالة الظل السام", nameEn: "Toxic Shadow Aura", reqLevel: 5, price: 1000, desc: "توهج زمردي مشع وخطير.", color: "#10b981" }
+    ]
+};
 
 const SOVEREIGN_TITLES_DATA = [
     { id: "title-novice", nameAr: "المبرمج المبتدئ", nameEn: "Novice Coder", week: 1, reqLevel: 1, basePrice: 50, discPrice: 5, desc: "لقب يثبت اجتيازك للأسبوع التأسيسي الأول لبناء الواجهات الأساسية." },
@@ -1115,6 +1162,129 @@ const ShopSystem = {
         purchasedTitles: [],
         equippedTitle: ""
         
+        
+    },
+    renderConsumables() {
+        const container = document.getElementById('consumables-grid');
+        if(!container) return;
+        container.innerHTML = "";
+        SYSTEM_ITEMS_DATA.consumables.forEach(item => {
+            const btnHtml = `<button onclick="ShopSystem.buyConsumable('${item.type}', ${item.price}, '${item.nameAr}')" class="w-full text-xs font-bold py-1.5 px-3 rounded border transition duration-300 ${this.playerData.gold >= item.price ? 'bg-sys-green/10 border-sys-green text-sys-green hover:bg-sys-green hover:text-black' : 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'}">🪙 شراء واستهلاك (${item.price} G)</button>`;
+            
+            container.innerHTML += `
+                <div class="shop-card rounded-xl p-4 border border-sys-green/20">
+                    <div class="text-center pb-2 mb-2 border-b border-white/5">
+                        <span class="block text-xs font-black text-sys-green font-orbitron">${item.nameEn}</span>
+                        <span class="block text-sm font-bold text-white font-cairo">${item.nameAr}</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 text-center leading-relaxed mb-4 h-10 font-cairo">${item.desc}</p>
+                    ${btnHtml}
+                </div>`;
+        });
+    },
+
+    renderVouchers() {
+        const container = document.getElementById('vouchers-grid');
+        if(!container) return;
+        container.innerHTML = "";
+        SYSTEM_ITEMS_DATA.vouchers.forEach(item => {
+            const btnHtml = `<button onclick="ShopSystem.buyVoucher(${item.price}, '${item.nameAr}')" class="w-full text-xs font-bold py-1.5 px-3 rounded border transition duration-300 ${this.playerData.gold >= item.price ? 'bg-sys-orange/10 border-sys-orange text-sys-orange hover:bg-sys-orange hover:text-black' : 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'}">🎟️ استخراج تصريح (${item.price} G)</button>`;
+            
+            container.innerHTML += `
+                <div class="shop-card rounded-xl p-4 border border-sys-orange/20 relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-6xl opacity-10">${item.icon}</div>
+                    <div class="text-right pb-2 mb-2 border-b border-white/5 relative z-10">
+                        <span class="block text-sm font-bold text-white font-cairo">${item.nameAr}</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 leading-relaxed mb-4 h-8 font-cairo relative z-10">${item.desc}</p>
+                    <div class="relative z-10">${btnHtml}</div>
+                </div>`;
+        });
+    },
+
+    renderAuras() {
+        const container = document.getElementById('auras-grid');
+        if(!container) return;
+        container.innerHTML = "";
+        SYSTEM_ITEMS_DATA.auras.forEach(item => {
+            const isPurchased = this.playerData.purchasedAuras && this.playerData.purchasedAuras.includes(item.id);
+            const isEquipped = this.playerData.equippedAura === item.id;
+            
+            let btnHtml = "";
+            if (isEquipped) {
+                btnHtml = `<button class="w-full text-xs font-bold py-1.5 px-3 rounded text-black cursor-default" style="background-color: ${item.color}">✨ هالة مفعلة</button>`;
+            } else if (isPurchased) {
+                btnHtml = `<button onclick="ShopSystem.equipAura('${item.id}', '${item.color}')" class="w-full text-xs font-bold py-1.5 px-3 rounded bg-transparent border hover:text-white transition duration-300" style="border-color: ${item.color}; color: ${item.color}">تفعيل الهالة</button>`;
+            } else {
+                btnHtml = `<button onclick="ShopSystem.buyAura('${item.id}', ${item.price})" class="w-full text-xs font-bold py-1.5 px-3 rounded border transition duration-300 ${this.playerData.gold >= item.price ? 'hover:text-black' : 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed'}" style="${this.playerData.gold >= item.price ? `border-color: ${item.color}; color: ${item.color}` : ''}">🪙 دمج الهالة (${item.price} G)</button>`;
+            }
+
+            container.innerHTML += `
+                <div class="shop-card rounded-xl p-4 border" style="border-color: ${isEquipped ? item.color : 'rgba(255,255,255,0.05)'}; ${isEquipped ? `box-shadow: 0 0 15px ${item.color}40;` : ''}">
+                    <div class="text-center pb-2 mb-2 border-b border-white/5">
+                        <span class="block text-xs font-black font-orbitron" style="color: ${item.color}">${item.nameEn}</span>
+                        <span class="block text-sm font-bold text-white font-cairo mt-1">${item.nameAr}</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 text-center leading-relaxed mb-4 h-8 font-cairo">${item.desc}</p>
+                    ${btnHtml}
+                </div>`;
+        });
+    },
+
+    buyConsumable(type, price, name) {
+        if (this.playerData.gold < price) return;
+        this.playerData.gold -= price;
+        
+        let systemData = JSON.parse(localStorage.getItem('monarch_system_data') || '{}');
+        systemData.gold = this.playerData.gold;
+
+        if(type === 'free_ap') {
+            systemData.ap = (systemData.ap || 0) + 1;
+            this.showAlert("💎 بلورة مستهلكة", `تمت إضافة نقطة سمات (AP) حرة. استخدمها بحكمة.`, "sys-cyan");
+        } else if (type === 'xp_boost') {
+            localStorage.setItem('sovereign_xp_multiplier_end', Date.now() + (24 * 60 * 60 * 1000));
+            this.showAlert("📜 لفافة مفعلة", "تم تفعيل مضاعف الخبرة لمدة 24 ساعة!", "sys-gold");
+        } else if (type === 'fatigue_reset') {
+            this.showAlert("🧪 إكسير مستهلك", "تم إنعاش طاقتك بالكامل! لا توجد أعذار الآن.", "sys-green");
+        }
+        
+        localStorage.setItem('monarch_system_data', JSON.stringify(systemData));
+        this.saveState();
+        this.renderShop();
+        this.triggerConfetti();
+    },
+
+    buyVoucher(price, name) {
+        if (this.playerData.gold < price) return;
+        this.playerData.gold -= price;
+        this.saveState();
+        this.renderShop();
+        this.triggerConfetti();
+        this.showAlert("🎟️ ترخيص معتمد", `تم إصدار: ${name}. يحق لك استخدامه الآن في العالم الحقيقي.`, "sys-orange");
+    },
+
+    buyAura(id, price) {
+        if (this.playerData.gold < price) return;
+        this.playerData.gold -= price;
+        if (!this.playerData.purchasedAuras) this.playerData.purchasedAuras = [];
+        this.playerData.purchasedAuras.push(id);
+        this.saveState();
+        this.renderShop();
+        this.triggerConfetti();
+        this.showAlert("✨ تمت إضافة الهالة", "أصبحت هذه السمة اللونية متاحة في أرشيفك.", "sys-cyan");
+    },
+
+    equipAura(id, color) {
+        this.playerData.equippedAura = id;
+        this.saveState();
+        this.renderShop();
+        
+        // تعديل ألوان الواجهة فوراً
+        document.documentElement.style.setProperty('--sys-cyan', color);
+        document.documentElement.style.setProperty('--sys-cyan-glow', color + '99');
+        localStorage.setItem('sovereign_aura_color', color);
+        
+        this.showAlert("🔮 تم تفعيل الهالة", "تغير التردد البصري للنظام بالكامل.", "sys-purple");
     },
     // ==========================================
 // SEARCH SYSTEM
@@ -1184,6 +1354,8 @@ initBroadcastListener() {
             this.playerData.purchasedLinks = parsed.purchasedLinks || [];
             this.playerData.purchasedTitles = parsed.purchasedTitles || [];
             this.playerData.equippedTitle = parsed.equippedTitle || "";
+            this.playerData.purchasedAuras = parsed.purchasedAuras || [];
+this.playerData.equippedAura = parsed.equippedAura || "";
         }
         this.updateHeaderUI();
     },
@@ -1217,10 +1389,12 @@ initBroadcastListener() {
     },
 
     renderShop() {
-        this.renderSecretLinks();
-        this.renderTitles();
-    },
-
+    this.renderSecretLinks();
+    this.renderTitles();
+    this.renderConsumables();
+    this.renderVouchers();
+    this.renderAuras();
+},
     renderSecretLinks() {
         const container = document.getElementById('links-grid');
         container.innerHTML = "";
@@ -2234,6 +2408,16 @@ const Milestone = {
         if(typeof SoundEffects !== 'undefined') SoundEffects.playSystemClick();
     }
 };
+</script>
+<script>
+    // تفعيل الهالة السيادية المحفوظة فور تحميل الصفحة
+    const savedAura = localStorage.getItem('sovereign_aura_color');
+    if(savedAura) {
+        document.documentElement.style.setProperty('--sys-cyan', savedAura);
+        document.documentElement.style.setProperty('--sys-cyan-glow', savedAura + '99');
+        // للاندماج المطلق يمكنك توحيد اللونين الأساسيين
+        // document.documentElement.style.setProperty('--sys-purple', savedAura); 
+    }
 </script>
 </body>
 </html>
