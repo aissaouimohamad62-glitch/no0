@@ -429,7 +429,24 @@
     </style>
 </head>
 <body>
-<nav id="sovereign-nav" class="flex flex-wrap gap-3 justify-center md:justify-start items-center p-4 bg-slate-950/60 border border-slate-850/50 backdrop-blur-md rounded-lg shadow-[inset_0_0_15px_rgba(0,0,0,0.8)] my-4 select-none">
+
+    <div class="system-window">
+        <!-- شريط معلومات العاهل المحدث دائماً والمترابط مع index.html -->
+        <div class="monarch-status-header">
+            <div class="flex items-center gap-3" style="display: flex; align-items: center; gap: 15px;">
+                <div class="status-badge" style="color: #ffd700; border-color: #ffd700;">
+                    <span>👑 المستوى:</span>
+                    <span id="header-lvl" class="sys-font">1</span>
+                </div>
+                <div class="status-badge" style="color: #00f0ff; border-color: #00f0ff;">
+                    <span>📊 الخبرة XP:</span>
+                    <span id="header-xp" class="sys-font">0/100</span>
+                </div>
+                <div class="status-badge" style="color: #fbbf24; border-color: #fbbf24;">
+                    <span>🪙 الذهب:</span>
+                    <span id="header-gold" class="sys-font">0</span>
+                </div>
+                <nav id="sovereign-nav" class="flex flex-wrap gap-3 justify-center md:justify-start items-center p-4 bg-slate-950/60 border border-slate-850/50 backdrop-blur-md rounded-lg shadow-[inset_0_0_15px_rgba(0,0,0,0.8)] my-4 select-none">
     
     <a href="index.html" class="nav-item px-4 py-2.5 text-xs font-mono rounded font-bold transition-all duration-300 ease-out flex items-center gap-1.5 border border-slate-800 bg-slate-900/40 text-slate-400 hover:text-[var(--sys-cyan)] hover:border-[var(--sys-cyan)] hover:shadow-[0_0_12px_rgba(0,240,255,0.2)]">
         <span>🏠</span> <span>DASHBOARD</span>
@@ -472,22 +489,6 @@
         <span>📊</span> <span>SYSTEM LOGS</span>
     </a>
 </nav>
-    <div class="system-window">
-        <!-- شريط معلومات العاهل المحدث دائماً والمترابط مع index.html -->
-        <div class="monarch-status-header">
-            <div class="flex items-center gap-3" style="display: flex; align-items: center; gap: 15px;">
-                <div class="status-badge" style="color: #ffd700; border-color: #ffd700;">
-                    <span>👑 المستوى:</span>
-                    <span id="header-lvl" class="sys-font">1</span>
-                </div>
-                <div class="status-badge" style="color: #00f0ff; border-color: #00f0ff;">
-                    <span>📊 الخبرة XP:</span>
-                    <span id="header-xp" class="sys-font">0/100</span>
-                </div>
-                <div class="status-badge" style="color: #fbbf24; border-color: #fbbf24;">
-                    <span>🪙 الذهب:</span>
-                    <span id="header-gold" class="sys-font">0</span>
-                </div>
             </div>
             <!-- اختيار القارئ المفضل -->
             <div>
