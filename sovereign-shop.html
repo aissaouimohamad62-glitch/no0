@@ -2418,6 +2418,37 @@ const Milestone = {
         // للاندماج المطلق يمكنك توحيد اللونين الأساسيين
         // document.documentElement.style.setProperty('--sys-purple', savedAura); 
     }
+    // دالة تجهيز وتغيير الهالة السيادية
+function equipAura(colorHex) {
+    // 1. حفظ اللون في الذاكرة المحلية للنظام
+    localStorage.setItem('sovereign_aura_color', colorHex);
+    
+    // 2. تطبيق اللون فوراً على الصفحة الحالية
+    document.documentElement.style.setProperty('--sys-cyan', colorHex);
+    
+    // 3. إشعار النظام (Toast) إذا كان مفعلاً
+    if (typeof Toast !== 'undefined') {
+        Toast.show('تمت مزامنة الطاقة السيادية وتجهيز الهالة بنجاح!', 'success');
+    } else {
+        alert('تم تجهيز الهالة بنجاح!');
+    }
+}
+
+// المزامنة اللحظية في حال تغيير الهالة من نافذة أخرى
+window.addEventListener('storage', (e) => {
+    if (e.key === 'sovereign_aura_color') {
+        applyAura();
+    }
+});
+
+function applyAura() {
+    const savedAura = localStorage.getItem('sovereign_aura_color');
+    if (savedAura) {
+        document.documentElement.style.setProperty('--sys-cyan', savedAura);
+    }
+}
+document.addEventListener('DOMContentLoaded', applyAura);
 </script>
+
 </body>
 </html>
