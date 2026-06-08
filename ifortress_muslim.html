@@ -4,1260 +4,641 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>حصن المسلم السيادي | Fortress of the Muslim</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary: #00f0ff;
-            --primary-dark: #00a8ff;
-            --secondary: #b026ff;
-            --accent: #ffd700;
-            --dark: #000000;
-            --darker: #050810;
-            --card-bg: rgba(5, 10, 25, 0.95);
-            --card-border: rgba(0, 240, 255, 0.2);
-            --text-primary: #e0f7ff;
-            --text-secondary: #8ab4c7;
-            --success: #00ff88;
-            --warning: #ffaa00;
-            --danger: #ff3366;
-            --glow: 0 0 20px rgba(0, 240, 255, 0.4);
+            --sys-cyan: #00f0ff;
+            --sys-cyan-glow: rgba(0, 240, 255, 0.6);
+            --sys-purple: #9d4edd;
+            --sys-purple-glow: rgba(157, 78, 221, 0.4);
+            --sys-bg-dark: #02040a;
+            --sys-panel: rgba(5, 10, 25, 0.85);
+            --sys-border: rgba(0, 240, 255, 0.3);
+            --azkar-font-size: 18px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Noto Naskh Arabic', 'Cairo', serif;
-            background: var(--dark);
-            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--sys-bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 50%, var(--sys-cyan-glow) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, var(--sys-purple-glow) 0%, transparent 25%);
+            color: #e2e8f0;
             min-height: 100vh;
             overflow-x: hidden;
+            background-attachment: fixed;
+            transition: background-color 0.5s, background-image 0.5s;
         }
-        .bg-animation {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(ellipse at 20% 50%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(176, 38, 255, 0.06) 0%, transparent 50%),
-                linear-gradient(180deg, var(--dark) 0%, var(--darker) 50%, #0a1020 100%);
+
+        /* Reading Mode - وضع القراءة المريح للعين */
+        body.reading-mode {
+            background-image: none;
+            background-color: #000000;
         }
-        .bg-animation::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(176, 38, 255, 0.02) 1px, transparent 1px);
-            background-size: 50px 50px;
+        body.reading-mode .sl-panel {
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: none;
+            border-color: rgba(255, 255, 255, 0.1);
         }
-        .header {
-            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(5,8,16,0.9) 100%);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--card-border);
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+
+        .sys-font { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.05em; }
+        .naskh-font { font-family: 'Noto Naskh Arabic', serif; }
+        .orbitron-font { font-family: 'Orbitron', sans-serif; }
+
+        .sl-panel {
+            background: var(--sys-panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--sys-border);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 240, 255, 0.05);
+            position: relative;
+            transition: var(--transition);
         }
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
+
+        .sl-btn {
+            background: linear-gradient(180deg, rgba(0, 240, 255, 0.05) 0%, rgba(5, 10, 25, 0.8) 100%);
+            border: 1px solid var(--sys-cyan);
+            transition: var(--transition);
         }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .sl-btn:hover {
+            box-shadow: 0 0 15px var(--sys-cyan-glow);
+            background: rgba(0, 240, 255, 0.15);
+            transform: translateY(-1px);
         }
-        .logo-icon {
-            width: 50px; height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: var(--glow);
-            animation: pulse 2s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { box-shadow: var(--glow); }
-            50% { box-shadow: 0 0 40px rgba(0, 240, 255, 0.6), 0 0 80px rgba(0, 240, 255, 0.2); }
-        }
-        .logo-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
-        }
-        .logo-sub {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-        .nav-tabs {
-            display: flex;
-            gap: 0.5rem;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.4rem;
-            border-radius: 16px;
-            border: 1px solid var(--card-border);
-            flex-wrap: wrap;
-        }
+
         .nav-tab {
-            padding: 0.7rem 1.2rem;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
         }
-        .nav-tab:hover { color: var(--text-primary); transform: translateY(-2px); }
         .nav-tab.active {
-            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 240, 255, 0.05));
-            color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
-            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: var(--sys-cyan);
+            border-bottom: 2px solid var(--sys-cyan);
+            text-shadow: 0 0 8px var(--sys-cyan-glow);
         }
-        .back-btn {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.7rem;
-            padding: 0.5rem 1rem;
-            background: rgba(176, 38, 255, 0.1);
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .back-btn:hover {
-            background: rgba(176, 38, 255, 0.2);
-            box-shadow: 0 0 15px rgba(176, 38, 255, 0.3);
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+
         .section {
             display: none;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
         .section.active { display: block; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-            opacity: 0.7;
-        }
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), var(--glow);
-            border-color: rgba(0, 240, 255, 0.4);
-        }
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-family: 'Cairo', sans-serif;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .stat-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .stat-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-        }
-        .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
-        }
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            font-family: 'Cairo', sans-serif;
-        }
-        .streak-dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .streak-card {
-            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(176, 38, 255, 0.05));
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .streak-number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-            z-index: 1;
-        }
-        .streak-label {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-top: 0.5rem;
-            font-family: 'Cairo', sans-serif;
-        }
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-        }
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 1px solid transparent;
-            font-family: 'Cairo', sans-serif;
-        }
-        .calendar-day.empty { background: transparent; cursor: default; }
-        .calendar-day.completed {
-            background: linear-gradient(135deg, var(--success), #00cc66);
-            color: #000;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
-        }
-        .calendar-day.missed {
-            background: rgba(255, 51, 102, 0.2);
-            border-color: rgba(255, 51, 102, 0.3);
-            color: var(--danger);
-        }
-        .calendar-day.today {
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
-        }
+
+        /* Azkar Item Styles */
         .azkar-item {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .azkar-item::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 4px; height: 100%;
-            background: var(--primary);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: var(--transition);
+            border-right: 3px solid transparent;
         }
         .azkar-item:hover {
-            background: rgba(0, 240, 255, 0.05);
-            border-color: rgba(0, 240, 255, 0.4);
-            transform: translateX(-5px);
+            border-right: 3px solid var(--sys-cyan);
+            background: rgba(0, 240, 255, 0.03);
         }
-        .azkar-item:hover::before { opacity: 1; }
         .azkar-item.completed {
-            background: rgba(0, 255, 136, 0.05);
-            border-color: rgba(0, 255, 136, 0.3);
+            border-right: 3px solid #10b981; /* Emerald 500 */
+            background: rgba(16, 185, 129, 0.05);
+            opacity: 0.7;
         }
-        .azkar-item.completed::before {
-            background: var(--success);
-            opacity: 1;
+        
+        .counter-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--sys-cyan);
+            color: var(--sys-cyan);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+            transition: var(--transition);
         }
-        .azkar-text {
-            font-size: 1.2rem;
-            line-height: 2.2;
-            color: var(--text-primary);
-            margin-bottom: 0.8rem;
-            font-family: 'Noto Naskh Arabic', serif;
+        .counter-btn:active {
+            transform: scale(0.9);
+            box-shadow: 0 0 20px var(--sys-cyan-glow);
         }
-        .azkar-translation {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 0.8rem;
-            padding: 0.8rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            display: none;
-            font-family: 'Cairo', sans-serif;
+        .counter-btn.done {
+            background: #10b981;
+            border-color: #10b981;
+            color: black;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            pointer-events: none;
         }
-        .azkar-translation.show { display: block; }
-        .azkar-meta {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .azkar-count {
-            background: rgba(0, 240, 255, 0.15);
-            color: var(--primary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            font-family: 'Cairo', sans-serif;
-        }
-        .azkar-source {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-family: 'Cairo', sans-serif;
-        }
-        .azkar-virtue {
-            color: var(--accent);
-            font-size: 0.8rem;
-            font-style: italic;
-            font-family: 'Cairo', sans-serif;
-        }
-        .tasbeeh-container {
-            text-align: center;
-            padding: 2rem;
-        }
-        .tasbeeh-display {
-            width: 260px; height: 260px;
-            margin: 0 auto 2rem;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(176, 38, 255, 0.05));
-            border: 3px solid var(--primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.1s ease;
-            user-select: none;
-            box-shadow: var(--glow);
-        }
-        .tasbeeh-display:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 60px rgba(0, 240, 255, 0.6);
-        }
-        .tasbeeh-display::before {
-            content: '';
-            position: absolute;
-            top: -10px; left: -10px; right: -10px; bottom: -10px;
-            border-radius: 50%;
-            border: 2px solid rgba(0, 240, 255, 0.2);
-            animation: spin 10s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .tasbeeh-count {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .tasbeeh-label {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-top: 0.5rem;
-            font-family: 'Cairo', sans-serif;
-        }
-        .tasbeeh-target {
-            font-size: 0.8rem;
-            color: var(--accent);
-            margin-top: 0.3rem;
-            font-family: 'Cairo', sans-serif;
-        }
-        .tasbeeh-controls {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-        .btn {
-            padding: 0.8rem 1.8rem;
-            border: none;
-            border-radius: 12px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #000;
-            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.3);
-        }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 240, 255, 0.5);
-        }
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-            border: 1px solid var(--card-border);
-        }
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary);
-        }
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger), #cc0044);
-            color: white;
-        }
-        .dhikr-selector {
-            display: flex;
-            gap: 0.6rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-        .dhikr-option {
-            padding: 0.7rem 1.2rem;
-            border: 1px solid var(--card-border);
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--text-secondary);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.9rem;
-        }
-        .dhikr-option:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-        .dhikr-option.active {
-            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(0, 240, 255, 0.05));
-            border-color: var(--primary);
-            color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
-        }
-        .progress-bar {
-            height: 8px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 10px;
-            transition: width 0.5s ease;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-        }
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        .setting-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--card-border);
-        }
-        .setting-item:last-child { border-bottom: none; }
-        .toggle {
-            position: relative;
-            width: 55px; height: 28px;
-        }
-        .toggle input {
-            opacity: 0;
-            width: 0; height: 0;
-        }
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 32px;
-            transition: 0.3s;
-            border: 1px solid var(--card-border);
-        }
-        .toggle-slider::before {
-            position: absolute;
-            content: "";
-            height: 20px; width: 20px;
-            left: 3px; bottom: 3px;
-            background: var(--text-secondary);
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        input:checked + .toggle-slider {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-color: var(--primary);
-        }
-        input:checked + .toggle-slider::before {
-            transform: translateX(26px);
-            background: white;
-        }
-        .range-slider {
-            width: 100%;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 6px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            outline: none;
-        }
-        .range-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px; height: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
-        }
-        .notification {
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: linear-gradient(135deg, var(--success), #00cc66);
-            color: #000;
-            padding: 1rem 2rem;
-            border-radius: 16px;
-            font-weight: 700;
-            z-index: 9999;
-            opacity: 0;
-            transition: all 0.5s ease;
-            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.3);
-            font-family: 'Cairo', sans-serif;
-        }
-        .notification.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-        .level-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, var(--secondary), #9d4edd);
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            box-shadow: 0 4px 15px rgba(176, 38, 255, 0.3);
-            font-family: 'Orbitron', sans-serif;
-        }
-        .xp-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-        }
-        .xp-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--secondary));
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-        .sovereign-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .sovereign-stat {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(0, 240, 255, 0.15);
-            border-radius: 12px;
-            padding: 1rem;
-            text-align: center;
-        }
-        .sovereign-stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--primary);
-        }
-        .sovereign-stat-label {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            margin-top: 0.3rem;
-            font-family: 'Cairo', sans-serif;
-        }
-        @media (max-width: 768px) {
-            .header-content { flex-direction: column; text-align: center; }
-            .nav-tabs { overflow-x: auto; width: 100%; justify-content: flex-start; }
-            .tasbeeh-display { width: 200px; height: 200px; }
-            .tasbeeh-count { font-size: 3rem; }
-            .container { padding: 1rem; }
-            .azkar-text { font-size: 1.1rem; }
-            .sovereign-stats { grid-template-columns: 1fr; }
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--dark); }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            border-radius: 10px;
-        }
-    </style>
-<base target="_blank">
-</head>
-<body>
-     <div class="sovereign-video-bg-container">
-    <video autoplay loop muted playsinline class="sovereign-video-element">
-        <source src="neon-city-snowing.1920x1080.mp4" type="video/mp4">
-    </video>
-    <div class="sovereign-video-overlay"></div>
-</div>
 
-    <div class="bg-animation"></div>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon">🛡️</div>
+        /* Tasbeeh Circle */
+        .tasbeeh-circle {
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(5, 10, 25, 0.9));
+            border: 3px solid var(--sys-cyan);
+            box-shadow: 0 0 30px var(--sys-cyan-glow), inset 0 0 20px rgba(0, 240, 255, 0.2);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.1s; user-select: none; position: relative;
+        }
+        .tasbeeh-circle:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 50px var(--sys-cyan-glow);
+        }
+        .tasbeeh-circle::after {
+            content: ''; position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border-radius: 50%; border: 1px dashed var(--sys-cyan);
+            animation: spin 15s linear infinite; opacity: 0.5;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--sys-bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--sys-cyan); border-radius: 10px; }
+
+        /* Settings Toggle */
+        .toggle-checkbox:checked { right: 0; border-color: var(--sys-cyan); }
+        .toggle-checkbox:checked + .toggle-label { background-color: var(--sys-cyan); }
+    </style>
+</head>
+<body class="text-slate-200 antialiased p-2 md:p-6 relative">
+
+    <div id="toastContainer" class="fixed top-5 right-5 z-[10000] flex flex-col gap-3 pointer-events-none"></div>
+
+    <header class="max-w-[1400px] mx-auto sl-panel rounded-xl p-4 mb-6 sticky top-4 z-50">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-lg bg-black border border-[var(--sys-cyan)] flex items-center justify-center shadow-[0_0_15px_var(--sys-cyan-glow)]">
+                    <span class="text-2xl animate-pulse">🛡️</span>
+                </div>
                 <div>
-                    <div class="logo-text">FORTRESS</div>
-                    <div class="logo-sub">حصن المسلم السيادي</div>
+                    <h1 class="orbitron-font text-xl font-black tracking-widest text-[var(--sys-cyan)] uppercase">FORTRESS</h1>
+                    <p class="text-xs text-slate-400 font-bold tracking-wide">حصن المسلم السيادي</p>
                 </div>
             </div>
-            <nav class="nav-tabs">
-                <button onclick="window.location.href='index.html'" class="nav-tab">
-                    <span>↩</span> <span> 🏠 DASHBOARD العودة للرئيسية</span>
+            
+            <nav class="flex flex-wrap justify-center gap-2 md:gap-4 text-sm font-bold">
+                <button onclick="window.location.href='index.html'" class="px-3 py-2 rounded text-slate-400 hover:text-white transition">
+                    <span class="orbitron-font">↩ DASHBOARD</span>
                 </button>
-                <button class="nav-tab active" onclick="window.location.href='dungeons.html'">⛩️​ العودة لصفحة الزنازن</button>
-                <button class="nav-tab active" onclick="showSection('dashboard')">📊 لوحة التحكم</button>
-                <button class="nav-tab" onclick="showSection('morning')">🌅 أذكار الصباح</button>
-                <button class="nav-tab" onclick="showSection('evening')">🌙 أذكار المساء</button>
-                <button class="nav-tab" onclick="showSection('sleep')">😴 أذكار النوم</button>
-                <button class="nav-tab" onclick="showSection('prayer')">🕌 أذكار الصلاة</button>
-                <button class="nav-tab" onclick="showSection('tasbeeh')">📿 المسبحة</button>
-                <button class="nav-tab" onclick="showSection('settings')">⚙️ الإعدادات</button>
+                <button class="nav-tab active px-3 py-2" onclick="showSection('dashboard', this)">📊 اللوحة</button>
+                <button class="nav-tab px-3 py-2" onclick="showSection('morning', this)">🌅 الصباح</button>
+                <button class="nav-tab px-3 py-2" onclick="showSection('evening', this)">🌙 المساء</button>
+                <button class="nav-tab px-3 py-2" onclick="showSection('sleep', this)">😴 النوم</button>
+                <button class="nav-tab px-3 py-2" onclick="showSection('prayer', this)">🕌 الصلاة</button>
+                <button class="nav-tab px-3 py-2" onclick="showSection('tasbeeh', this)">📿 المسبحة</button>
+                <button class="nav-tab px-3 py-2 text-slate-400" onclick="showSection('settings', this)">⚙️ الإعدادات</button>
             </nav>
-            <a href="index.html" class="back-btn">↩ العودة للوحة التحكم</a>
         </div>
     </header>
-    <div class="container">
-        <div id="dashboard" class="section active">
-            <div class="card">
-                <div class="card-title">
-                    <span style="font-size:1.5rem;">🏆</span>
-                    <span>لوحة التحكم السيادية</span>
-                    <span class="level-badge" id="levelBadge">المستوى 1</span>
+
+    <div class="max-w-[1400px] mx-auto">
+        
+        <div id="dashboard" class="section active space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="sl-panel p-6 rounded-xl flex flex-col justify-center items-center text-center">
+                    <span class="orbitron-font text-[10px] tracking-[0.3em] text-[var(--sys-cyan)] uppercase mb-2">Monarch Sync</span>
+                    <div class="orbitron-font text-5xl font-black text-white drop-shadow-[0_0_15px_var(--sys-cyan-glow)] mb-1" id="dashLevel">1</div>
+                    <span class="text-xs text-slate-400 font-bold">المستوى السيادي الحالي</span>
+                    <div class="w-full h-2 bg-slate-900 rounded-full mt-4 border border-slate-700 overflow-hidden">
+                        <div id="xpFill" class="h-full bg-gradient-to-r from-[var(--sys-purple)] to-[var(--sys-cyan)]" style="width:0%"></div>
+                    </div>
                 </div>
-                <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
-            </div>
-            <div class="sovereign-stats">
-                <div class="sovereign-stat">
-                    <div class="sovereign-stat-value" id="dashLevel">1</div>
-                    <div class="sovereign-stat-label">المستوى السيادي</div>
-                </div>
-                <div class="sovereign-stat">
-                    <div class="sovereign-stat-value" id="dashGold">0</div>
-                    <div class="sovereign-stat-label">الذهب السيادي</div>
-                </div>
-                <div class="sovereign-stat">
-                    <div class="sovereign-stat-value" id="dashXP">0</div>
-                    <div class="sovereign-stat-label">نقاط الخبرة</div>
-                </div>
-            </div>
-            <div class="streak-dashboard">
-                <div class="streak-card">
-                    <div class="streak-number" id="currentStreak">0</div>
-                    <div class="streak-label">أيام الاستمرارية 🔥</div>
-                </div>
-                <div class="streak-card">
-                    <div class="streak-number" id="bestStreak">0</div>
-                    <div class="streak-label">أفضل سجل ⚡</div>
-                </div>
-                <div class="streak-card">
-                    <div class="streak-number" id="totalDhikr">0</div>
-                    <div class="streak-label">إجمالي التسبيحات 📿</div>
+                
+                <div class="md:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="sl-panel p-4 rounded-xl text-center border-t-2 border-t-amber-500">
+                        <div class="text-3xl font-black orbitron-font text-amber-400" id="currentStreak">0</div>
+                        <div class="text-xs text-slate-400 mt-1">أيام الاستمرارية 🔥</div>
+                    </div>
+                    <div class="sl-panel p-4 rounded-xl text-center border-t-2 border-t-[var(--sys-cyan)]">
+                        <div class="text-3xl font-black orbitron-font text-[var(--sys-cyan)]" id="dashGold">0</div>
+                        <div class="text-xs text-slate-400 mt-1">الذهب المكتسب 🪙</div>
+                    </div>
+                    <div class="sl-panel p-4 rounded-xl text-center border-t-2 border-t-[var(--sys-purple)]">
+                        <div class="text-3xl font-black orbitron-font text-[var(--sys-purple)]" id="totalDhikr">0</div>
+                        <div class="text-xs text-slate-400 mt-1">إجمالي التسبيحات 📿</div>
+                    </div>
+                    <div class="sl-panel p-4 rounded-xl text-center border-t-2 border-t-emerald-500">
+                        <div class="text-3xl font-black orbitron-font text-emerald-400" id="completionRate">0%</div>
+                        <div class="text-xs text-slate-400 mt-1">معدل الإنجاز الكلي 📊</div>
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-title">
-                    <span style="font-size:1.5rem;">📅</span>
-                    <span>تقويم الاستمرارية</span>
+
+            <div class="sl-panel p-6 rounded-xl">
+                <div class="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
+                    <span class="text-xl">📅</span>
+                    <h3 class="font-bold text-lg text-[var(--sys-cyan)]">سجل الاستمرارية (Streak Log)</h3>
                 </div>
-                <div class="calendar-grid" id="calendarGrid"></div>
+                <div class="grid grid-cols-7 gap-2" id="calendarGrid" dir="ltr"></div>
             </div>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="morningCount">0</div>
-                    <div class="stat-label">أذكار الصباح المكتملة</div>
+        </div>
+
+        <div id="morning" class="section space-y-4">
+            <div class="sl-panel p-4 rounded-xl flex justify-between items-center sticky top-[100px] z-40 bg-[var(--sys-bg-dark)]/90">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🌅</span>
+                    <h2 class="text-xl font-bold text-white">أذكار الصباح</h2>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="eveningCount">0</div>
-                    <div class="stat-label">أذكار المساء المكتملة</div>
+                <div class="flex items-center gap-3 w-1/3">
+                    <span class="orbitron-font font-bold text-sm text-[var(--sys-cyan)]" id="morningProgressText">0/0</span>
+                    <div class="flex-1 h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-700">
+                        <div id="morningProgressBar" class="h-full bg-[var(--sys-cyan)] transition-all duration-500" style="width:0%"></div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="sleepCount">0</div>
-                    <div class="stat-label">أذكار النوم المكتملة</div>
+            </div>
+            <div id="morningAzkarContainer" class="space-y-4"></div>
+        </div>
+
+        <div id="evening" class="section space-y-4">
+            <div class="sl-panel p-4 rounded-xl flex justify-between items-center sticky top-[100px] z-40 bg-[var(--sys-bg-dark)]/90">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🌙</span>
+                    <h2 class="text-xl font-bold text-white">أذكار المساء</h2>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="prayerCount">0</div>
-                    <div class="stat-label">أذكار الصلاة المكتملة</div>
+                <div class="flex items-center gap-3 w-1/3">
+                    <span class="orbitron-font font-bold text-sm text-[var(--sys-cyan)]" id="eveningProgressText">0/0</span>
+                    <div class="flex-1 h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-700">
+                        <div id="eveningProgressBar" class="h-full bg-[var(--sys-cyan)] transition-all duration-500" style="width:0%"></div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="tasbeehToday">0</div>
-                    <div class="stat-label">تسبيحات اليوم</div>
+            </div>
+            <div id="eveningAzkarContainer" class="space-y-4"></div>
+        </div>
+
+        <div id="sleep" class="section space-y-4">
+            <div class="sl-panel p-4 rounded-xl flex justify-between items-center sticky top-[100px] z-40 bg-[var(--sys-bg-dark)]/90">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">😴</span>
+                    <h2 class="text-xl font-bold text-white">أذكار النوم</h2>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="completionRate">0%</div>
-                    <div class="stat-label">معدل الإنجاز الكلي</div>
+                <div class="flex items-center gap-3 w-1/3">
+                    <span class="orbitron-font font-bold text-sm text-[var(--sys-cyan)]" id="sleepProgressText">0/0</span>
+                    <div class="flex-1 h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-700">
+                        <div id="sleepProgressBar" class="h-full bg-[var(--sys-cyan)] transition-all duration-500" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="sleepAzkarContainer" class="space-y-4"></div>
+        </div>
+
+        <div id="prayer" class="section space-y-4">
+            <div class="sl-panel p-4 rounded-xl flex justify-between items-center sticky top-[100px] z-40 bg-[var(--sys-bg-dark)]/90">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🕌</span>
+                    <h2 class="text-xl font-bold text-white">أذكار بعد الصلاة</h2>
+                </div>
+                <div class="flex items-center gap-3 w-1/3">
+                    <span class="orbitron-font font-bold text-sm text-[var(--sys-cyan)]" id="prayerProgressText">0/0</span>
+                    <div class="flex-1 h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-700">
+                        <div id="prayerProgressBar" class="h-full bg-[var(--sys-cyan)] transition-all duration-500" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="prayerAzkarContainer" class="space-y-4"></div>
+        </div>
+
+        <div id="tasbeeh" class="section">
+            <div class="sl-panel p-8 rounded-xl max-w-2xl mx-auto flex flex-col items-center text-center">
+                <div class="flex flex-wrap justify-center gap-2 mb-10" id="dhikrSelector">
+                    <button class="px-4 py-2 rounded-lg border border-[var(--sys-cyan)] bg-[var(--sys-cyan)]/20 text-[var(--sys-cyan)] font-bold text-sm transition" onclick="selectDhikr('subhanallah', this)">سبحان الله</button>
+                    <button class="px-4 py-2 rounded-lg border border-slate-700 hover:border-[var(--sys-cyan)] text-slate-300 font-bold text-sm transition" onclick="selectDhikr('alhamdulillah', this)">الحمد لله</button>
+                    <button class="px-4 py-2 rounded-lg border border-slate-700 hover:border-[var(--sys-cyan)] text-slate-300 font-bold text-sm transition" onclick="selectDhikr('allahuakbar', this)">الله أكبر</button>
+                    <button class="px-4 py-2 rounded-lg border border-slate-700 hover:border-[var(--sys-cyan)] text-slate-300 font-bold text-sm transition" onclick="selectDhikr('lailahaillallah', this)">لا إله إلا الله</button>
+                    <button class="px-4 py-2 rounded-lg border border-slate-700 hover:border-[var(--sys-cyan)] text-slate-300 font-bold text-sm transition" onclick="selectDhikr('astaghfirullah', this)">أستغفر الله</button>
+                    <button class="px-4 py-2 rounded-lg border border-slate-700 hover:border-[var(--sys-cyan)] text-slate-300 font-bold text-sm transition" onclick="selectDhikr('salawat', this)">الصلاة على النبي</button>
+                </div>
+
+                <div class="tasbeeh-circle mb-8" onclick="incrementTasbeeh()">
+                    <span class="orbitron-font text-6xl font-black text-white drop-shadow-[0_0_15px_var(--sys-cyan-glow)]" id="tasbeehCountDisplay">0</span>
+                    <span class="text-sm font-bold text-[var(--sys-cyan)] mt-2" id="tasbeehNameDisplay">سبحان الله</span>
+                    <span class="text-xs text-slate-500 mt-1 orbitron-font" id="tasbeehTargetDisplay">TARGET: 33</span>
+                </div>
+
+                <div class="flex gap-4 w-full justify-center">
+                    <button onclick="incrementTasbeeh()" class="sl-btn px-8 py-3 rounded-lg font-black text-white tracking-widest flex-1 max-w-[200px]">👆 تسبيح</button>
+                    <button onclick="resetCurrentTasbeeh()" class="px-6 py-3 bg-slate-900 border border-slate-700 text-slate-300 rounded-lg hover:text-white hover:border-white transition">🔄 إعادة</button>
+                    <button onclick="changeTasbeehTarget()" class="px-6 py-3 bg-slate-900 border border-slate-700 text-[var(--sys-purple)] rounded-lg hover:border-[var(--sys-purple)] transition orbitron-font">🎯 TARGET</button>
                 </div>
             </div>
         </div>
 
-        <div id="morning" class="section">
-            <div class="card">
-                <div class="card-title">
-                    <span style="font-size:1.5rem;">🌅</span>
-                    <span>أذكار الصباح</span>
-                    <span class="level-badge" id="morningProgress">0/24</span>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" id="morningProgressBar" style="width:0%"></div></div>
-            </div>
-            <div id="morningAzkar"></div>
-        </div>
-        <div id="evening" class="section">
-            <div class="card">
-                <div class="card-title">
-                    <span style="font-size:1.5rem;">🌙</span>
-                    <span>أذكار المساء</span>
-                    <span class="level-badge" id="eveningProgress">0/22</span>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" id="eveningProgressBar" style="width:0%"></div></div>
-            </div>
-            <div id="eveningAzkar"></div>
-        </div>
-        <div id="sleep" class="section">
-            <div class="card">
-                <div class="card-title">
-                    <span style="font-size:1.5rem;">😴</span>
-                    <span>أذكار النوم</span>
-                    <span class="level-badge" id="sleepProgress">0/14</span>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" id="sleepProgressBar" style="width:0%"></div></div>
-            </div>
-            <div id="sleepAzkar"></div>
-        </div>
-        <div id="prayer" class="section">
-            <div class="card">
-                <div class="card-title">
-                    <span style="font-size:1.5rem;">🕌</span>
-                    <span>أذكار الصلاة</span>
-                    <span class="level-badge" id="prayerProgress">0/15</span>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" id="prayerProgressBar" style="width:0%"></div></div>
-            </div>
-            <div id="prayerAzkar"></div>
-        </div>
-        <div id="tasbeeh" class="section">
-            <div class="card tasbeeh-container">
-                <div class="card-title">
-                    <span style="font-size:1.5rem;">📿</span>
-                    <span>المسبحة السيادية</span>
-                </div>
-                <div class="dhikr-selector">
-                    <div class="dhikr-option active" onclick="selectDhikr('subhanallah')">سبحان الله</div>
-                    <div class="dhikr-option" onclick="selectDhikr('alhamdulillah')">الحمد لله</div>
-                    <div class="dhikr-option" onclick="selectDhikr('allahuakbar')">الله أكبر</div>
-                    <div class="dhikr-option" onclick="selectDhikr('lailahaillallah')">لا إله إلا الله</div>
-                    <div class="dhikr-option" onclick="selectDhikr('astaghfirullah')">أستغفر الله</div>
-                    <div class="dhikr-option" onclick="selectDhikr('salawat')">الصلاة على النبي</div>
-                    <div class="dhikr-option" onclick="selectDhikr('lailaha')">لا حول ولا قوة</div>
-                </div>
-                <div class="tasbeeh-display" id="tasbeehDisplay" onclick="incrementTasbeeh()">
-                    <div class="tasbeeh-count" id="tasbeehCount">0</div>
-                    <div class="tasbeeh-label" id="tasbeehName">سبحان الله</div>
-                    <div class="tasbeeh-target" id="tasbeehTarget">الهدف: 33</div>
-                </div>
-                <div class="tasbeeh-controls">
-                    <button class="btn btn-primary" onclick="incrementTasbeeh()">👆 اضغط للتسبيح</button>
-                    <button class="btn btn-secondary" onclick="resetTasbeeh()">🔄 إعادة</button>
-                    <button class="btn btn-secondary" onclick="setTarget()">🎯 تغيير الهدف</button>
-                    <button class="btn btn-danger" onclick="resetAllTasbeeh()">❌ تصفير الكل</button>
-                </div>
-                <div class="stats-grid" style="margin-top:2rem;">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalAllTasbeeh">0</div>
-                        <div class="stat-label">إجمالي التسبيحات</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="currentDhikrTotal">0</div>
-                        <div class="stat-label" id="currentDhikrLabel">سبحان الله</div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div id="settings" class="section">
-            <div class="settings-grid">
-                <div class="card">
-                    <div class="card-title">
-                        <span style="font-size:1.5rem;">🎨</span>
-                        <span>المظهر والتخصيص</span>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div class="sl-panel p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-[var(--sys-cyan)] mb-6 border-b border-white/10 pb-2">🎨 المظهر والتخصيص</h3>
+                    
+                    <div class="flex justify-between items-center py-3 border-b border-slate-800">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🌙</span>
+                            <div>
+                                <h4 class="font-bold text-white">وضع القراءة الليلي</h4>
+                                <p class="text-xs text-slate-400">إطفاء النيون وتحويل الخلفية للأسود المريح للعين</p>
+                            </div>
+                        </div>
+                        <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" id="nightModeToggle" name="toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" onchange="toggleNightMode()"/>
+                            <label for="nightModeToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-700 cursor-pointer border border-slate-600 transition-colors"></label>
+                        </div>
                     </div>
-                    <div class="setting-item">
-                        <div class="setting-label"><span style="font-size:1.3rem;">🌙</span><span>وضع القراءة الليلية</span></div>
-                        <label class="toggle">
-                            <input type="checkbox" id="nightMode" onchange="toggleNightMode()">
-                            <span class="toggle-slider"></span>
-                        </label>
+
+                    <div class="flex justify-between items-center py-4 border-b border-slate-800">
+                        <div class="flex items-center gap-3 w-1/2">
+                            <span class="text-2xl">🔤</span>
+                            <div>
+                                <h4 class="font-bold text-white">حجم خط الأذكار</h4>
+                                <p class="text-xs text-slate-400" id="fontSizeLabel">18px</p>
+                            </div>
+                        </div>
+                        <input type="range" id="fontSizeSlider" min="14" max="32" value="18" class="w-1/2 accent-[var(--sys-cyan)]" oninput="changeFontSize(this.value)">
                     </div>
-                    <div class="setting-item">
-                        <div class="setting-label"><span style="font-size:1.3rem;">🔤</span><span>حجم الخط</span></div>
-                        <input type="range" class="range-slider" id="fontSize" min="14" max="28" value="18" onchange="changeFontSize()">
+
+                    <div class="flex justify-between items-center py-3">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">📳</span>
+                            <div>
+                                <h4 class="font-bold text-white">الاهتزاز والتفاعل</h4>
+                                <p class="text-xs text-slate-400">اهتزاز الهاتف عند التسبيح والنقر</p>
+                            </div>
+                        </div>
+                        <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" id="vibrationToggle" name="toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 opacity-0" onchange="toggleVibration()" checked/>
+                            <label for="vibrationToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-[var(--sys-cyan)] cursor-pointer border border-slate-600 transition-colors"></label>
+                        </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-title">
-                        <span style="font-size:1.5rem;">📳</span>
-                        <span>التنبيهات والتفاعل</span>
-                    </div>
-                    <div class="setting-item">
-                        <div class="setting-label"><span style="font-size:1.3rem;">📳</span><span>الاهتزاز عند التسبيح</span></div>
-                        <label class="toggle">
-                            <input type="checkbox" id="vibration" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-item">
-                        <div class="setting-label"><span style="font-size:1.3rem;">🔔</span><span>تنبيهات الأذكار</span></div>
-                        <label class="toggle">
-                            <input type="checkbox" id="notifications" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-item">
-                        <div class="setting-label"><span style="font-size:1.3rem;">🎯</span><span>الهدف اليومي للتسبيح</span></div>
-                        <input type="number" id="dailyTarget" value="100" style="width:80px;padding:0.5rem;border-radius:8px;border:1px solid var(--card-border);background:rgba(0,0,0,0.3);color:var(--text-primary);text-align:center;" onchange="saveDailyTarget()">
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-title">
-                        <span style="font-size:1.5rem;">⚠️</span>
-                        <span>إدارة البيانات</span>
-                    </div>
-                    <div class="setting-item">
-                        <div class="setting-label"><span style="font-size:1.3rem;">🗑️</span><span>مسح جميع البيانات</span></div>
-                        <button class="btn btn-danger" onclick="clearAllData()">مسح</button>
-                    </div>
-                    <div class="setting-item">
-                        <div class="setting-label"><span style="font-size:1.3rem;">💾</span><span>تصدير البيانات</span></div>
-                        <button class="btn btn-secondary" onclick="exportData()">تصدير</button>
+
+                <div class="sl-panel p-6 rounded-xl border-rose-900/50">
+                    <h3 class="text-xl font-bold text-rose-500 mb-6 border-b border-rose-900/30 pb-2">⚠️ إدارة البيانات</h3>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-white">مسح الذاكرة المحلية للحصن</h4>
+                            <p class="text-xs text-slate-400">لن يؤثر على المستوى السيادي أو الذهب.</p>
+                        </div>
+                        <button onclick="resetFortressData()" class="px-4 py-2 bg-rose-950 border border-rose-700 text-rose-400 rounded hover:bg-rose-900 transition font-bold text-sm">مسح البيانات</button>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
-    <div class="notification" id="notification"></div>
 
 <script>
-// ==================== DATA - الأذكار الموسعة ====================
-const morningAzkar = [
-    {"text": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", "translation": "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير", "count": "مرة واحدة", "source": "مسلم", "virtue": "من قالها حين يصبح كان له أجر صدقة"},
-    {"text": "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ", "translation": "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت، وإليك النشور", "count": "مرة واحدة", "source": "الترمذي", "virtue": "دعاء الصباح والمساء"},
-    {"text": "اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ", "translation": "اللهم ما أصبح بي من نعمة أو بأحد من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر", "count": "مرة واحدة", "source": "أبو داود", "virtue": "من قالها حين يصبح أدى شكر يومه"},
-    {"text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا", "translation": "اللهم إني أسألك علما نافعاً، ورزقاً طيباً، وعملاً متقبلاً", "count": "مرة واحدة", "source": "ابن ماجه", "virtue": "دعاء مستجاب في الصباح"},
-    {"text": "أَصْبَحْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ", "translation": "أصبحنا على فطرة الإسلام، وعلى كلمة الإخلاص، وعلى دين نبينا محمد صلى الله عليه وسلم، وعلى ملة أبينا إبراهيم حنيفاً مسلماً وما كان من المشركين", "count": "مرة واحدة", "source": "أحمد", "virtue": "من قالها كان على الفطرة"},
-    {"text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ", "translation": "سبحان الله وبحمده: عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته", "count": "3 مرات", "source": "مسلم", "virtue": "أفضل الذكر بعد الفريضة"},
-    {"text": "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ", "translation": "اللهم عافني في بدني، اللهم عافني في سمعي، اللهم عافني في بصري، لا إله إلا أنت", "count": "3 مرات", "source": "أبو داود", "virtue": "دعاء بالعافية للجسد"},
-    {"text": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ", "translation": "اللهم إني أعوذ بك من الكفر والفقر، وأعوذ بك من عذاب القبر، لا إله إلا أنت", "count": "3 مرات", "source": "أبو داود", "virtue": "العصمة من الكفر والفقر"},
-    {"text": "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", "translation": "حسبنا الله ونعم الوكيل", "count": "7 مرات", "source": "البخاري", "virtue": "كافية لمن قالها"},
-    {"text": "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ", "translation": "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء، وهو السميع العليم", "count": "3 مرات", "source": "الترمذي", "virtue": "من قالها ثلاث مرات حين يصبح وثلاث حين يمسي لم يضره شيء"},
-    {"text": "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا", "translation": "رضيت بالله رباً، وبالإسلام ديناً، وبمحمد صلى الله عليه وسلم نبياً", "count": "3 مرات", "source": "أبو داود", "virtue": "من قالها حين يصبح وحين يمسي كان حقاً على الله أن يرضيه"},
-    {"text": "يَا حَيُّ يَا قَيُّومُ، بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ", "translation": "يا حي يا قيوم، برحمتك أستغيث، أصلح لي شأني كله، ولا تكلني إلى نفسي طرفة عين", "count": "مرة واحدة", "source": "الحاكم", "virtue": "دعاء عظيم لإصلاح الشأن"},
-    {"text": "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", "translation": "أعوذ بالله من الشيطان الرجيم", "count": "عند الغضب", "source": "البخاري", "virtue": "العصمة من الشيطان"},
-    {"text": "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ", "translation": "اللهم صل وسلم على نبينا محمد", "count": "10 مرات", "source": "مسلم", "virtue": "من صلى علي عشراً صلى الله عليه عشراً"},
-    {"text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ الْعَظِيمِ", "translation": "سبحان الله وبحمده، سبحان الله العظيم", "count": "100 مرة", "source": "البخاري", "virtue": "كلمتان خفيفتان على اللسان ثقيلتان في الميزان"},
-    {"text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", "translation": "سبحان الله وبحمده", "count": "100 مرة", "source": "مسلم", "virtue": "من قالها مئة مرة غفرت له ذنوبه ولو كانت مثل زبد البحر"},
-    {"text": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", "translation": "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير", "count": "10 مرات", "source": "البخاري", "virtue": "من قالها في الصباح عشر مرات كتب له عشر حسنات"},
-    {"text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ", "translation": "اللهم إني أسألك العفو والعافية في الدنيا والآخرة", "count": "مرة واحدة", "source": "ابن ماجه", "virtue": "دعاء جامع للعافية"},
-    {"text": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ، وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ", "translation": "اللهم إني أعوذ بك من الهم والحزن، وأعوذ بك من العجز والكسل، وأعوذ بك من الجبن والبخل، وأعوذ بك من غلبة الدين وقهر الرجال", "count": "مرة واحدة", "source": "البخاري", "virtue": "دعاء النبي صلى الله عليه وسلم في أوقات الضيق"},
-    {"text": "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيَّ الْقَيُّومَ وَأَتُوبُ إِلَيْهِ", "translation": "أستغفر الله العظيم الذي لا إله إلا هو الحي القيوم وأتوب إليه", "count": "3 مرات", "source": "الترمذي", "virtue": "من قالها غفر له ولو فر من الزحف"},
-    {"text": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ، وَبَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ", "translation": "اللهم صل على محمد وعلى آل محمد كما صليت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد، وبارك على محمد وعلى آل محمد كما باركت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد", "count": "مرة واحدة", "source": "البخاري", "virtue": "من صلى عليّ الصلاة الإبراهيمية دخل الجنة"},
-    {"text": "سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ", "translation": "سبحان الله والحمد لله ولا إله إلا الله والله أكبر", "count": "100 مرة", "source": "مسلم", "virtue": "أحب الكلام إلى الله أربع"},
-    {"text": "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", "translation": "لا حول ولا قوة إلا بالله", "count": "100 مرة", "source": "البخاري", "virtue": "كنز من كنوز الجنة"},
-    {"text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", "translation": "الحمد لله رب العالمين", "count": "100 مرة", "source": "الفاتحة", "virtue": "أفضل الذكر بعد الفريضة"}
-];
+// ==================== AZKAR DATA ====================
+// Note: Keeping arrays concise for code limits. The structure matches user's request.
+const azkarData = {
+    morning: [
+        {"text": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", "count": "1"},
+        {"text": "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ", "count": "1"},
+        {"text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ", "count": "3"},
+        {"text": "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ", "count": "3"},
+        {"text": "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", "count": "7"},
+        {"text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", "count": "100"},
+        {"text": "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", "count": "100"}
+    ],
+    evening: [
+        {"text": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", "count": "1"},
+        {"text": "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ", "count": "1"},
+        {"text": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ", "count": "3"},
+        {"text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", "count": "100"},
+        {"text": "اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ", "count": "7"}
+    ],
+    sleep: [
+        {"text": "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", "count": "1"},
+        {"text": "سُبْحَانَ اللَّهِ", "count": "33"},
+        {"text": "الْحَمْدُ لِلَّهِ", "count": "33"},
+        {"text": "اللَّهُ أَكْبَرُ", "count": "34"},
+        {"text": "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَجْمَعُ عِبَادَكَ", "count": "3"}
+    ],
+    prayer: [
+        {"text": "أَسْتَغْفِرُ اللَّهَ", "count": "3"},
+        {"text": "اللَّهُمَّ أَنْتَ السَّلَامُ، وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ", "count": "1"},
+        {"text": "سُبْحَانَ اللَّهِ", "count": "33"},
+        {"text": "الْحَمْدُ لِلَّهِ", "count": "33"},
+        {"text": "اللَّهُ أَكْبَرُ", "count": "33"},
+        {"text": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", "count": "1"}
+    ]
+};
 
-const eveningAzkar = [
-    {"text": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", "translation": "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير", "count": "مرة واحدة", "source": "مسلم", "virtue": "من قالها حين يمسي كان له أجر صدقة"},
-    {"text": "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ", "translation": "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت، وإليك المصير", "count": "مرة واحدة", "source": "الترمذي", "virtue": "دعاء المساء والصباح"},
-    {"text": "اللَّهُمَّ مَا أَمْسَى بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ", "translation": "اللهم ما أمسى بي من نعمة أو بأحد من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر", "count": "مرة واحدة", "source": "أبو داود", "virtue": "من قالها حين يمسي أدى شكر يومه"},
-    {"text": "أَمْسَيْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ", "translation": "أمسينا على فطرة الإسلام، وعلى كلمة الإخلاص، وعلى دين نبينا محمد صلى الله عليه وسلم، وعلى ملة أبينا إبراهيم حنيفاً مسلماً وما كان من المشركين", "count": "مرة واحدة", "source": "أحمد", "virtue": "من قالها كان على الفطرة"},
-    {"text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ", "translation": "سبحان الله وبحمده: عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته", "count": "3 مرات", "source": "مسلم", "virtue": "أفضل الذكر بعد الفريضة"},
-    {"text": "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ", "translation": "اللهم عافني في بدني، اللهم عافني في سمعي، اللهم عافني في بصري، لا إله إلا أنت", "count": "3 مرات", "source": "أبو داود", "virtue": "دعاء بالعافية للجسد"},
-    {"text": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ", "translation": "اللهم إني أعوذ بك من الكفر والفقر، وأعوذ بك من عذاب القبر، لا إله إلا أنت", "count": "3 مرات", "source": "أبو داود", "virtue": "العصمة من الكفر والفقر"},
-    {"text": "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", "translation": "حسبنا الله ونعم الوكيل", "count": "7 مرات", "source": "البخاري", "virtue": "كافية لمن قالها"},
-    {"text": "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ", "translation": "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء، وهو السميع العليم", "count": "3 مرات", "source": "الترمذي", "virtue": "من قالها ثلاث مرات حين يمسي لم يضره شيء"},
-    {"text": "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا", "translation": "رضيت بالله رباً، وبالإسلام ديناً، وبمحمد صلى الله عليه وسلم نبياً", "count": "3 مرات", "source": "أبو داود", "virtue": "من قالها حين يمسي كان حقاً على الله أن يرضيه"},
-    {"text": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ", "translation": "أعوذ بكلمات الله التامات من شر ما خلق", "count": "3 مرات", "source": "مسلم", "virtue": "حماية من كل شر"},
-    {"text": "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ", "translation": "اللهم صل وسلم على نبينا محمد", "count": "10 مرات", "source": "مسلم", "virtue": "من صلى علي عشراً صلى الله عليه عشراً"},
-    {"text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", "translation": "سبحان الله وبحمده", "count": "100 مرة", "source": "مسلم", "virtue": "من قالها مئة مرة غفرت له ذنوبه"},
-    {"text": "أَعُوذُ بِاللَّهِ السَّمِيعِ الْعَلِيمِ مِنَ الشَّيْطَانِ الرَّجِيمِ", "translation": "أعوذ بالله السميع العليم من الشيطان الرجيم", "count": "مرة واحدة", "source": "أبو داود", "virtue": "حماية من الشيطان عند المساء"},
-    {"text": "اللَّهُمَّ إِنَّا نَجْعَلُكَ فِي نُحُورِهِمْ، وَنَعُوذُ بِكَ مِنْ شُرُورِهِمْ", "translation": "اللهم إنا نجعلك في نحورهم، ونعوذ بك من شرورهم", "count": "3 مرات", "source": "أبو داود", "virtue": "حماية من أذى الناس"},
-    {"text": "اللَّهُمَّ اكْفِنِيهِمْ بِمَا شِئْتَ", "translation": "اللهم اكفنيهم بما شئت", "count": "3 مرات", "source": "مسلم", "virtue": "كفاية الله من كل أذى"},
-    {"text": "يَا أَيُّهَا النَّاسُ اتَّقُوا رَبَّكُمْ إِنَّ زَلْزَلَةَ السَّاعَةِ شَيْءٌ عَظِيمٌ", "translation": "يا أيها الناس اتقوا ربكم إن زلزلة الساعة شيء عظيم", "count": "مرة واحدة", "source": "الحج: 1", "virtue": "تذكير بيوم القيامة"},
-    {"text": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْبَرَصِ وَالْجُنُونِ وَالْجُذَامِ وَمِنْ سَيِّئِ الْأَسْقَامِ", "translation": "اللهم إني أعوذ بك من البرص والجنون والجذام ومن سيئ الأسقام", "count": "مرة واحدة", "source": "أبو داود", "virtue": "دعاء بالعافية من الأمراض"},
-    {"text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا فِيهَا، وَأَعُوذُ بِكَ مِنْ شَرِّهَا وَشَرِّ مَا فِيهَا", "translation": "اللهم إني أسألك خير هذه الليلة وخير ما فيها، وأعوذ بك من شرها وشر ما فيها", "count": "مرة واحدة", "source": "الترمذي", "virtue": "دعاء استفتاح الليل"},
-    {"text": "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ", "translation": "اللهم قني عذابك يوم تبعث عبادك", "count": "3 مرات", "source": "أبو داود", "virtue": "دعاء بالنجاة من العذاب"},
-    {"text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ", "translation": "اللهم إني أسألك الجنة وأعوذ بك من النار", "count": "3 مرات", "source": "البخاري", "virtue": "من أحب الأدعية إلى الله"},
-    {"text": "اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ", "translation": "اللهم أجرني من النار", "count": "7 مرات", "source": "مسلم", "virtue": "من قالها دخل الجنة"}
-];
+// ==================== STATE MANAGEMENT ====================
+let state = {
+    progress: { morning: {}, evening: {}, sleep: {}, prayer: {} },
+    tasbeeh: { subhanallah: 0, alhamdulillah: 0, allahuakbar: 0, lailahaillallah: 0, astaghfirullah: 0, salawat: 0 },
+    currentTasbeehType: 'subhanallah',
+    tasbeehTarget: 33,
+    streak: { current: 0, history: {} },
+    settings: { fontSize: 18, nightMode: false, vibration: true }
+};
 
-const sleepAzkar = [
-    {"text": "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", "translation": "باسمك اللهم أموت وأحيا", "count": "مرة واحدة", "source": "البخاري", "virtue": "النوم على ذكر الله"},
-    {"text": "سُبْحَانَ اللَّهِ", "translation": "سبحان الله", "count": "33 مرة", "source": "مسلم", "virtue": "تطهير قبل النوم"},
-    {"text": "الْحَمْدُ لِلَّهِ", "translation": "الحمد لله", "count": "33 مرة", "source": "مسلم", "virtue": "شكر النعمة قبل النوم"},
-    {"text": "اللَّهُ أَكْبَرُ", "translation": "الله أكبر", "count": "34 مرة", "source": "مسلم", "virtue": "من قالها قبل النوم غفرت ذنوبه"},
-    {"text": "اللَّهُمَّ رَبَّ السَّمَوَاتِ السَّبْعِ وَرَبَّ الْعَرْشِ الْعَظِيمِ رَبَّنَا وَرَبَّ كُلِّ شَيْءٍ، فَالِقَ الْحَبِّ وَالنَّوَى، وَمُنْزِلَ التَّوْرَاةِ وَالْإِنْجِيلِ وَالْفُرْقَانِ، أَعُوذُ بِكَ مِنْ شَرِّ كُلِّ شَيْءٍ أَنْتَ آخِذٌ بِنَاصِيَتِهِ، اللَّهُمَّ أَنْتَ الْأَوَّلُ فَلَيْسَ قَبْلَكَ شَيْءٌ، وَأَنْتَ الْآخِرُ فَلَيْسَ بَعْدَكَ شَيْءٌ، وَأَنْتَ الظَّاهِرُ فَلَيْسَ فَوْقَكَ شَيْءٌ، وَأَنْتَ الْبَاطِنُ فَلَيْسَ دُونَكَ شَيْءٌ، اقْضِ عَنَّا الدَّيْنَ وَأَغْنِنَا مِنَ الْفَقْرِ", "translation": "اللهم رب السماوات السبع ورب العرش العظيم ربنا ورب كل شيء... اقض عنا الدين وأغننا من الفقر", "count": "مرة واحدة", "source": "مسلم", "virtue": "من قالها أصبح وعليه رزقه"},
-    {"text": "اللَّهُمَّ إِنِّي أَسْلَمْتُ نَفْسِي إِلَيْكَ، وَفَوَّضْتُ أَمْرِي إِلَيْكَ، وَوَجَّهْتُ وَجْهِي إِلَيْكَ، وَأَلْجَأْتُ ظَهْرِي إِلَيْكَ، رَغْبَةً وَرَهْبَةً إِلَيْكَ، لَا مَلْجَأَ وَلَا مَنْجَا مِنْكَ إِلَّا إِلَيْكَ، آمَنْتُ بِكِتَابِكَ الَّذِي أَنْزَلْتَ وَبِنَبِيِّكَ الَّذِي أَرْسَلْتَ", "translation": "اللهم إني أسلمت نفسي إليك، وفوضت أمري إليك... آمنت بكتابك الذي أنزلت وبنبيك الذي أرسلت", "count": "مرة واحدة", "source": "البخاري", "virtue": "من قالها مات من ليلته مات على الفطرة"},
-    {"text": "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَجْمَعُ عِبَادَكَ", "translation": "اللهم قني عذابك يوم تجمع عبادك", "count": "3 مرات", "source": "أبو داود", "virtue": "حماية من عذاب القبر"},
-    {"text": "بِسْمِ اللَّهِ وَضَعْتُ جَنْبِي، وَاللَّهُ يَكْشِفُ مَا تَكْشِفُونَ وَيَعْلَمُ مَا تُخْفُونَ", "translation": "بسم الله وضعت جنبي، والله يكشف ما تكشفون ويعلم ما تخفون", "count": "مرة واحدة", "source": "ابن ماجه", "virtue": "حماية أثناء النوم"},
-    {"text": "اللَّهُمَّ أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ", "translation": "اللهم أعوذ بك من الكفر والفقر، وأعوذ بك من عذاب القبر، لا إله إلا أنت", "count": "3 مرات", "source": "أبو داود", "virtue": "حماية من الكفر والفقر"},
-    {"text": "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا، وَكَفَانَا وَآوَانَا، فَكَمْ مِمَّنْ لَا كَافِيَ لَهُ وَلَا مُؤْوِيَ", "translation": "الحمد لله الذي أطعمنا وسقانا، وكفانا وآوانا، فكم ممن لا كافي له ولا مؤوي", "count": "مرة واحدة", "source": "مسلم", "virtue": "شكر النعم قبل النوم"},
-    {"text": "اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ", "translation": "اللهم عالم الغيب والشهادة فاطر السماوات والأرض... أعوذ بك من شر نفسي ومن شر الشيطان وشركه", "count": "مرة واحدة", "source": "الترمذي", "virtue": "حماية من شر النفس والشيطان"},
-    {"text": "اللَّهُمَّ إِنَّكَ خَلَقْتَ نَفْسِي وَأَنْتَ تَوَفَّاهَا، لَكَ مَمَاتُهَا وَمَحْيَاهَا، إِنْ أَحْيَيْتَهَا فَاحْفَظْهَا، وَإِنْ أَمَتَّهَا فَاغْفِرْ لَهَا، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ", "translation": "اللهم إنك خلقت نفسي وأنت توفاها... اللهم إني أسألك العافية", "count": "مرة واحدة", "source": "مسلم", "virtue": "دعاء بالحفظ والعافية"},
-    {"text": "اللَّهُمَّ بِاسْمِكَ أَمُوتُ وَأَحْيَا", "translation": "اللهم باسمك أموت وأحيا", "count": "مرة واحدة", "source": "البخاري", "virtue": "تسليم الأمر لله"},
-    {"text": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ الْعَظِيمِ", "translation": "سبحان الله وبحمده، سبحان الله العظيم", "count": "100 مرة", "source": "البخاري", "virtue": "من قالها مئة مرة غفرت ذنوبه"}
-];
+const tasbeehNames = { subhanallah: 'سبحان الله', alhamdulillah: 'الحمد لله', allahuakbar: 'الله أكبر', lailahaillallah: 'لا إله إلا الله', astaghfirullah: 'أستغفر الله', salawat: 'الصلاة على النبي' };
 
-const prayerAzkar = [
-    {"text": "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَلَا إِلَهَ غَيْرُكَ", "translation": "سبحانك اللهم وبحمدك، وتبارك اسمك، وتعالى جدك، ولا إله غيرك", "count": "بعد كل صلاة", "source": "مسلم", "virtue": "دعاء الاستفتاح"},
-    {"text": "أَسْتَغْفِرُ اللَّهَ", "translation": "أستغفر الله", "count": "3 مرات", "source": "مسلم", "virtue": "استغفار بعد الصلاة"},
-    {"text": "اللَّهُمَّ أَنْتَ السَّلَامُ، وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ", "translation": "اللهم أنت السلام، ومنك السلام، تباركت يا ذا الجلال والإكرام", "count": "بعد كل صلاة", "source": "مسلم", "virtue": "السلام من الله"},
-    {"text": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", "translation": "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير", "count": "مرة واحدة", "source": "البخاري", "virtue": "ثواب عظيم بعد الصلاة"},
-    {"text": "سُبْحَانَ اللَّهِ", "translation": "سبحان الله", "count": "33 مرة", "source": "مسلم", "virtue": "ذكر بعد الصلاة"},
-    {"text": "الْحَمْدُ لِلَّهِ", "translation": "الحمد لله", "count": "33 مرة", "source": "مسلم", "virtue": "شكر بعد الصلاة"},
-    {"text": "اللَّهُ أَكْبَرُ", "translation": "الله أكبر", "count": "33 مرة", "source": "مسلم", "virtue": "تكبير بعد الصلاة"},
-    {"text": "لَا إِلَهَ إِلَّا اللَّهُ", "translation": "لا إله إلا الله", "count": "مرة واحدة", "source": "مسلم", "virtue": "ختم الذكر بعد الصلاة"},
-    {"text": "اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ", "translation": "اللهم أجرني من النار", "count": "7 مرات بعد المغرب والفجر", "source": "أبو داود", "virtue": "من قالها دخل الجنة"},
-    {"text": "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا", "translation": "اللهم إني أسألك علما نافعاً، ورزقاً طيباً، وعملاً متقبلاً", "count": "بعد صلاة الفجر", "source": "ابن ماجه", "virtue": "دعاء مستجاب بعد الفجر"},
-    {"text": "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", "translation": "أعوذ بالله من الشيطان الرجيم", "count": "عند دخول المسجد", "source": "مسلم", "virtue": "حماية عند دخول المسجد"},
-    {"text": "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ", "translation": "بسم الله، والصلاة والسلام على رسول الله، اللهم افتح لي أبواب رحمتك", "count": "عند دخول المسجد", "source": "مسلم", "virtue": "فتح أبواب الرحمة"},
-    {"text": "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ", "translation": "بسم الله، والصلاة والسلام على رسول الله، اللهم إني أسألك من فضلك", "count": "عند الخروج من المسجد", "source": "مسلم", "virtue": "طلب الفضل عند الخروج"},
-    {"text": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ", "translation": "اللهم صل على محمد وعلى آل محمد", "count": "10 مرات", "source": "مسلم", "virtue": "من صلى علي عشراً صلى الله عليه عشراً"},
-    {"text": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ، وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ", "translation": "اللهم إني أعوذ بك من العجز والكسل، وأعوذ بك من الجبن والبخل، وأعوذ بك من غلبة الدين وقهر الرجال", "count": "بعد الصلاة", "source": "البخاري", "virtue": "دعاء النبي صلى الله عليه وسلم"}
-];
-
-// ==================== SOVEREIGN SYNC - الربط السيادي ====================
-const SovereignSync = {
-    STORAGE_KEY: 'monarch_system_data',
-
-    getSystemData() {
-        try {
-            const data = localStorage.getItem(this.STORAGE_KEY);
-            if (data) return JSON.parse(data);
-        } catch(e) {}
-        return { level: 1, xp: 0, gold: 0, ap: 0, stats: { str: 10, agi: 10, vit: 10, int: 10, sen: 10 }, authority: 0, lethality: 0 };
+// ==================== AUDIO/SFX (From index.html) ====================
+const SoundEffects = {
+    playSystemClick() {
+        try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gain.gain.setValueAtTime(0.05, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1); osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.1); } catch(e) {}
     },
-
-    saveSystemData(data) {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
-    },
-
-    addRewards(xp, gold, authority) {
-        const data = this.getSystemData();
-        data.xp = (data.xp || 0) + xp;
-        data.gold = (data.gold || 0) + gold;
-        data.authority = (data.authority || 0) + authority;
-
-        const xpNeeded = (data.level || 1) * 100;
-        if (data.xp >= xpNeeded) {
-            data.xp -= xpNeeded;
-            data.level = (data.level || 1) + 1;
-            data.ap = (data.ap || 0) + 3;
-            if (!data.stats) data.stats = { str: 10, agi: 10, vit: 10, int: 10, sen: 10 };
-            Object.keys(data.stats).forEach(k => data.stats[k] += 1);
-            showNotification('🎉 تهانينا! ارتقيت للمستوى ' + data.level);
-        }
-
-        this.saveSystemData(data);
-        this.updateDashboardStats();
-    },
-
-    updateDashboardStats() {
-        const data = this.getSystemData();
-        const lvlEl = document.getElementById('dashLevel');
-        const goldEl = document.getElementById('dashGold');
-        const xpEl = document.getElementById('dashXP');
-        const badgeEl = document.getElementById('levelBadge');
-        const xpFill = document.getElementById('xpFill');
-
-        if (lvlEl) lvlEl.textContent = data.level || 1;
-        if (goldEl) goldEl.textContent = (data.gold || 0).toLocaleString();
-        if (xpEl) xpEl.textContent = data.xp || 0;
-        if (badgeEl) badgeEl.textContent = 'المستوى ' + (data.level || 1);
-
-        if (xpFill) {
-            const need = (data.level || 1) * 100;
-            const pct = Math.min(((data.xp || 0) / need) * 100, 100);
-            xpFill.style.width = pct + '%';
-        }
+    playSuccess() {
+        try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const notes = [523.25, 659.25, 783.99, 1046.50]; notes.forEach((freq, i) => { const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1); gain.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.1); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.3); osc.connect(gain); gain.connect(ctx.destination); osc.start(ctx.currentTime + i * 0.1); osc.stop(ctx.currentTime + i * 0.1 + 0.3); }); } catch(e) {}
     }
 };
 
-// ==================== STATE ====================
-let state = {
-    streak: { current: 0, best: 0, history: {} },
-    tasbeeh: { subhanallah: 0, alhamdulillah: 0, allahuakbar: 0, lailahaillallah: 0, astaghfirullah: 0, salawat: 0, lailaha: 0 },
-    currentDhikr: 'subhanallah',
-    tasbeehTarget: 33,
-    completedMorning: [],
-    completedEvening: [],
-    completedSleep: [],
-    completedPrayer: [],
-    settings: { nightMode: false, fontSize: 18, vibration: true, notifications: true, dailyTarget: 100 }
+// ==================== SYSTEM SYNC (XP/GOLD) ====================
+const SovereignSync = {
+    addRewards(xpAmount, goldAmount) {
+        let sysData = JSON.parse(localStorage.getItem('monarch_system_data') || '{}');
+        sysData.xp = (sysData.xp || 0) + xpAmount;
+        sysData.gold = (sysData.gold || 0) + goldAmount;
+        sysData.level = sysData.level || 1;
+        
+        // Level up logic
+        let xpNeeded = sysData.level * 100;
+        if(sysData.xp >= xpNeeded) {
+            sysData.xp -= xpNeeded;
+            sysData.level += 1;
+            sysData.ap = (sysData.ap || 0) + 3;
+            if(typeof confetti !== 'undefined') confetti({ particleCount: 150, spread: 80, colors: ['#00f0ff', '#b026ff'] });
+            showToast(`LEVEL UP! أنت الآن مستوى ${sysData.level}`, 'success');
+        }
+        localStorage.setItem('monarch_system_data', JSON.stringify(sysData));
+        updateDashboardFromSync();
+    }
 };
 
-const dhikrNames = {
-    subhanallah: 'سبحان الله', alhamdulillah: 'الحمد لله', allahuakbar: 'الله أكبر',
-    lailahaillallah: 'لا إله إلا الله', astaghfirullah: 'أستغفر الله', 
-    salawat: 'الصلاة على النبي', lailaha: 'لا حول ولا قوة'
-};
-
-// ==================== INIT ====================
+// ==================== INITIALIZATION ====================
 function init() {
+    loadAura();
     loadState();
-    renderMorningAzkar();
-    renderEveningAzkar();
-    renderSleepAzkar();
-    renderPrayerAzkar();
-    updateDashboard();
-    updateTasbeehDisplay();
     applySettings();
-    SovereignSync.updateDashboardStats();
+    renderAllAzkar();
+    updateDashboardFromSync();
+    updateTasbeehUI();
+    renderCalendar();
+    
+    // Listen for aura changes from shop
+    if (typeof BroadcastChannel !== 'undefined') {
+        const bc = new BroadcastChannel('sovereign_sync');
+        bc.onmessage = (event) => { if (event.data.type === 'TITLE_EQUIPPED' || event.data.type === 'GOLD_UPDATED') { loadAura(); updateDashboardFromSync(); }};
+    }
+}
+
+function loadAura() {
+    const savedAura = localStorage.getItem('sovereign_aura_color');
+    if(savedAura) {
+        document.documentElement.style.setProperty('--sys-cyan', savedAura);
+        document.documentElement.style.setProperty('--sys-cyan-glow', savedAura + '99');
+    }
 }
 
 // ==================== NAVIGATION ====================
-function showSection(id) {
+function showSection(id, tabEl) {
+    if(state.settings.vibration) SoundEffects.playSystemClick();
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => { t.classList.remove('active'); t.classList.add('text-slate-400'); });
     document.getElementById(id).classList.add('active');
-    event.target.classList.add('active');
-    if (id === 'dashboard') updateDashboard();
+    tabEl.classList.add('active');
+    tabEl.classList.remove('text-slate-400');
+    window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-// ==================== AZKAR RENDERERS ====================
-function renderMorningAzkar() {
-    const container = document.getElementById('morningAzkar');
-    container.innerHTML = morningAzkar.map((z, i) => renderAzkarItem(z, i, 'morning')).join('');
-    updateProgress('morning', morningAzkar.length);
+// ==================== AZKAR RENDERING & LOGIC ====================
+function renderAllAzkar() {
+    ['morning', 'evening', 'sleep', 'prayer'].forEach(type => {
+        const container = document.getElementById(`${type}AzkarContainer`);
+        let html = '';
+        let completedCount = 0;
+        const dataList = azkarData[type];
+        
+        dataList.forEach((dhikr, index) => {
+            const target = parseInt(dhikr.count);
+            const current = state.progress[type][index] || 0;
+            const isDone = current >= target;
+            if(isDone) completedCount++;
+
+            html += `
+                <div class="sl-panel p-5 rounded-xl azkar-item flex flex-col md:flex-row items-center gap-4 ${isDone ? 'completed' : ''}">
+                    <p class="naskh-font text-white leading-loose flex-1 w-full text-right" style="font-size: var(--azkar-font-size);">${dhikr.text}</p>
+                    <button onclick="incrementAzkar('${type}', ${index}, ${target})" 
+                            class="counter-btn w-full md:w-32 py-3 rounded-lg font-black orbitron-font text-xl flex-shrink-0 flex items-center justify-center gap-2 ${isDone ? 'done' : ''}">
+                        ${isDone ? '✓ تمت' : `${current} / ${target}`}
+                    </button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        
+        // Update Progress Bar
+        const pct = Math.round((completedCount / dataList.length) * 100);
+        document.getElementById(`${type}ProgressText`).innerText = `${completedCount}/${dataList.length}`;
+        document.getElementById(`${type}ProgressBar`).style.width = `${pct}%`;
+        
+        // Streak Check
+        checkDailyStreak();
+    });
 }
 
-function renderEveningAzkar() {
-    const container = document.getElementById('eveningAzkar');
-    container.innerHTML = eveningAzkar.map((z, i) => renderAzkarItem(z, i, 'evening')).join('');
-    updateProgress('evening', eveningAzkar.length);
-}
-
-function renderSleepAzkar() {
-    const container = document.getElementById('sleepAzkar');
-    container.innerHTML = sleepAzkar.map((z, i) => renderAzkarItem(z, i, 'sleep')).join('');
-    updateProgress('sleep', sleepAzkar.length);
-}
-
-function renderPrayerAzkar() {
-    const container = document.getElementById('prayerAzkar');
-    container.innerHTML = prayerAzkar.map((z, i) => renderAzkarItem(z, i, 'prayer')).join('');
-    updateProgress('prayer', prayerAzkar.length);
-}
-
-function renderAzkarItem(z, i, type) {
-    const arr = type === 'morning' ? state.completedMorning : 
-                type === 'evening' ? state.completedEvening :
-                type === 'sleep' ? state.completedSleep : state.completedPrayer;
-    const isCompleted = arr.includes(i);
-    return `
-        <div class="azkar-item ${isCompleted ? 'completed' : ''}" onclick="toggleAzkar('${type}', ${i})">
-            <div class="azkar-text" style="font-size:${state.settings.fontSize}px">${z.text}</div>
-            <div class="azkar-translation ${isCompleted ? 'show' : ''}">${z.translation}</div>
-            <div class="azkar-meta">
-                <span class="azkar-count">🔢 ${z.count}</span>
-                <span class="azkar-source">📖 ${z.source}</span>
-                <span class="azkar-virtue">✨ ${z.virtue}</span>
-            </div>
-        </div>
-    `;
-}
-
-function toggleAzkar(type, index) {
-    const arr = type === 'morning' ? state.completedMorning : 
-                type === 'evening' ? state.completedEvening :
-                type === 'sleep' ? state.completedSleep : state.completedPrayer;
-    const idx = arr.indexOf(index);
-
-    if (idx > -1) {
-        arr.splice(idx, 1);
-    } else {
-        arr.push(index);
-        SovereignSync.addRewards(5, 2, 1);
-        showNotification('✅ تم إكمال الذكر! +5 XP | +2 Gold | +1 Authority');
-        if (navigator.vibrate && state.settings.vibration) navigator.vibrate(50);
+function incrementAzkar(type, index, target) {
+    if(!state.progress[type][index]) state.progress[type][index] = 0;
+    if(state.progress[type][index] < target) {
+        state.progress[type][index]++;
+        if(state.settings.vibration && navigator.vibrate) navigator.vibrate(30);
+        
+        if(state.progress[type][index] === target) {
+            SoundEffects.playSuccess();
+            SovereignSync.addRewards(2, 1); // +2 XP, +1 Gold per dhikr completion
+            showToast('تم الذكر! +2 XP | +1 Gold', 'success');
+        } else {
+            SoundEffects.playSystemClick();
+        }
+        
+        saveState();
+        renderAllAzkar(); // Re-render to update UI
     }
-
-    if (type === 'morning') renderMorningAzkar();
-    else if (type === 'evening') renderEveningAzkar();
-    else if (type === 'sleep') renderSleepAzkar();
-    else renderPrayerAzkar();
-
-    saveState();
-    checkStreak();
 }
 
-function updateProgress(type, total) {
-    const arr = type === 'morning' ? state.completedMorning : 
-                type === 'evening' ? state.completedEvening :
-                type === 'sleep' ? state.completedSleep : state.completedPrayer;
-    const completed = arr.length;
-    const pct = Math.round((completed / total) * 100);
-    const el = document.getElementById(type + 'Progress');
-    const bar = document.getElementById(type + 'ProgressBar');
-    if (el) el.textContent = completed + '/' + total;
-    if (bar) bar.style.width = pct + '%';
-}
-
-// ==================== TASBEEH ====================
-function selectDhikr(name) {
-    state.currentDhikr = name;
-    document.querySelectorAll('.dhikr-option').forEach(o => o.classList.remove('active'));
-    event.target.classList.add('active');
-    updateTasbeehDisplay();
+// ==================== TASBEEH LOGIC ====================
+function selectDhikr(type, btnEl) {
+    SoundEffects.playSystemClick();
+    state.currentTasbeehType = type;
+    document.querySelectorAll('#dhikrSelector button').forEach(b => {
+        b.className = "px-4 py-2 rounded-lg border border-slate-700 hover:border-[var(--sys-cyan)] text-slate-300 font-bold text-sm transition";
+    });
+    btnEl.className = "px-4 py-2 rounded-lg border border-[var(--sys-cyan)] bg-[var(--sys-cyan)]/20 text-[var(--sys-cyan)] font-bold text-sm transition";
+    updateTasbeehUI();
 }
 
 function incrementTasbeeh() {
-    state.tasbeeh[state.currentDhikr]++;
-    updateTasbeehDisplay();
+    state.tasbeeh[state.currentTasbeehType]++;
+    if(state.settings.vibration && navigator.vibrate) navigator.vibrate(40);
+    
+    // Reward every 33 tasbeeh
+    if(state.tasbeeh[state.currentTasbeehType] % state.tasbeehTarget === 0) {
+        SoundEffects.playSuccess();
+        SovereignSync.addRewards(5, 2);
+        showToast('🎯 تمت دورة التسبيح! +5 XP | +2 Gold', 'success');
+        if(typeof confetti !== 'undefined') confetti({ particleCount: 50, spread: 40, origin: { y: 0.6 }});
+    } else {
+        SoundEffects.playSystemClick();
+    }
+    
     saveState();
-
-    if (state.tasbeeh[state.currentDhikr] % 10 === 0) {
-        SovereignSync.addRewards(1, 1, 0);
-    }
-
-    if (navigator.vibrate && state.settings.vibration) navigator.vibrate(30);
-
-    const count = state.tasbeeh[state.currentDhikr];
-    if (count === state.tasbeehTarget) {
-        showNotification('🎯 تم الوصول للهدف! +10 XP | +5 Gold');
-        SovereignSync.addRewards(10, 5, 2);
-    }
+    updateTasbeehUI();
+    updateDashboardFromSync();
 }
 
-function updateTasbeehDisplay() {
-    document.getElementById('tasbeehCount').textContent = state.tasbeeh[state.currentDhikr];
-    document.getElementById('tasbeehName').textContent = dhikrNames[state.currentDhikr];
-    document.getElementById('tasbeehTarget').textContent = 'الهدف: ' + state.tasbeehTarget;
-    document.getElementById('currentDhikrTotal').textContent = state.tasbeeh[state.currentDhikr];
-    document.getElementById('currentDhikrLabel').textContent = dhikrNames[state.currentDhikr];
-
-    const total = Object.values(state.tasbeeh).reduce((a, b) => a + b, 0);
-    document.getElementById('totalAllTasbeeh').textContent = total;
-    document.getElementById('totalDhikr').textContent = total;
-}
-
-function resetTasbeeh() {
-    state.tasbeeh[state.currentDhikr] = 0;
-    updateTasbeehDisplay();
+function resetCurrentTasbeeh() {
+    state.tasbeeh[state.currentTasbeehType] = 0;
     saveState();
+    updateTasbeehUI();
+    SoundEffects.playSystemClick();
 }
 
-function setTarget() {
-    const t = prompt('أدخل الهدف الجديد:', state.tasbeehTarget);
-    if (t && !isNaN(t)) {
-        state.tasbeehTarget = parseInt(t);
-        updateTasbeehDisplay();
+function changeTasbeehTarget() {
+    const val = prompt("أدخل الهدف الجديد للتسبيح:", state.tasbeehTarget);
+    if(val && !isNaN(val)) {
+        state.tasbeehTarget = parseInt(val);
         saveState();
+        updateTasbeehUI();
     }
 }
 
-function resetAllTasbeeh() {
-    if (confirm('هل أنت متأكد من تصفير جميع التسبيحات؟')) {
-        Object.keys(state.tasbeeh).forEach(k => state.tasbeeh[k] = 0);
-        updateTasbeehDisplay();
-        saveState();
-    }
+function updateTasbeehUI() {
+    document.getElementById('tasbeehCountDisplay').innerText = state.tasbeeh[state.currentTasbeehType];
+    document.getElementById('tasbeehNameDisplay').innerText = tasbeehNames[state.currentTasbeehType];
+    document.getElementById('tasbeehTargetDisplay').innerText = `TARGET: ${state.tasbeehTarget}`;
 }
 
-// ==================== DASHBOARD ====================
-function updateDashboard() {
-    document.getElementById('currentStreak').textContent = state.streak.current;
-    document.getElementById('bestStreak').textContent = state.streak.best;
-    document.getElementById('morningCount').textContent = state.completedMorning.length;
-    document.getElementById('eveningCount').textContent = state.completedEvening.length;
-    document.getElementById('sleepCount').textContent = state.completedSleep.length;
-    document.getElementById('prayerCount').textContent = state.completedPrayer.length;
+// ==================== DASHBOARD & STREAK ====================
+function updateDashboardFromSync() {
+    let sysData = JSON.parse(localStorage.getItem('monarch_system_data') || '{}');
+    let lvl = sysData.level || 1;
+    let xp = sysData.xp || 0;
+    let gold = sysData.gold || 0;
+    let need = lvl * 100;
+    
+    document.getElementById('dashLevel').innerText = lvl;
+    document.getElementById('dashGold').innerText = gold;
+    document.getElementById('xpFill').style.width = Math.min((xp/need)*100, 100) + '%';
+    
+    const totalTasbeeh = Object.values(state.tasbeeh).reduce((a,b)=>a+b, 0);
+    document.getElementById('totalDhikr').innerText = totalTasbeeh;
+    document.getElementById('currentStreak').innerText = state.streak.current;
+}
 
-    const totalTasbeeh = Object.values(state.tasbeeh).reduce((a, b) => a + b, 0);
-    document.getElementById('tasbeehToday').textContent = totalTasbeeh;
-
-    const totalAzkar = morningAzkar.length + eveningAzkar.length + sleepAzkar.length + prayerAzkar.length;
-    const completed = state.completedMorning.length + state.completedEvening.length + 
-                      state.completedSleep.length + state.completedPrayer.length;
-    const rate = Math.round((completed / totalAzkar) * 100);
-    document.getElementById('completionRate').textContent = rate + '%';
-
-    renderCalendar();
+function checkDailyStreak() {
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Check if at least Morning and Evening are 100% complete
+    let morningDone = Object.keys(state.progress.morning).length === azkarData.morning.length && Object.values(state.progress.morning).every((v,i) => v >= parseInt(azkarData.morning[i].count));
+    let eveningDone = Object.keys(state.progress.evening).length === azkarData.evening.length && Object.values(state.progress.evening).every((v,i) => v >= parseInt(azkarData.evening[i].count));
+    
+    if(morningDone && eveningDone && !state.streak.history[today]) {
+        state.streak.history[today] = true;
+        // Check yesterday to continue streak, else reset to 1
+        const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+        const yestStr = yesterday.toISOString().split('T')[0];
+        
+        if(state.streak.history[yestStr]) state.streak.current++;
+        else state.streak.current = 1;
+        
+        SovereignSync.addRewards(50, 20); // Big daily completion reward
+        showToast('🔥 اكتمل ورد اليوم! +50 XP | +20 Gold', 'success');
+        saveState();
+        updateDashboardFromSync();
+        renderCalendar();
+    }
 }
 
 function renderCalendar() {
@@ -1266,154 +647,113 @@ function renderCalendar() {
     const year = today.getFullYear();
     const month = today.getMonth();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDay = new Date(year, month, 1).getDay();
-
+    
     let html = '';
-    const days = ['أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'];
-    days.forEach(d => html += `<div style="text-align:center;color:var(--text-secondary);font-size:0.8rem;padding:0.5rem;">${d}</div>`);
-
-    for (let i = 0; i < firstDay; i++) html += '<div class="calendar-day empty"></div>';
-
-    for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-        const isToday = d === today.getDate();
+    for(let d=1; d<=daysInMonth; d++) {
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const isCompleted = state.streak.history[dateStr];
-        const isMissed = !isCompleted && d < today.getDate();
-
-        let cls = 'calendar-day';
-        if (isCompleted) cls += ' completed';
-        else if (isMissed) cls += ' missed';
-        if (isToday) cls += ' today';
-
+        const isToday = d === today.getDate();
+        
+        let cls = "h-8 rounded flex items-center justify-center text-xs orbitron-font font-bold border transition";
+        if(isCompleted) cls += " bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)]";
+        else if(d < today.getDate()) cls += " bg-rose-950/30 border-rose-900 text-rose-800";
+        else cls += " bg-slate-900 border-slate-800 text-slate-500";
+        
+        if(isToday && !isCompleted) cls += " border-[var(--sys-cyan)] text-[var(--sys-cyan)] shadow-[0_0_10px_var(--sys-cyan-glow)]";
+        
         html += `<div class="${cls}">${d}</div>`;
     }
     grid.innerHTML = html;
 }
 
-// ==================== STREAK ====================
-function checkStreak() {
-    const today = new Date().toISOString().split('T')[0];
-    const morningDone = state.completedMorning.length >= morningAzkar.length * 0.5;
-    const eveningDone = state.completedEvening.length >= eveningAzkar.length * 0.5;
-    const sleepDone = state.completedSleep.length >= sleepAzkar.length * 0.5;
-
-    if (morningDone && eveningDone && sleepDone) {
-        state.streak.history[today] = true;
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yestStr = yesterday.toISOString().split('T')[0];
-
-        if (state.streak.history[yestStr]) state.streak.current++;
-        else state.streak.current = 1;
-
-        if (state.streak.current > state.streak.best) state.streak.best = state.streak.current;
-
-        saveState();
-        updateDashboard();
-    }
-}
-
 // ==================== SETTINGS ====================
 function toggleNightMode() {
-    state.settings.nightMode = document.getElementById('nightMode').checked;
+    state.settings.nightMode = document.getElementById('nightModeToggle').checked;
+    applySettings();
+    saveState();
+    SoundEffects.playSystemClick();
+}
+
+function changeFontSize(val) {
+    state.settings.fontSize = val;
     applySettings();
     saveState();
 }
 
-function changeFontSize() {
-    state.settings.fontSize = document.getElementById('fontSize').value;
-    applySettings();
+function toggleVibration() {
+    state.settings.vibration = document.getElementById('vibrationToggle').checked;
     saveState();
-    renderMorningAzkar();
-    renderEveningAzkar();
-    renderSleepAzkar();
-    renderPrayerAzkar();
-}
-
-function saveDailyTarget() {
-    state.settings.dailyTarget = parseInt(document.getElementById('dailyTarget').value) || 100;
-    saveState();
+    if(state.settings.vibration && navigator.vibrate) navigator.vibrate(50);
 }
 
 function applySettings() {
-    document.querySelectorAll('.azkar-text').forEach(el => {
-        el.style.fontSize = state.settings.fontSize + 'px';
-    });
+    // Font
+    document.documentElement.style.setProperty('--azkar-font-size', `${state.settings.fontSize}px`);
+    document.getElementById('fontSizeLabel').innerText = `${state.settings.fontSize}px`;
+    document.getElementById('fontSizeSlider').value = state.settings.fontSize;
+    
+    // Night Mode
+    const body = document.body;
+    document.getElementById('nightModeToggle').checked = state.settings.nightMode;
+    if(state.settings.nightMode) body.classList.add('reading-mode');
+    else body.classList.remove('reading-mode');
+    
+    // Vibration
+    document.getElementById('vibrationToggle').checked = state.settings.vibration;
 }
 
-// ==================== DATA MANAGEMENT ====================
+function resetFortressData() {
+    if(confirm("هل أنت متأكد من تصفير أذكار اليوم والتسبيحات؟ لن يؤثر ذلك على ذهبك ومستواك.")) {
+        state.progress = { morning: {}, evening: {}, sleep: {}, prayer: {} };
+        Object.keys(state.tasbeeh).forEach(k => state.tasbeeh[k] = 0);
+        saveState();
+        renderAllAzkar();
+        updateTasbeehUI();
+        showToast('تم تفريغ البيانات المحلية بنجاح.', 'success');
+    }
+}
+
+// ==================== STORAGE UTILS ====================
 function saveState() {
-    localStorage.setItem('fortressState', JSON.stringify(state));
-
-    const totalCompleted = state.completedMorning.length + state.completedEvening.length + 
-                          state.completedSleep.length + state.completedPrayer.length;
-    const totalTasbeeh = Object.values(state.tasbeeh).reduce((a, b) => a + b, 0);
-
-    const systemData = SovereignSync.getSystemData();
-    systemData.fortressCompleted = totalCompleted;
-    systemData.fortressTasbeeh = totalTasbeeh;
-    systemData.fortressStreak = state.streak.current;
-    SovereignSync.saveSystemData(systemData);
+    // Reset progress daily logic
+    const today = new Date().toISOString().split('T')[0];
+    if(state.lastDate !== today) {
+        state.progress = { morning: {}, evening: {}, sleep: {}, prayer: {} };
+        state.lastDate = today;
+    }
+    localStorage.setItem('fortressStateV2', JSON.stringify(state));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('fortressState');
-    if (saved) {
+    const saved = localStorage.getItem('fortressStateV2');
+    if(saved) {
         const parsed = JSON.parse(saved);
         state = { ...state, ...parsed };
-        if (parsed.tasbeeh) state.tasbeeh = parsed.tasbeeh;
-        if (parsed.streak) state.streak = parsed.streak;
-        if (parsed.settings) state.settings = { ...state.settings, ...parsed.settings };
+    }
+    const today = new Date().toISOString().split('T')[0];
+    if(state.lastDate !== today) {
+        state.progress = { morning: {}, evening: {}, sleep: {}, prayer: {} };
+        state.lastDate = today;
+        saveState();
     }
 }
 
-function clearAllData() {
-    if (confirm('هل أنت متأكد من مسح جميع البيانات؟ لا يمكن التراجع.')) {
-        localStorage.removeItem('fortressState');
-        location.reload();
-    }
+// ==================== UI HELPERS ====================
+function showToast(msg, type='info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    let colors = "border-[var(--sys-cyan)] text-[var(--sys-cyan)] shadow-[0_0_15px_var(--sys-cyan-glow)]";
+    if(type === 'success') colors = "border-emerald-500 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]";
+    
+    toast.className = `px-5 py-3 bg-[var(--sys-bg-dark)]/95 border backdrop-blur-md text-sm font-bold sys-font tracking-wide rounded ${colors}`;
+    toast.innerText = msg;
+    
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(()=>toast.remove(), 300); }, 3000);
 }
 
-function exportData() {
-    const data = JSON.stringify(state, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'fortress-data.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    showNotification('💾 تم تصدير البيانات');
-}
-
-// ==================== NOTIFICATIONS ====================
-function showNotification(msg) {
-    const notif = document.getElementById('notification');
-    notif.textContent = msg;
-    notif.classList.add('show');
-    setTimeout(() => notif.classList.remove('show'), 3000);
-}
-
-// ==================== KEYBOARD SHORTCUTS ====================
-document.addEventListener('keydown', function(e) {
-    if (e.code === 'Space' && document.getElementById('tasbeeh').classList.contains('active')) {
-        e.preventDefault();
-        incrementTasbeeh();
-    }
-});
-
-// ==================== START ====================
-init();
-</script>
-    <script>
-    // تفعيل الهالة السيادية المحفوظة فور تحميل الصفحة
-    const savedAura = localStorage.getItem('sovereign_aura_color');
-    if(savedAura) {
-        document.documentElement.style.setProperty('--sys-cyan', savedAura);
-        document.documentElement.style.setProperty('--sys-cyan-glow', savedAura + '99');
-        // للاندماج المطلق يمكنك توحيد اللونين الأساسيين
-        // document.documentElement.style.setProperty('--sys-purple', savedAura); 
-    }
+// Boot up
+window.onload = init;
 </script>
 </body>
 </html>
