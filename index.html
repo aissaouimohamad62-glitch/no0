@@ -1805,7 +1805,7 @@ const SovereignSchedules = {
 };
 
 // ==========================================
-// SOVEREIGN ENGINE - الإصدار المتوافق والمصحح بالكامل
+// SOVEREIGN ENGINE - المطور والمصحح بالكامل للمزامنة والتوليد
 // ==========================================
 const SovereignEngine = {
     state: {
@@ -1813,8 +1813,7 @@ const SovereignEngine = {
         get playerXP() { return PlayerState.data.xp || 0; },
         get playerGold() { return PlayerState.data.gold || 0; },
         activeTitle: localStorage.getItem('sovereign_title') || "[مبتدئ الكتل]",
-        activeQuest: JSON.parse(localStorage.getItem('sovereign_active_quest')) || null,
-        lastDistractionTime: 0
+        activeQuest: JSON.parse(localStorage.getItem('sovereign_active_quest')) || null
     },
     config: { 
         weights: { coding_ai: 30, sports: 20, languages_books: 10, dungeons: 10 }, 
@@ -1823,7 +1822,6 @@ const SovereignEngine = {
     },
     
     init() {
-        // تأمين وجود كائن الأدوات المساعدة للحسابات الزمنية العشريّة
         if (!window.Utils) {
             window.Utils = {
                 formatDecimalTime(dec) {
@@ -1838,9 +1836,13 @@ const SovereignEngine = {
             };
         }
 
+        // تأمين حفظ البيانات محلياً إذا لم تكن موجودة لمنع توقف المحرك
+        if (!localStorage.getItem('sovereign_program_data') && typeof PROGRAM_DATA !== 'undefined') {
+            localStorage.setItem('sovereign_program_data', JSON.stringify(PROGRAM_DATA));
+        }
+
         this.checkActiveQuestOnLoad();
         this.runTimeScheduleEngine();
-        // فحص دوري كل دقيقة بدون استهلاك موارد الجهاز
         setInterval(() => this.runTimeScheduleEngine(), 60000);
     },
     
@@ -1856,22 +1858,23 @@ const SovereignEngine = {
         const currentTimeDecimal = Utils.getCurrentDecimalTime();
         
         const activeProgramId = localStorage.getItem('sovereign_active_program') || 'week1';
+        let allPrograms = null;
         
-        // جلب الجداول ديناميكياً من الذاكرة المشتركة المزامنة مع ملف الميثاق
-        const rawData = localStorage.getItem('sovereign_program_data');
-        if (!rawData) {
-            console.warn('[SovereignEngine]: لم يتم سحب الجداول بعد. يرجى فتح صفحة operational-charter.html مرة واحدة لتفعيل الربط.');
-            return;
+        try {
+            allPrograms = JSON.parse(localStorage.getItem('sovereign_program_data'));
+        } catch(e) {}
+        
+        // Fallback للمصفوفة المحلية إذا لم يكتمل التزامن الخارجي بعد
+        if (!allPrograms && typeof PROGRAM_DATA !== 'undefined') {
+            allPrograms = PROGRAM_DATA;
         }
         
-        const allPrograms = JSON.parse(rawData);
+        if (!allPrograms || !allPrograms[activeProgramId]) return;
         const prog = allPrograms[activeProgramId];
-        if (!prog) return;
         
         let currentBlock = null;
         let blocks = [];
         
-        // معالجة الأيام الخاصة والروتينية بدقة رياضية متناهية
         if (prog.special && prog.special[day] && prog.special[day].blocks) {
             blocks = prog.special[day].blocks.map(b => {
                 const timeParts = b.time.split('-');
@@ -1893,7 +1896,6 @@ const SovereignEngine = {
             }));
         }
         
-        // البحث عن الكتلة الزمنية الحالية المطابقة للوقت الحالي للكمبيوتر
         for (let block of blocks) {
             if (currentTimeDecimal >= block.start && currentTimeDecimal < block.end) {
                 currentBlock = block;
@@ -1901,10 +1903,10 @@ const SovereignEngine = {
             }
         }
         
-        // إطلاق المهمة فوراً عند اكتشاف كتلة جديدة تماماً
         if (currentBlock) {
-            const isAlreadyActive = this.state.activeQuest && this.state.activeQuest.title === currentBlock.title;
-            if (!isAlreadyActive) {
+            // التحقق من أن المهمة ليست نشطة حالياً في النظام لتجنب التكرار المزعج
+            const savedActive = localStorage.getItem('sovereign_active_quest');
+            if (!savedActive) {
                 this.triggerQuestPopup({
                     title: currentBlock.title,
                     details: currentBlock.desc,
@@ -1928,26 +1930,34 @@ const SovereignEngine = {
         this.state.activeQuest = questData;
         localStorage.setItem('sovereign_active_quest', JSON.stringify(questData));
         
-        // توثيق الحدث في السجلات الداخلية للنظام السيادي
-        if (window.QuestSystem && typeof QuestSystem.logToSystem === 'function') {
-            QuestSystem.logToSystem('quest', `رصد بروتوكول زمني نشط: [${questData.title}]`);
+        // حساب الجوائز بناءً على نوع الكتلة المحددة
+        const rewardXP = this.config.weights[questData.type] || 20;
+        
+        // تحديث سجلات التوثيق الفورية
+        if (window.QuestSystem && typeof QuestSystem.logAction === 'function') {
+            QuestSystem.logAction('quest', `تم استدعاء بروتوكول تلقائي: [${questData.title}]`);
         }
         
-        // استدعاء نافذة العرض السينمائية المدمجة بملفك الرئيسي وتمرير الجوائز بدقة
+        // تصحيح الاستدعاء الفخم ومطابقة المعاملات الحقيقية لـ AnimePopup.show(title, description, timeLimit, rewardXP)
         if (window.AnimePopup && typeof AnimePopup.show === 'function') {
-            const rewardGold = this.config.weights[questData.type] || 10;
-            // مطابقة معاملات الدالة المكتوبة في السطر 310 بملفك: (title, desc, type, reward)
-            AnimePopup.show(questData.title, questData.details, questData.type, rewardGold);
-        } else {
-            // حل احترافي طارئ لحقن النافذة مباشرة إذا كانت واجهة الأنمي معطلة
-            alert(`⚡ بروتوكول سيادي نشط حالياً ⚡\n\nالمهمة: ${questData.title}\nالوقت: ${questData.timeLimit}`);
+            AnimePopup.show(questData.title, questData.details, questData.timeLimit, rewardXP);
         }
     },
 
     checkActiveQuestOnLoad() {
         try {
             const saved = localStorage.getItem('sovereign_active_quest');
-            if (saved) this.state.activeQuest = JSON.parse(saved);
+            if (saved) {
+                this.state.activeQuest = JSON.parse(saved);
+                // إظهار البار السفلي الذكي للمهمة فوراً إذا كانت محفوظة ولم تنتهِ بعد
+                const activeBar = document.getElementById('activeDirectiveBar');
+                const activeText = document.getElementById('activeDirectiveText');
+                if (activeBar && activeText) {
+                    activeText.textContent = this.state.activeQuest.title;
+                    activeBar.classList.remove('hidden');
+                    if (window.DirectiveTimer) DirectiveTimer.start(this.state.activeQuest.acceptedAt || Date.now());
+                }
+            }
         } catch (e) {}
     }
 };
@@ -2249,5 +2259,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
+
 
 
