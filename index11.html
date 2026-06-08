@@ -624,7 +624,7 @@
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-1">
                     <span class="sys-font text-[9px] text-[var(--sys-cyan)] tracking-[0.3em] font-bold uppercase animate-pulse">CURRENT ACTIVE DIRECTIVE</span>
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span class="w-1.5 h-3 rounded-full bg-emerald-500 animate-ping"></span>
                     <span class="sys-font text-[9px] text-emerald-400 font-bold uppercase">LIVE</span>
                 </div>
                 <div class="flex items-center gap-3">
@@ -1142,8 +1142,8 @@ const PlayerState = {
         if (!file) return;
 
         // التحقق من حجم الملف لحماية الذاكرة المحلية
-        if (file.size > 1.5 * 1024 * 1024) {
-            if(window.Toast) Toast.show("⚠️ حجم الصورة كبير جداً! اختر صورة أقل من 1.5 ميجابايت", "error");
+        if (file.size > 3 * 1024 * 1024) {
+            if(window.Toast) Toast.show("⚠️ حجم الصورة كبير جداً! اختر صورة أقل من 3 ميجابايت", "error");
             return;
         }
 
