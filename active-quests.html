@@ -65,7 +65,7 @@
             
             <div class="flex flex-wrap items-center gap-6 bg-slate-950/60 px-6 py-3 rounded-lg border border-slate-800">
                 <div class="text-center">
-                    <span class="block text-[10px] text-slate-500 font-mono">LEVEL</span>
+                    <span class="block text-[10px] text-slate-500 font-mono" id="player-level" >LEVEL</span>
                     <span id="player-level" class="text-xl font-bold text-white font-mono">1</span>
                 </div>
                 <div class="h-8 w-[1px] bg-slate-800"></div>
@@ -78,8 +78,8 @@
                 <div class="h-8 w-[1px] bg-slate-800"></div>
                 <div class="text-center">
                     <span class="block text-[10px] text-slate-500 font-mono">GOLD</span>
-                    <div class="flex items-center gap-1">
-                        <span class="text-yellow-500 text-sm">🪙</span>
+                    <div  class="flex items-center gap-1">
+                        <span  class="text-yellow-500 text-sm">🪙</span>
                         <span id="player-gold" class="text-lg font-bold text-yellow-400 font-mono">0</span>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
 
                 <div class="sovereign-panel rounded-xl p-5 space-y-3">
                     <h3 class="text-xs font-black text-white border-b border-slate-800 pb-2 font-mono tracking-widest uppercase">📜 Live Operations Log</h3>
-                    <div id="local-logs-container" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 text-[11px] font-mono">
+                    <div id="pending-tasks-container" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 text-[11px] font-mono">
                         </div>
                 </div>
             </div>
@@ -220,10 +220,189 @@
         </main>
     </div>
 
-
     <script>
+
+
+// ========================================================
+// 3. محرك البروتوكول النشط حالياً (Active Directive) المتصل بالرئيسية
+// ========================================================
+const ActiveQuestEngine = {
+    quest: null, interval: null, startTime: null, durationMs: 0,
+    init() {
+        try { this.quest = JSON.parse(localStorage.getItem('sovereign_active_quest')); } catch(e){}
+        this.render();
+    },
+    render() {
+        const noState = document.getElementById('no-quest-state');
+        const activeState = document.getElementById('active-quest-state');
+        
+        if (!this.quest) {
+            if(noState) noState.classList.remove('hidden'); 
+            if(activeState) activeState.classList.add('hidden');
+            clearInterval(this.interval);
+        } else {
+            if(noState) noState.classList.add('hidden'); 
+            if(activeState) activeState.classList.remove('hidden');
+            
+            if(document.getElementById('quest-title')) document.getElementById('quest-title').textContent = this.quest.title;
+            if(document.getElementById('quest-desc')) document.getElementById('quest-desc').textContent = this.quest.details || 'جاري المزامنة...';
+            if(document.getElementById('quest-xp-reward')) document.getElementById('quest-xp-reward').textContent = `+${this.quest.rewardXP || 10} XP`;
+            if(document.getElementById('quest-gold-reward')) document.getElementById('quest-gold-reward').textContent = `+${(this.quest.rewardXP || 10)*2} 🪙`;
+            
+            this.startTime = parseInt(localStorage.getItem('directive_start_time')) || this.quest.acceptedAt || Date.now();
+            let timeLimit = this.quest.timeLimit || "25:00";
+            let parts = timeLimit.split(':');
+            this.durationMs = ((parseInt(parts[0])||0)*60*1000) + ((parseInt(parts[1])||0)*1000);
+            
+            this.startTimer();
+        }
+    },
+    startTimer() {
+        clearInterval(this.interval);
+        const update = () => {
+            const elapsed = Date.now() - this.startTime;
+            const remaining = this.durationMs - elapsed;
+            const txt = document.getElementById('quest-timer-text');
+            const bar = document.getElementById('quest-timer-bar');
+            
+            if (remaining <= 0) {
+                if(txt) txt.textContent = "00:00:00 (انتهى الوقت)";
+                if(bar) bar.style.width = "100%";
+                clearInterval(this.interval);
+                return;
+            }
+            let s = Math.floor((remaining/1000)%60), m = Math.floor((remaining/60000)%60), h = Math.floor((remaining/3600000)%24);
+            if(txt) txt.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            if(bar) bar.style.width = `${(remaining/this.durationMs)*100}%`;
+        };
+        update();
+        this.interval = setInterval(update, 1000);
+    },
+    complete() {
+        if(!this.quest) return;
+        const xp = this.quest.rewardXP || 10;
+        const gold = xp * 2;
+        PlayerState.addReward(xp, gold);
+        SystemLogger.log('success', `Cleared Directive: [${this.quest.title}] | +${xp}XP`);
+        this.clear();
+        if(typeof confetti === 'function') confetti({particleCount: 80, spread: 60});
+    },
+    cancel() {
+        if(!this.quest) return;
+        PlayerState.applyPenalty(15, 20);
+        SystemLogger.log('penalty', `Aborted Directive: [${this.quest.title}]`);
+        this.clear();
+    },
+    clear() {
+        localStorage.removeItem('sovereign_active_quest');
+        localStorage.removeItem('directive_start_time');
+        this.quest = null;
+        this.init();
+    }
+};
+
+// ========================================================
+// 4. نظام طابور المهام المعلقة (Pending Quests Queue) من index.html
+// ========================================================
+const PendingTasks = {
+    init() { this.render(); },
+    getTasks() { return JSON.parse(localStorage.getItem('SL_QUESTS') || '[]'); },
+    saveTasks(tasks) { localStorage.setItem('SL_QUESTS', JSON.stringify(tasks)); },
+    render() {
+        const container = document.getElementById('pending-tasks-container');
+        if(!container) return;
+        const tasks = this.getTasks();
+        const pending = tasks.filter(t => !t.completed);
+        
+        if(document.getElementById('pending-count')) document.getElementById('pending-count').textContent = pending.length;
+        
+        if (pending.length === 0) {
+            container.innerHTML = `<div class="text-center py-4 text-slate-500 text-xs sys-font">No pending engagements detected.</div>`;
+            return;
+        }
+
+        container.innerHTML = pending.map(task => {
+            const xpReward = task.priority === 'high' ? 100 : task.priority === 'medium' ? 50 : 20;
+            const goldReward = task.priority === 'high' ? 30 : task.priority === 'medium' ? 15 : 5;
+            return `
+            <div class="bg-black/40 border border-slate-800 p-3 flex justify-between items-center rounded mb-2 hover:border-amber-500/40 transition-colors">
+                <div class="flex items-center gap-3">
+                    <button onclick="PendingTasks.completeTask(${task.id}, ${xpReward}, ${goldReward}, '${task.stat||'int'}')" class="w-5 h-5 rounded border-2 border-amber-500 hover:bg-amber-500/20 transition-colors"></button>
+                    <div>
+                        <div class="text-white text-sm font-bold">${task.text.replace(/</g, "&lt;")}</div>
+                        <div class="flex gap-2 mt-1 text-[10px] sys-font">
+                            <span class="text-amber-400 uppercase">+1 ${task.stat||'INT'}</span>
+                            <span class="text-emerald-400">+${xpReward} XP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    },
+    completeTask(id, xp, gold, stat) {
+        let tasks = this.getTasks();
+        const idx = tasks.findIndex(t => t.id === id);
+        if (idx > -1) {
+            tasks[idx].completed = true;
+            this.saveTasks(tasks);
+            
+            PlayerState.addReward(xp, gold);
+            PlayerState.load();
+            if(PlayerState.data.stats && PlayerState.data.stats[stat] !== undefined) PlayerState.data.stats[stat]++;
+            PlayerState.save();
+            
+            SystemLogger.log('success', `Queue Task Cleared | +${xp}XP`);
+            this.render();
+            if(typeof confetti === 'function') confetti({particleCount: 40, spread: 40});
+        }
+    }
+};
+
+// ========================================================
+// 5. تفعيل السجلات السيادية (System Logs)
+// ========================================================
+const SystemLogger = {
+    log(type, msg) {
+        let logs = JSON.parse(localStorage.getItem('sovereign_system_logs') || '[]');
+        logs.unshift({ id: Date.now(), timestamp: new Date().toLocaleTimeString('en-US',{hour12:false}), type, message: msg });
+        localStorage.setItem('sovereign_system_logs', JSON.stringify(logs.slice(0, 30)));
+        this.render();
+    },
+    render() {
+        const container = document.getElementById('local-logs-container');
+        if (!container) return;
+        const logs = JSON.parse(localStorage.getItem('sovereign_system_logs') || '[]');
+        container.innerHTML = logs.slice(0, 10).map(log => {
+            let clr = log.type === 'success' ? 'text-emerald-400' : log.type === 'penalty' ? 'text-rose-400' : 'text-[var(--sys-cyan)]';
+            return `<div class="p-1 border-b border-slate-900 text-[11px] sys-font text-slate-400"><span class="text-slate-600">[${log.timestamp}]</span> <span class="${clr}">${log.message}</span></div>`;
+        }).join('');
+    }
+};
+
+// ========================================================
+// 6. الربط والمزامنة الفورية الشاملة عند التعديل في أي علامة تبويب أخرى
+// ========================================================
+window.addEventListener('storage', (e) => {
+    if (e.key === 'monarch_system_data') { PlayerState.load(); PlayerState.updateUI(); }
+    if (e.key === 'sovereign_active_quest') ActiveQuestEngine.init();
+    if (e.key === 'SL_QUESTS') PendingTasks.init();
+    if (e.key === 'sovereign_system_logs') SystemLogger.render();
+    if (e.key === 'sovereign_aura_color') applyAura();
+});
+
+// إطلاق قنوات الاتصال والمزامنة فور التحميل الأساسي
+document.addEventListener('DOMContentLoaded', () => {
+    applyAura();
+    PlayerState.load(); 
+    PlayerState.updateUI();
+    ActiveQuestEngine.init();
+    PendingTasks.init();
+    SystemLogger.render();
+});
+</script>
+<script>
         // ==========================================
-        // SYSTEM TIME SYNC (Ensuring standard day index)
+        // 1. SYSTEM TIME SYNC (Ensuring standard day index)
         // ==========================================
         const TimeSync = {
             init() {
@@ -238,196 +417,161 @@
                 if(nameEl) nameEl.textContent = days[dayIndex];
             }
         };
-const Utils = {
-    formatDecimalTime(dec) {
-        const h = Math.floor(dec);
-        const m = Math.floor((dec - h) * 60);
-        return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-    },
-    getCurrentDecimalTime() {
-        const now = new Date();
-        return now.getHours() + now.getMinutes() / 60;
-    },
-    getDayName(idx) {
-        const days = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-        return days[idx];
-    }
-};
 
-const ProgramManager = {
-    activeProgramId: 'week1',
-    
-    init() {
-        const saved = localStorage.getItem('sovereign_active_program');
-        if (saved) this.activeProgramId = saved;
-        else {
-            const lvl = PlayerState.data.level || 1;
-            if (lvl >= 1000) this.activeProgramId = 'week5';
-            else if (lvl >= 800) this.activeProgramId = 'week4';
-            else if (lvl >= 600) this.activeProgramId = 'week3';
-            else if (lvl >= 450) this.activeProgramId = 'week2';
-            else this.activeProgramId = 'week1';
-        }
-        this.renderTodaySchedule(); // عرض الجدول اليومي
-    },
-    
-    renderTodaySchedule() {
-        const now = new Date();
-        const day = now.getDay();
-        const currentTime = Utils.getCurrentDecimalTime();
-        const prog = PROGRAM_DATA[this.activeProgramId];
-        
-        // عرض الكتلة النشطة الحالية
-        let currentBlock = null;
-        let blocks = [];
-        
-        if (([1, 4, 5, 6].includes(day)) && prog.special[day]) {
-            blocks = prog.special[day].blocks.map(b => ({
-                start: parseFloat(b.time.split('-')[0].replace(':','.')),
-                end: parseFloat(b.time.split('-')[1].replace(':','.')),
-                title: b.title,
-                desc: b.desc,
-                timeStr: b.time
-            }));
-        } else {
-            blocks = prog.schedule.map(s => ({
-                start: s.start,
-                end: s.end,
-                title: s.title,
-                desc: s.desc,
-                timeStr: `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}`
-            }));
-        }
-        
-        // Find active block
-        for (let block of blocks) {
-            if (currentTime >= block.start && currentTime < block.end) {
-                currentBlock = block;
-                break;
+        const Utils = {
+            formatDecimalTime(dec) {
+                const h = Math.floor(dec);
+                const m = Math.floor((dec - h) * 60);
+                return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+            },
+            getCurrentDecimalTime() {
+                const now = new Date();
+                return now.getHours() + now.getMinutes() / 60;
+            },
+            getDayName(idx) {
+                const days = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+                return days[idx];
             }
-        }
-        
-        // عرض في واجهة المستخدم
-        const container = document.getElementById('today-schedule-preview');
-        if (container) {
-            if (currentBlock) {
-                container.innerHTML = `
-                    <div class="block-active live-pulse p-3 rounded">
-                        <div class="text-[10px] text-emerald-400 font-bold mb-1">الكتلة النشطة الآن</div>
-                        <div class="text-white font-bold">${currentBlock.title}</div>
-                        <div class="text-[11px] text-slate-400">${currentBlock.desc}</div>
-                        <div class="text-[10px] text-[var(--sys-cyan)] mt-1">${currentBlock.timeStr}</div>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = `<div class="text-slate-500 text-center">لا توجد كتلة نشطة حالياً</div>`;
-            }
-        }
-    }
-};
+        };
 
         // ==========================================
-        // SYSTEM CORE STATE (Safe Data Merge)
+        // 2. PLAYER STATE ENGINE (Central Memory Sync)
         // ==========================================
         const PlayerState = {
-            data: {
-                level: 1,
-                xp: 0,
-                gold: 0,
-                stats: { str: 10, vit: 10, agi: 10, int: 10, sen: 10 }
-            },
+            data: { level: 1, xp: 0, gold: 0, equippedTitle: '' },
             init() {
+                this.load();
+                this.updateUI();
+            },
+            load() {
                 const saved = localStorage.getItem('monarch_system_data');
                 if (saved) {
-                    try {
-                        const parsed = JSON.parse(saved);
-                        // Merge safely to protect other stats (authority, lethality, etc.)
-                        this.data = { ...this.data, ...parsed };
-                    } catch (e) {
-                        console.error("Error parsing system data:", e);
-                    }
-                } else {
-                    this.save();
+                    try { this.data = JSON.parse(saved); } catch(e) { console.error("Error loading system data", e); }
                 }
-                this.updateUI();
             },
             save() {
-                // Fetch the absolute latest to prevent overwriting parallel tab updates
-                let currentSaved = {};
-                try {
-                    currentSaved = JSON.parse(localStorage.getItem('monarch_system_data') || '{}');
-                } catch(e) {}
-                
-                const dataToSave = {
-                    ...currentSaved,
-                    level: this.data.level,
-                    xp: this.data.xp,
-                    gold: this.data.gold
-                };
-                localStorage.setItem('monarch_system_data', JSON.stringify(dataToSave));
+                localStorage.setItem('monarch_system_data', JSON.stringify(this.data));
             },
-            addReward(xpAmount, goldAmount) {
-                this.data.xp += xpAmount;
-                this.data.gold += goldAmount;
+            updateUI() {
+                // تحديث جميع عناصر المستوى (تدعم التكرار في الهيدر)
+                const lvlEls = document.querySelectorAll('#player-level');
+                lvlEls.forEach(el => {
+                    if (el.tagName !== 'SPAN' || el.classList.contains('text-xl')) {
+                        el.textContent = this.data.level || 1;
+                    }
+                });
                 
-                let xpNeeded = this.data.level * 100;
+                const xpBar = document.getElementById('player-xp-bar');
+                if (xpBar) {
+                    const xpNeeded = (this.data.level || 1) * 100;
+                    const pct = Math.min(100, ((this.data.xp || 0) / xpNeeded) * 100);
+                    xpBar.style.width = `${pct}%`;
+                }
+                
+                const goldEl = document.getElementById('player-gold');
+                if (goldEl) goldEl.textContent = this.data.gold || 0;
+            },
+            addReward(xp, gold) {
+                this.load();
+                this.data.xp = (this.data.xp || 0) + xp;
+                this.data.gold = (this.data.gold || 0) + gold;
+                
+                let xpNeeded = (this.data.level || 1) * 100;
                 while (this.data.xp >= xpNeeded) {
                     this.data.xp -= xpNeeded;
-                    this.data.level++;
+                    this.data.level = (this.data.level || 1) + 1;
                     xpNeeded = this.data.level * 100;
-                    this.triggerLevelUpEffects();
+                    if (typeof SoundEffects !== 'undefined') SoundEffects.playLevelUp();
+                    if (typeof Toast !== 'undefined') Toast.show(`🌟 ارتقاء مستوى سيادي! أنت الآن في المستوى ${this.data.level}`, 'success');
                 }
+                
                 this.save();
                 this.updateUI();
             },
-            applyPenalty(xpPenalty, goldPenalty) {
-                this.data.xp -= xpPenalty;
-                this.data.gold -= goldPenalty;
+            applyPenalty(xp, gold) {
+                this.load();
+                this.data.xp = Math.max(0, (this.data.xp || 0) - xp);
+                this.data.gold = Math.max(0, (this.data.gold || 0) - gold);
+                this.save();
+                this.updateUI();
                 
-                // Floor limit checks
-                if(this.data.gold < 0) this.data.gold = 0;
-                if(this.data.xp < 0) {
-                    if(this.data.level > 1) {
-                        this.data.level--;
-                        this.data.xp += (this.data.level * 100);
-                    } else {
-                        this.data.xp = 0;
+                // تأثير فلاش العقوبة الأحمر المجهز في الـ Style الخاص بك
+                document.body.classList.add('penalty-flash');
+                setTimeout(() => document.body.classList.remove('penalty-flash'), 500);
+                if (typeof Toast !== 'undefined') Toast.show(`⚠️ تم تطبيق العقوبة الصارمة: -${xp} XP | -${gold} 🪙`, 'error');
+            }
+        };
+
+        // ==========================================
+        // 3. OPERATIONAL PROGRAM PREVIEW MANAGER
+        // ==========================================
+        const ProgramManager = {
+            activeProgramId: 'week1',
+            init() {
+                const saved = localStorage.getItem('sovereign_active_program');
+                if (saved) this.activeProgramId = saved;
+                this.renderTodaySchedule();
+            },
+            renderTodaySchedule() {
+                const container = document.getElementById('today-schedule-preview');
+                if (!container) return;
+
+                if (typeof PROGRAM_DATA === 'undefined') {
+                    container.innerHTML = `<div class="text-slate-500 text-center text-xs">مؤشر الميثاق التشغيلي نشط في الخلفية.</div>`;
+                    return;
+                }
+                
+                const now = new Date();
+                const day = now.getDay();
+                const currentTime = Utils.getCurrentDecimalTime();
+                const prog = PROGRAM_DATA[this.activeProgramId];
+                if (!prog) return;
+                
+                let currentBlock = null;
+                let blocks = [];
+                
+                if (([1, 4, 5, 6].includes(day)) && prog.special && prog.special[day]) {
+                    blocks = prog.special[day].blocks.map(b => ({
+                        start: parseFloat(b.time.split('-')[0].replace(':','.')),
+                        end: parseFloat(b.time.split('-')[1].replace(':','.')),
+                        title: b.title,
+                        desc: b.desc,
+                        timeStr: b.time
+                    }));
+                } else if (prog.schedule) {
+                    blocks = prog.schedule.map(s => ({
+                        start: s.start,
+                        end: s.end,
+                        title: s.title,
+                        desc: s.desc,
+                        timeStr: `${Utils.formatDecimalTime(s.start)} - ${Utils.formatDecimalTime(s.end)}`
+                    }));
+                }
+                
+                for (let block of blocks) {
+                    if (currentTime >= block.start && currentTime < block.end) {
+                        currentBlock = block;
+                        break;
                     }
                 }
                 
-                this.save();
-                this.updateUI();
-                
-                // Visual Flash Effect
-                const header = document.getElementById('main-header');
-                if(header) {
-                    header.classList.add('penalty-flash');
-                    setTimeout(() => header.classList.remove('penalty-flash'), 500);
-                }
-            },
-            triggerLevelUpEffects() {
-                if (typeof QuestManager !== 'undefined') {
-                    QuestManager.logAction('system', `🚀 ترقية سيادية كبرى! تم بلوغ المستوى [ ${this.data.level} ]`);
-                }
-            },
-            updateUI() {
-                const lvlEl = document.getElementById('player-level');
-                const barEl = document.getElementById('player-xp-bar');
-                const goldEl = document.getElementById('player-gold');
-                
-                if (lvlEl) lvlEl.textContent = this.data.level;
-                if (goldEl) goldEl.textContent = this.data.gold;
-                
-                if (barEl) {
-                    let xpNeeded = this.data.level * 100;
-                    let percentage = Math.min((this.data.xp / xpNeeded) * 100, 100);
-                    barEl.style.width = `${percentage}%`;
+                if (currentBlock) {
+                    container.innerHTML = `
+                        <div class="block-active live-pulse p-3 rounded bg-slate-950/40 border border-emerald-500/20">
+                            <div class="text-[10px] text-emerald-400 font-bold mb-1">الكتلة النشطة الآن</div>
+                            <div class="text-white font-bold">${currentBlock.title}</div>
+                            <div class="text-[11px] text-slate-400">${currentBlock.desc}</div>
+                            <div class="text-[10px] text-[var(--sys-cyan)] mt-1">${currentBlock.timeStr}</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `<div class="text-slate-500 text-center text-xs">لا توجد كتلة نشطة حالياً وفق الجدول القياسي</div>`;
                 }
             }
         };
 
         // ==========================================
-        // QUEST MANAGER PROTOCOL (Strict Engagement)
+        // 4. QUEST MANAGER PROTOCOL (Strict Engagement)
         // ==========================================
         const QuestManager = {
             activeQuest: null,
@@ -441,7 +585,7 @@ const ProgramManager = {
                     try {
                         this.activeQuest = JSON.parse(savedActive);
                         this.baseXPReward = parseInt(this.activeQuest.xp || this.activeQuest.rewardXP || 30);
-                        this.baseGoldReward = this.baseXPReward * 2;
+                        this.baseGoldReward = parseInt(this.activeQuest.gold || (this.baseXPReward * 2));
                     } catch(e) {
                         this.activeQuest = null;
                     }
@@ -484,13 +628,13 @@ const ProgramManager = {
                 const timerText = document.getElementById('quest-timer-text');
                 const timerBar = document.getElementById('quest-timer-bar');
                 
-                const startTimeKey = localStorage.getItem('directive_start_time') || Date.now();
-                if (!localStorage.getItem('directive_start_time')) {
+                let startTimeKey = localStorage.getItem('directive_start_time');
+                if (!startTimeKey) {
+                    startTimeKey = Date.now().toString();
                     localStorage.setItem('directive_start_time', startTimeKey);
                 }
 
-                // Default to 60 mins if not specified, parsing timeLimit if it exists (e.g. "25:00")
-                let totalDurationMs = 60 * 60 * 1000; 
+                let totalDurationMs = 60 * 60 * 1000; // الافتراضي ساعة
                 if (this.activeQuest.timeLimit && this.activeQuest.timeLimit.includes(':')) {
                     const parts = this.activeQuest.timeLimit.split(':');
                     totalDurationMs = (parseInt(parts[0]) * 60 * 1000) + (parseInt(parts[1] || 0) * 1000);
@@ -503,7 +647,7 @@ const ProgramManager = {
                     const remaining = totalDurationMs - elapsed;
 
                     if (remaining <= 0) {
-                        if (timerText) timerText.textContent = "00:00:00 - الوقت المستهدف اكتمل";
+                        if (timerText) timerText.textContent = "00:00:00 - اكتمل الوقت المستهدف";
                         if (timerBar) timerBar.style.width = "100%";
                         clearInterval(this.timerInterval);
                         return;
@@ -528,26 +672,18 @@ const ProgramManager = {
 
             completeActiveQuest() {
                 if (!this.activeQuest) return;
-
                 PlayerState.addReward(this.baseXPReward, this.baseGoldReward);
-
-                this.logAction('quest', `تم إنجاز المهمة النشطة [${this.activeQuest.title}]: +${this.baseXPReward} XP | +${this.baseGoldReward} 🪙`);
-                
+                this.logAction('quest', `تم إنجاز المهمة [${this.activeQuest.title}]: +${this.baseXPReward} XP | +${this.baseGoldReward} 🪙`);
                 this.clearQuestMemory();
                 this.init();
             },
 
             cancelActiveQuest() {
                 if (!this.activeQuest) return;
-
-                // Strict Penalty System Activation
                 const penaltyXP = 10;
                 const penaltyGold = 15;
-
                 PlayerState.applyPenalty(penaltyXP, penaltyGold);
-
                 this.logAction('error', `عقوبة تراجع: تم إلغاء المهمة [${this.activeQuest.title}]. خصم ${penaltyXP} XP و ${penaltyGold} 🪙`);
-                
                 this.clearQuestMemory();
                 this.init();
             },
@@ -563,7 +699,7 @@ const ProgramManager = {
                 logs.unshift({
                     id: 'log_' + Date.now(),
                     timestamp: new Date().toLocaleTimeString('ar-EG'),
-                    type: type, // 'quest', 'system', 'error'
+                    type: type, 
                     message: detail
                 });
                 localStorage.setItem('sovereign_system_logs', JSON.stringify(logs.slice(0, 100)));
@@ -571,7 +707,8 @@ const ProgramManager = {
             },
 
             renderLogs() {
-                const container = document.getElementById('local-logs-container');
+                // المزامنة الذكية مع الحاوية المجهزة في واجهتك المخصصة للسجلات
+                const container = document.getElementById('pending-tasks-container') || document.getElementById('local-logs-container');
                 if (!container) return;
 
                 const logs = JSON.parse(localStorage.getItem('sovereign_system_logs') || '[]');
@@ -586,193 +723,217 @@ const ProgramManager = {
                     if (log.type === 'error') color = 'text-rose-400';
                     
                     return `<div class="p-1.5 bg-slate-950/60 border border-slate-900 rounded mb-1 flex items-start gap-2">
-                        <span class="text-slate-500 flex-shrink-0 mt-0.5">[${log.timestamp}]</span> 
+                        <span class="text-slate-500 flex-shrink-0 mt-0.5 text-[9px]">[${log.timestamp}]</span> 
                         <span class="${color} font-bold leading-tight">${log.message}</span>
                     </div>`;
                 }).join('');
             }
         };
 
-        // INITIALIZATION
+        // ==========================================
+        // 5. AURA SYNCHRONIZATION MATRIX
+        // ==========================================
+        function applyAura() {
+            const savedAura = localStorage.getItem('sovereign_aura_color');
+            if(savedAura) {
+                document.documentElement.style.setProperty('--sys-cyan', savedAura);
+            }
+        }
+
+        // INITIALIZATION & CROSS-TAB SYNC
         window.addEventListener('DOMContentLoaded', () => {
+            applyAura();
             TimeSync.init();
             PlayerState.init();
             QuestManager.init();
+            ProgramManager.init();
 
-            // Handle cross-tab synchronization
+            // الاستماع الفوري للتعديلات القادمة من اللوحات الأخرى دون الحاجة لإعادة تحميل الصفحة
             window.addEventListener('storage', (e) => {
-                if (e.key === 'monarch_system_data' || e.key === 'sovereign_active_quest' || e.key === 'sovereign_system_logs') {
-                    PlayerState.init();
+                if (e.key === 'monarch_system_data') {
+                    PlayerState.load();
+                    PlayerState.updateUI();
+                }
+                if (e.key === 'sovereign_active_quest') {
                     QuestManager.init();
+                }
+                if (e.key === 'sovereign_system_logs') {
+                    QuestManager.renderLogs();
+                }
+                if (e.key === 'sovereign_aura_color') {
+                    applyAura();
                 }
             });
         });
+
         const UI = {
-    toggleTimerSettings() {
-        if (typeof SoundEffects !== 'undefined') SoundEffects.playSystemClick();
-        document.getElementById('timerModal').classList.toggle('hidden');
-    }
-};
-
-const Toast = {
-    show(message, type = 'info') {
-        const container = document.getElementById('toastContainer');
-        if (!container) return;
-        const toast = document.createElement('div');
-        const colors = {
-            success: 'border-emerald-500 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]',
-            error: 'border-rose-500 text-rose-400 shadow-[0_0_15px_rgba(225,29,72,0.3)]',
-            info: 'border-[var(--sys-cyan)] text-[var(--sys-cyan)] shadow-[0_0_15px_rgba(0,240,255,0.3)]'
-        };
-        toast.className = `pointer-events-auto px-5 py-3 bg-[#02040a]/95 border backdrop-blur-md text-sm font-bold sys-font tracking-wide animate-system-pop ${colors[type] || colors.info}`;
-        toast.textContent = message;
-        container.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 4000);
-    }
-};
-    // ==========================================
-// SYSTEM RESET ENGINE (HARD RESET)
-// ==========================================
-const SystemReset = {
-    confirmAndReset() {
-        if(window.SoundEffects) SoundEffects.playSystemClick();
-        
-        // رسالة التحذير الأولى
-        const firstConfirm = confirm("⚠️ تحذير أمني سيادي: هل أنت متأكد أنك تريد مسح جميع البيانات؟\n(سيعود المستوى إلى 1، وتفقد كل الذهب، الخبرة، المهام، والسجلات ولن يمكنك استرجاعها).");
-        if (!firstConfirm) return;
-
-        // رسالة التأكيد النهائية
-        const secondConfirm = confirm("‼️ تأكيد نهائي: هذه العملية ستعيد النظام إلى نقطة الصفر. هل تريد تنفيذ 'مسح الذاكرة'؟");
-        if (!secondConfirm) return;
-
-        // قائمة المفاتيح المخزنة في النظام لمسحها
-        const keysToReset = [
-            'monarch_system_data', 
-            'sovereign_active_quest', 
-            'directive_start_time', 
-            'sovereign_active_program', 
-            'SL_QUESTS', 
-            'sovereign_system_logs',
-            'sovereign_titles_index'
-        ];
-
-        // تنفيذ المسح
-        keysToReset.forEach(key => localStorage.removeItem(key));
-
-        // مسح أي تخزين مؤقت للألقاب والمقايضات
-        Object.keys(localStorage).forEach(key => {
-            if (key.startsWith('title_cache_')) {
-                localStorage.removeItem(key);
+            toggleTimerSettings() {
+                if (typeof SoundEffects !== 'undefined') SoundEffects.playSystemClick();
+                const modal = document.getElementById('timerModal');
+                if(modal) modal.classList.toggle('hidden');
             }
-        });
+        };
 
-        alert("🔄 تم مسح الذاكرة وإعادة ضبط النظام بالكامل. سيتم إعادة تشغيل الواجهة.");
-        
-        // إعادة تحميل الصفحة لتطبيق حالة الصفر
-        window.location.reload();
-    }
-};
+        const Toast = {
+            show(message, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                if (!container) {
+                    // إنشاء حاوية التوست تلقائياً إذا لم تكن موجودة للحفاظ على مرونة النظام دون تعديل الستايل
+                    const newContainer = document.createElement('div');
+                    newContainer.id = 'toastContainer';
+                    newContainer.className = 'fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none';
+                    document.body.appendChild(newContainer);
+                }
+                
+                const toast = document.createElement('div');
+                const colors = {
+                    success: 'border-emerald-500 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)]',
+                    error: 'border-rose-500 text-rose-400 shadow-[0_0_15px_rgba(225,29,72,0.3)]',
+                    info: 'border-[var(--sys-cyan)] text-[var(--sys-cyan)] shadow-[0_0_15px_rgba(0,240,255,0.3)]'
+                };
+                toast.className = `pointer-events-auto px-5 py-3 bg-[#02040a]/95 border backdrop-blur-md text-sm font-bold tracking-wide rounded-lg border-l-4 transition-all duration-300 ${colors[type] || colors.info}`;
+                toast.textContent = message;
+                
+                document.getElementById('toastContainer').appendChild(toast);
+                setTimeout(() => { 
+                    toast.style.opacity = '0'; 
+                    setTimeout(() => toast.remove(), 300); 
+                }, 4000);
+            }
+        };
 
-// ==========================================
-// SOUND EFFECTS
-// ==========================================
-const SoundEffects = {
-    track1: new Audio('SHADOWBORN.mp3'),
-    track2: new Audio('Kingdom_of_Iron.mp3'),
-    currentTrackNumber: null,
-    isMusicPlaying: false,
+        // ==========================================
+        // 6. SYSTEM RESET ENGINE (HARD RESET)
+        // ==========================================
+        const SystemReset = {
+            confirmAndReset() {
+                if(window.SoundEffects) SoundEffects.playSystemClick();
+                const firstConfirm = confirm("⚠️ تحذير أمني سيادي: هل أنت متأكد أنك تريد مسح جميع البيانات؟\n(سيعود المستوى إلى 1، وتفقد كل الذهب، الخبرة، المهام، والسجلات ولن يمكنك استرجاعها).");
+                if (!firstConfirm) return;
 
-    init() {
-        this.track1.loop = true;
-        this.track2.loop = true;
-    },
+                const secondConfirm = confirm("‼️ تأكيد نهائي: هذه العملية ستعيد النظام إلى نقطة الصفر. هل تريد تنفيذ 'مسح الذاكرة'؟");
+                if (!secondConfirm) return;
 
-    toggleMusic(trackNumber) {
-        const icon1 = document.getElementById('musicIcon1');
-        const icon2 = document.getElementById('musicIcon2');
+                const keysToReset = [
+                    'monarch_system_data',
+                    'sovereign_active_quest',
+                    'directive_start_time',
+                    'sovereign_active_program',
+                    'SL_QUESTS',
+                    'sovereign_system_logs',
+                    'sovereign_titles_index'
+                ];
 
-        if (this.isMusicPlaying && this.currentTrackNumber === trackNumber) {
-            this.stopAllAudio();
-            return;
-        }
-        if (this.isMusicPlaying) this.stopAllAudio();
+                keysToReset.forEach(key => localStorage.removeItem(key));
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('title_cache_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                alert("🔄 تم مسح الذاكرة وإعادة ضبط النظام بالكامل. سيتم إعادة تشغيل الواجهة.");
+                window.location.reload();
+            }
+        };
 
-        this.isMusicPlaying = true;
-        this.currentTrackNumber = trackNumber;
-
-        if (trackNumber === 1) {
-            this.track1.play().catch(err => console.log("Auto-play blocked:", err));
-            if (icon1) icon1.textContent = '⏸️';
-            if (icon2) icon2.textContent = '🎼';
-        } else if (trackNumber === 2) {
-            this.track2.play().catch(err => console.log("Auto-play blocked:", err));
-            if (icon1) icon1.textContent = '🎵';
-            if (icon2) icon2.textContent = '⏸️';
-        }
-    },
-
-    stopAllAudio() {
-        this.track1.pause(); this.track1.currentTime = 0;
-        this.track2.pause(); this.track2.currentTime = 0;
-        const icon1 = document.getElementById('musicIcon1');
-        const icon2 = document.getElementById('musicIcon2');
-        if (icon1) icon1.textContent = '🎵';
-        if (icon2) icon2.textContent = '🎼';
-        this.isMusicPlaying = false;
-        this.currentTrackNumber = null;
-    },
-
-    playSystemClick() {
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, ctx.currentTime);
-            gain.gain.setValueAtTime(0.05, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-            osc.connect(gain); gain.connect(ctx.destination);
-            osc.start(); osc.stop(ctx.currentTime + 0.1);
-        } catch(e) {}
-    },
-
-    playSuccess() {
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const notes = [523.25, 659.25, 783.99, 1046.50];
-            notes.forEach((freq, i) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1);
-                gain.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.3);
-                osc.connect(gain); gain.connect(ctx.destination);
-                osc.start(ctx.currentTime + i * 0.1);
-                osc.stop(ctx.currentTime + i * 0.1 + 0.3);
-            });
-        } catch(e) {}
-    },
-
-    playLevelUp() {
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const notes = [440, 554, 659, 880, 1108];
-            notes.forEach((freq, i) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.15);
-                gain.gain.setValueAtTime(0.08, ctx.currentTime + i * 0.15);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.4);
-                osc.connect(gain); gain.connect(ctx.destination);
-                osc.start(ctx.currentTime + i * 0.15);
-                osc.stop(ctx.currentTime + i * 0.15 + 0.4);
-            });
-        } catch(e) {}
-    }
-};
-SoundEffects.init();
+        // ==========================================
+        // 7. SOUND EFFECTS SYSTEM
+        // ==========================================
+        const SoundEffects = {
+            track1: new Audio('SHADOWBORN.mp3'),
+            track2: new Audio('Kingdom_of_Iron.mp3'),
+            currentTrackNumber: null,
+            isMusicPlaying: false,
+            init() {
+                this.track1.loop = true;
+                this.track2.loop = true;
+            },
+            toggleMusic(trackNumber) {
+                const icon1 = document.getElementById('musicIcon1');
+                const icon2 = document.getElementById('musicIcon2');
+                if (this.isMusicPlaying && this.currentTrackNumber === trackNumber) {
+                    this.stopAllAudio();
+                    return;
+                }
+                if (this.isMusicPlaying) this.stopAllAudio();
+                this.isMusicPlaying = true;
+                this.currentTrackNumber = trackNumber;
+                if (trackNumber === 1) {
+                    this.track1.play().catch(err => console.log("Audio play blocked:", err));
+                    if (icon1) icon1.textContent = '⏸️';
+                    if (icon2) icon2.textContent = '🎼';
+                } else if (trackNumber === 2) {
+                    this.track2.play().catch(err => console.log("Audio play blocked:", err));
+                    if (icon1) icon1.textContent = '🎵';
+                    if (icon2) icon2.textContent = '⏸️';
+                }
+            },
+            stopAllAudio() {
+                this.track1.pause();
+                this.track1.currentTime = 0;
+                this.track2.pause();
+                this.track2.currentTime = 0;
+                const icon1 = document.getElementById('musicIcon1');
+                const icon2 = document.getElementById('musicIcon2');
+                if (icon1) icon1.textContent = '🎵';
+                if (icon2) icon2.textContent = '🎼';
+                this.isMusicPlaying = false;
+                this.currentTrackNumber = null;
+            },
+            playSystemClick() {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.1);
+                } catch(e) {}
+            },
+            playSuccess() {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, i) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1);
+                        gain.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.1);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.3);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(ctx.currentTime + i * 0.1);
+                        osc.stop(ctx.currentTime + i * 0.1 + 0.3);
+                    });
+                } catch(e) {}
+            },
+            playLevelUp() {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const notes = [440, 554, 659, 880, 1108];
+                    notes.forEach((freq, i) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.15);
+                        gain.gain.setValueAtTime(0.08, ctx.currentTime + i * 0.15);
+                        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.4);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(ctx.currentTime + i * 0.15);
+                        osc.stop(ctx.currentTime + i * 0.15 + 0.4);
+                    });
+                } catch(e) {}
+            }
+        };
+        SoundEffects.init();
+    </script>
+    <script>
 
 // ==========================================
 // DIRECTIVE TIMER ENGINE
@@ -1205,15 +1366,6 @@ const Milestone = {
     }
 };
     </script>
-    <script>
-    // تفعيل الهالة السيادية المحفوظة فور تحميل الصفحة
-    const savedAura = localStorage.getItem('sovereign_aura_color');
-    if(savedAura) {
-        document.documentElement.style.setProperty('--sys-cyan', savedAura);
-        document.documentElement.style.setProperty('--sys-cyan-glow', savedAura + '99');
-        // للاندماج المطلق يمكنك توحيد اللونين الأساسيين
-        // document.documentElement.style.setProperty('--sys-purple', savedAura); 
-    }
-</script>
+
 </body>
 </html>
