@@ -3,414 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام العاهل - مواقيت الصلاة (مسعد - الجلفة)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>Solo Leveling | نظام العاهل - مواقيت الصلاة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
-        /* تم الحفاظ على التصميم الأساسي كما هو */
         :root {
-            --system-blue: #00e5ff;
-            --system-dark: rgba(10, 14, 23, 0.95);
-            --system-border: #0077ff;
-            --system-glow: 0 0 15px rgba(0, 229, 255, 0.5);
-            --system-text: #e0f7fa;
-            --danger-red: #ff3366;
+            --sys-cyan: #00f0ff; /* سيتم استبدال هذا برمجياً عند تفعيل هالة جديدة */
+            --sys-cyan-glow: rgba(0, 240, 255, 0.6);
+            --sys-purple: #9d4edd;
+            --sys-bg-dark: #02040a;
+            --sys-panel: rgba(5, 10, 25, 0.85);
+            --sys-border: rgba(0, 240, 255, 0.3);
+            --danger-red: #e11d48;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #050505;
-            background-image: radial-gradient(circle at center, #0a1128 0%, #000000 100%);
-            color: var(--system-text);
             font-family: 'Cairo', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: var(--sys-bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 50%, var(--sys-cyan-glow) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(157, 78, 221, 0.2) 0%, transparent 25%);
+            color: #e2e8f0;
             min-height: 100vh;
             overflow-x: hidden;
+            background-attachment: fixed;
         }
 
-        .system-window {
-            background: var(--system-dark);
-            border: 2px solid var(--system-border);
-            border-radius: 8px;
-            box-shadow: var(--system-glow), inset 0 0 20px rgba(0, 119, 255, 0.2);
-            width: 90%;
-            max-width: 450px;
-            padding: 25px;
+        .sys-font { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.05em; }
+
+        .sl-panel {
+            background: var(--sys-panel);
+            backdrop-filter: blur(16px);
+            border: 2px solid var(--sys-border);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.1);
             position: relative;
-            backdrop-filter: blur(5px);
-            animation: systemOpen 0.5s ease-out forwards;
         }
 
-        @keyframes systemOpen {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        .sl-panel::before, .sl-panel::after {
+            content: ''; position: absolute; width: 20px; height: 20px; pointer-events: none;
         }
-
-        .system-header {
-            text-align: center;
-            font-family: 'Share Tech Mono', 'Cairo', monospace;
-            font-size: 1.2rem;
-            color: var(--system-blue);
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            text-shadow: 0 0 8px var(--system-blue);
-        }
-         .monarch-title-badge {
-            color: #bb86fc;
-            text-shadow: 0 0 8px rgba(187, 134, 252, 0.8);
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-left: 10px;
-            padding: 3px 10px;
-            border: 1px solid #bb86fc;
-            border-radius: 6px;
-            background: rgba(187, 134, 252, 0.1);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .quest-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 229, 255, 0.3);
-            padding-bottom: 10px;
-        }
-
-        .countdown-container {
-            text-align: center;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--system-blue);
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-
-        .countdown-label {
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-
-        .countdown-time {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 2.5rem;
-            color: var(--system-blue);
-            text-shadow: var(--system-glow);
-            direction: ltr;
-        }
-
-        .prayer-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 25px 0;
-        }
-
-        .prayer-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 4px;
-            border-right: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .prayer-item.next-prayer {
-            background: rgba(0, 229, 255, 0.1);
-            border-right: 3px solid var(--system-blue);
-            box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.1);
-            color: var(--system-blue);
-            font-weight: bold;
-        }
-
-        .qibla-section {
-            text-align: center;
-            border-top: 1px solid rgba(0, 229, 255, 0.3);
-            padding-top: 20px;
-        }
+        .sl-panel::before { top: -2px; left: -2px; border-top: 3px solid var(--sys-cyan); border-left: 3px solid var(--sys-cyan); }
+        .sl-panel::after { bottom: -2px; right: -2px; border-bottom: 3px solid var(--sys-cyan); border-right: 3px solid var(--sys-cyan); }
 
         .compass-container {
-            width: 120px;
-            height: 120px;
-            border: 2px dashed var(--system-blue);
+            width: 140px; height: 140px;
+            border: 2px dashed var(--sys-cyan);
             border-radius: 50%;
-            margin: 0 auto 15px auto;
+            margin: 0 auto;
             position: relative;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+            box-shadow: 0 0 20px var(--sys-cyan-glow);
             transition: transform 0.5s ease-out;
         }
 
         .compass-arrow {
             position: absolute;
-            top: 10px;
-            left: calc(50% - 4px);
-            width: 8px;
-            height: 50px;
-            background: var(--danger-red);
+            top: 10px; left: calc(50% - 6px);
+            width: 12px; height: 60px;
+            background: var(--sys-cyan);
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            box-shadow: 0 0 10px var(--danger-red);
+            box-shadow: 0 0 15px var(--sys-cyan);
         }
 
         .center-dot {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px;
-            height: 10px;
-            background: var(--system-blue);
-            border-radius: 50%;
-            box-shadow: var(--system-glow);
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 12px; height: 12px;
+            background: white; border-radius: 50%;
+            box-shadow: 0 0 10px white;
         }
 
-        .system-notification {
-            position: fixed;
-            top: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(20, 0, 0, 0.9);
-            border: 2px solid var(--danger-red);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 5px;
-            box-shadow: 0 0 20px rgba(255, 51, 102, 0.6);
-            font-weight: bold;
-            transition: top 0.5s ease;
-            z-index: 1000;
-        }
+        /* Toast Notifications */
+        #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { pointer-events: auto; padding: 12px 20px; background: rgba(2, 4, 10, 0.95); border-right: 4px solid var(--sys-cyan); box-shadow: 0 0 15px var(--sys-cyan-glow); color: white; font-weight: bold; animation: slideIn 0.3s ease-out; transition: opacity 0.3s; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        .system-notification.show {
-            top: 20px;
+        .reward-btn { transition: var(--transition); }
+        .reward-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 15px var(--sys-cyan-glow); }
+        .reward-btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
+        
+        .prayer-item.next-prayer {
+            background: rgba(0, 240, 255, 0.1);
+            border-right: 3px solid var(--sys-cyan);
         }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-8 flex items-center justify-center">
 
-    <div class="system-notification" id="alert-box">
-        [تنبيه النظام]: حان الآن وقت الصلاة!
-    </div>
+    <div id="toastContainer"></div>
 
-    <div class="system-window">
-        <button onclick="window.location.href='index.html'" class="monarch-title-badge" >
-            <span>↩</span> <span> 🏠 DASHBOARD العودة للرئيسية</span>
-        </button>
-        <br> <br>
-        <div class="system-header">[ SYSTEM . REQUIREMENT ]</div>
+    <div class="sl-panel w-full max-w-2xl p-6 animate-system-pop">
         
-        <div class="quest-title">المهمة اليومية: إقامة الصلاة</div>
-        
-        <div class="countdown-container">
-            <div class="countdown-label" id="next-prayer-name">جاري تحديد الموقع...</div>
-            <div class="countdown-time" id="countdown">--:--:--</div>
+        <div class="flex flex-wrap justify-between items-center mb-8 border-b border-[var(--sys-border)] pb-4">
+            <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-slate-900/80 border border-slate-700 hover:border-[var(--sys-cyan)] text-[var(--sys-cyan)] text-xs font-black uppercase tracking-widest rounded flex items-center gap-2 transition-all">
+                <span>↩ DASHBOARD</span>
+            </button>
+            <div class="text-center mt-4 md:mt-0">
+                <div class="sys-font text-[10px] text-[var(--sys-cyan)] tracking-[0.3em] font-bold uppercase mb-1">[ SYSTEM . SPIRITUAL CORE ]</div>
+                <h1 class="text-2xl font-black text-white tracking-wider">مراقبة الطقوس السيادية</h1>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 border border-slate-700 rounded">
+                <span class="text-xs text-slate-400 font-bold uppercase sys-font">GOLD</span>
+                <span id="player-gold-display" class="font-black text-yellow-400 sys-font text-sm">--</span>
+            </div>
         </div>
 
-        <ul class="prayer-list" id="prayer-list">
-            <li class="prayer-item"><span>الفجر</span><span id="time-fajr">--:--</span></li>
-            <li class="prayer-item"><span>الظهر</span><span id="time-dhuhr">--:--</span></li>
-            <li class="prayer-item"><span>العصر</span><span id="time-asr">--:--</span></li>
-            <li class="prayer-item"><span>المغرب</span><span id="time-maghrib">--:--</span></li>
-            <li class="prayer-item"><span>العشاء</span><span id="time-isha">--:--</span></li>
-        </ul>
+        <div class="bg-black/50 border border-[var(--sys-cyan)]/30 rounded-lg p-6 text-center mb-8 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[var(--sys-cyan)]/5 animate-pulse pointer-events-none"></div>
+            <div id="next-prayer-name" class="sys-font text-sm text-slate-300 tracking-widest mb-2 font-bold">جاري المزامنة مع الإحداثيات...</div>
+            <div id="countdown" class="sys-font text-5xl md:text-6xl font-black text-[var(--sys-cyan)] drop-shadow-[0_0_15px_var(--sys-cyan-glow)] tabular-nums" dir="ltr">--:--:--</div>
+            <div id="location-display" class="text-xs text-slate-500 mt-3 font-mono">📍 تحديد الموقع قيد المعالجة</div>
+        </div>
 
-        <div class="qibla-section">
-            <div class="system-header" style="font-size: 1rem;">[ QIBLA . NAVIGATOR ]</div>
+        <div class="space-y-3 mb-8" id="prayer-list-container">
+            </div>
+
+        <div class="border-t border-[var(--sys-border)] pt-8 text-center">
+            <div class="sys-font text-[12px] text-[var(--sys-purple)] tracking-[0.3em] font-bold uppercase mb-6">[ QIBLA . NAVIGATOR ]</div>
             <div class="compass-container" id="compass">
                 <div class="compass-arrow"></div>
                 <div class="center-dot"></div>
             </div>
-            <div style="font-size: 0.85rem; color: #aaa;">قم بتدوير الجهاز لتحديد القبلة (يتطلب هاتف ذكي)</div>
+            <p class="text-xs text-slate-400 mt-6 font-bold">قم بتدوير الهاتف بوضع مسطح لتزامن البوصلة مع مسار القبلة.</p>
         </div>
     </div>
 
-    <script>
-        const API_URL = "https://api.aladhan.com/v1/timings";
-        let prayerTimes = {};
-        let qiblaDirection = 0;
-        let countdownInterval;
+    <audio id="athanAudio" src="https://media.blubrry.com/muslim_central_athan/audio.muslimcentral.com/athan/makkah.mp3"></audio>
 
-        // إحداثيات مسعد - الجلفة الافتراضية
-        const MESSAAD_LAT = 34.1543;
-        const MESSAAD_LON = 3.5026;
-
-        const athanAudio = new Audio('https://media.blubrry.com/muslim_central_athan/audio.muslimcentral.com/athan/makkah.mp3');
-
-        const prayers = [
-            { id: 'Fajr', ar: 'الفجر', domId: 'time-fajr' },
-            { id: 'Dhuhr', ar: 'الظهر', domId: 'time-dhuhr' },
-            { id: 'Asr', ar: 'العصر', domId: 'time-asr' },
-            { id: 'Maghrib', ar: 'المغرب', domId: 'time-maghrib' },
-            { id: 'Isha', ar: 'العشاء', domId: 'time-isha' }
-        ];
-
-        // 1. تحديد موقع المستخدم مع إضافة مسعد كبديل في حالة الفشل
-        function initLocation() {
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        fetchPrayerData(lat, lon);
-                        calculateQibla(lat, lon);
-                        initCompass();
-                    },
-                    (error) => {
-                        // في حال رفض الـ GPS أو فشله، نستخدم إحداثيات مسعد مباشرة
-                        document.getElementById('next-prayer-name').innerText = "تم استخدام موقع مسعد الافتراضي";
-                        fetchPrayerData(MESSAAD_LAT, MESSAAD_LON);
-                        calculateQibla(MESSAAD_LAT, MESSAAD_LON);
-                        initCompass();
-                    }
-                );
-            } else {
-                fetchPrayerData(MESSAAD_LAT, MESSAAD_LON);
-                calculateQibla(MESSAAD_LAT, MESSAAD_LON);
+<script>
+    // ==========================================
+    // 1. SYSTEM SYNC & STATE (XP/GOLD)
+    // ==========================================
+    const PlayerStats = {
+        data: { level: 1, xp: 0, gold: 0 },
+        
+        init() {
+            const saved = localStorage.getItem('monarch_system_data');
+            if (saved) {
+                try { this.data = { ...this.data, ...JSON.parse(saved) }; } catch(e) {}
             }
-        }
+            this.updateUI();
+        },
 
-        // 2. جلب البيانات باستخدام طريقة حساب وزارة الشؤون الدينية الجزائرية (method=21)
-        async function fetchPrayerData(lat, lon) {
-            try {
-                const timestamp = Math.floor(Date.now() / 1000);
-                // تم تعديل method=2 إلى method=21 المخصصة للجزائر
-                const response = await fetch(`${API_URL}/${timestamp}?latitude=${lat}&longitude=${lon}&method=21`);
-                const data = await response.json();
-                
-                prayerTimes = data.data.timings;
-                
-                prayers.forEach(p => {
-                    document.getElementById(p.domId).innerText = prayerTimes[p.id];
-                });
+        addRewards(xpAdd, goldAdd) {
+            this.data.xp += xpAdd;
+            this.data.gold += goldAdd;
 
-                startSystem(prayerTimes);
-
-            } catch (error) {
-                console.error("Error fetching data:", error);
+            // نظام رفع المستوى (نفس منطق Dashboard)
+            const xpNeeded = this.data.level * 100;
+            if (this.data.xp >= xpNeeded) {
+                this.data.level += 1;
+                this.data.xp -= xpNeeded;
+                this.data.ap = (this.data.ap || 0) + 3;
+                showToast(`⚡ LEVEL UP! أنت الآن في المستوى ${this.data.level}`);
             }
-        }
 
-        // 3. منطق العداد التنازلي وتحديد الصلاة القادمة
-        function startSystem(timings) {
-            clearInterval(countdownInterval);
+            // الدمج الآمن لحماية البيانات الأخرى
+            let systemData = JSON.parse(localStorage.getItem('monarch_system_data') || '{}');
+            systemData.xp = this.data.xp;
+            systemData.gold = this.data.gold;
+            systemData.level = this.data.level;
+            if(this.data.ap) systemData.ap = this.data.ap;
             
-            countdownInterval = setInterval(() => {
-                const now = new Date();
-                const currentTime = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
-                
-                let nextPrayer = null;
-                let minDiff = Infinity;
+            localStorage.setItem('monarch_system_data', JSON.stringify(systemData));
+            this.updateUI();
 
-                document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('next-prayer'));
-
-                for (let p of prayers) {
-                    const [hours, minutes] = timings[p.id].split(':').map(Number);
-                    const prayerTime = hours * 60 + minutes;
-                    
-                    let diff = prayerTime - currentTime;
-                    
-                    if (diff < 0) {
-                        diff += 24 * 60; 
-                    }
-
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        nextPrayer = { ...p, time: timings[p.id], diffObj: diff };
-                    }
-                }
-
-                if (nextPrayer) {
-                    const listItem = document.getElementById(nextPrayer.domId).parentElement;
-                    listItem.classList.add('next-prayer');
-
-                    document.getElementById('next-prayer-name').innerText = `الوقت المتبقي لصلاة ${nextPrayer.ar}`;
-
-                    const hrs = Math.floor(minDiff / 60);
-                    const mins = Math.floor(minDiff % 60);
-                    const secs = Math.floor((minDiff * 60) % 60);
-
-                    document.getElementById('countdown').innerText = 
-                        `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-
-                    if (hrs === 0 && mins === 0 && secs === 0) {
-                        triggerSystemAlert(nextPrayer.ar);
-                    }
-                }
-            }, 1000);
-        }
-
-        // 4. إشعار النظام المكتمل
-        function triggerSystemAlert(prayerName) {
-            athanAudio.play().catch(e => console.log("المتصفح يمنع التشغيل التلقائي للصوت."));
-            
-            const alertBox = document.getElementById('alert-box');
-            alertBox.innerText = `[تنبيه النظام]: حان الآن موعد أذان ${prayerName}`;
-            alertBox.classList.add('show');
-            setTimeout(() => alertBox.classList.remove('show'), 15000);
-
-            if (Notification.permission === "granted") {
-                new Notification("نظام العاهل", {
-                    body: `حان الآن وقت صلاة ${prayerName}`,
-                    icon: "https://cdn-icons-png.flaticon.com/512/1151/1151025.png"
-                });
-            } else if (Notification.permission !== "denied") {
-                Notification.requestPermission();
+            // مؤثرات بصرية
+            if(typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00f0ff', '#ffd700'] });
             }
+        },
+
+        updateUI() {
+            const goldEl = document.getElementById('player-gold-display');
+            if(goldEl) goldEl.innerText = this.data.gold;
+        }
+    };
+
+    // ==========================================
+    // 2. PRAYER REWARD ENGINE
+    // ==========================================
+    const RewardsConfig = {
+        mosque: {
+            'Fajr': { xp: 35, gold: 25, name: 'الفجر' },
+            'Dhuhr': { xp: 27, gold: 20, name: 'الظهر' },
+            'Asr': { xp: 27, gold: 20, name: 'العصر' },
+            'Maghrib': { xp: 27, gold: 20, name: 'المغرب' },
+            'Isha': { xp: 35, gold: 25, name: 'العشاء' }
+        },
+        home: { xp: 2, gold: 3 }
+    };
+
+    function claimPrayer(prayerId, locationType) {
+        const today = new Date().toISOString().split('T')[0];
+        const key = `prayer_${prayerId}_${today}`;
+        
+        if (localStorage.getItem(key)) {
+            showToast('⚠️ تم تسجيل مكافأة هذه الصلاة مسبقاً لهذا اليوم.');
+            return;
         }
 
-        // 5. حساب القبلة
-        function calculateQibla(lat, lon) {
-            const makkahLat = 21.422487;
-            const makkahLon = 39.826206;
-            
-            const toRad = (deg) => (deg * Math.PI) / 180;
-            const toDeg = (rad) => (rad * 180) / Math.PI;
+        let earnedXP = 0;
+        let earnedGold = 0;
+        let prayerName = RewardsConfig.mosque[prayerId].name;
 
-            const phiK = toRad(makkahLat);
-            const lambdaK = toRad(makkahLon);
-            const phi = toRad(lat);
-            const lambda = toRad(lon);
-
-            const y = Math.sin(lambdaK - lambda);
-            const x = Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda);
-            
-            let qibla = toDeg(Math.atan2(y, x));
-            qiblaDirection = (qibla + 360) % 360;
+        if (locationType === 'mosque') {
+            earnedXP = RewardsConfig.mosque[prayerId].xp;
+            earnedGold = RewardsConfig.mosque[prayerId].gold;
+            showToast(`🕌 صلاة ${prayerName} في المسجد! تم اكتساب +${earnedXP} XP و +${earnedGold} G`);
+        } else {
+            earnedXP = RewardsConfig.home.xp;
+            earnedGold = RewardsConfig.home.gold;
+            showToast(`🏠 صلاة ${prayerName} في المنزل. تم اكتساب +${earnedXP} XP و +${earnedGold} G`);
         }
 
-        // 6. تشغيل البوصلة
-        function initCompass() {
-            if (window.DeviceOrientationEvent) {
-                window.addEventListener('deviceorientation', function(event) {
-                    let alpha = event.alpha;
-                    let webkitAlpha = event.webkitCompassHeading;
-                    
-                    let heading = webkitAlpha || (360 - alpha);
-                    if (heading) {
-                        let finalAngle = qiblaDirection - heading;
-                        document.getElementById('compass').style.transform = `rotate(${finalAngle}deg)`;
-                    }
-                });
-            }
-        }
-
-        // التهيئة عند التحميل
-        document.addEventListener('DOMContentLoaded', () => {
-            if ("Notification" in window && Notification.permission !== "granted") {
-                Notification.requestPermission();
-            }
-            initLocation(); // تشغيل دالة تحديد الموقع عند التحميل
-        });
-    </script>
-    <script>
-    const savedAura = localStorage.getItem('sovereign_aura_color');
-    if(savedAura) {
-        document.documentElement.style.setProperty('--sys-cyan', savedAura);
-        document.documentElement.style.setProperty('--sys-cyan-glow', savedAura + '99');
+        PlayerStats.addRewards(earnedXP, earnedGold);
+        localStorage.setItem(key, 'claimed');
+        
+        // تحديث الواجهة لتعطيل الأزرار
+        renderPrayerList(window.currentTimings);
     }
-    </script>
+
+    // ==========================================
+    // 3. PRAYER TIMES & API LOGIC
+    // ==========================================
+    const prayersDataList = [
+        { id: 'Fajr', ar: 'الفجر' },
+        { id: 'Dhuhr', ar: 'الظهر' },
+        { id: 'Asr', ar: 'العصر' },
+        { id: 'Maghrib', ar: 'المغرب' },
+        { id: 'Isha', ar: 'العشاء' }
+    ];
+
+    const MESSAAD_LAT = 34.1543;
+    const MESSAAD_LON = 3.5026;
+    let countdownInterval;
+
+    function renderPrayerList(timings) {
+        if(!timings) return;
+        window.currentTimings = timings;
+        const container = document.getElementById('prayer-list-container');
+        container.innerHTML = '';
+        const today = new Date().toISOString().split('T')[0];
+
+        prayersDataList.forEach(p => {
+            const isClaimed = localStorage.getItem(`prayer_${p.id}_${today}`) !== null;
+            
+            const html = `
+            <div class="prayer-item flex flex-col md:flex-row justify-between items-center p-3 md:p-4 bg-slate-900/40 border border-slate-800 rounded transition-all hover:border-[var(--sys-cyan)]/50 gap-3">
+                <div class="flex justify-between w-full md:w-auto md:gap-8 items-center">
+                    <span class="sys-font text-lg font-bold text-white">${p.ar}</span>
+                    <span class="sys-font text-xl font-black text-[var(--sys-cyan)] tracking-wider" dir="ltr">${timings[p.id]}</span>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button onclick="claimPrayer('${p.id}', 'mosque')" ${isClaimed ? 'disabled' : ''} class="reward-btn flex-1 md:flex-none px-4 py-1.5 bg-emerald-900/30 border border-emerald-500/50 text-emerald-400 text-xs font-bold rounded">
+                        🕌 مسجد (+${RewardsConfig.mosque[p.id].xp}XP)
+                    </button>
+                    <button onclick="claimPrayer('${p.id}', 'home')" ${isClaimed ? 'disabled' : ''} class="reward-btn flex-1 md:flex-none px-4 py-1.5 bg-slate-800/50 border border-slate-600 text-slate-300 text-xs font-bold rounded">
+                        🏠 منزل (+${RewardsConfig.home.xp}XP)
+                    </button>
+                </div>
+            </div>`;
+            container.innerHTML += html;
+        });
+    }
+
+    async function fetchPrayerData(lat, lon, isFallback = false) {
+        try {
+            const timestamp = Math.floor(Date.now() / 1000);
+            // Method 21: وزارة الشؤون الدينية والأوقاف الجزائرية
+            const res = await fetch(`https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lat}&longitude=${lon}&method=21`);
+            const data = await res.json();
+            
+            const locText = isFallback ? "📍 إحداثيات مسعد - الجلفة (الوضع الافتراضي)" : "📍 إحداثيات الموقع الحالي (GPS مباشر)";
+            document.getElementById('location-display').innerText = locText;
+
+            renderPrayerList(data.data.timings);
+            startCountdown(data.data.timings);
+        } catch (e) {
+            showToast('❌ فشل الاتصال بقاعدة بيانات المواقيت السيرفر.');
+        }
+    }
+
+    function startCountdown(timings) {
+        clearInterval(countdownInterval);
+        countdownInterval = setInterval(() => {
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+            
+            let nextPrayer = null;
+            let minDiff = Infinity;
+
+            // إزالة التمييز السابق
+            document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('next-prayer'));
+
+            for (let p of prayersDataList) {
+                const [hours, minutes] = timings[p.id].split(':').map(Number);
+                const prayerTime = hours * 60 + minutes;
+                
+                let diff = prayerTime - currentTime;
+                if (diff < 0) diff += 24 * 60; 
+
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    nextPrayer = p;
+                }
+            }
+
+            if (nextPrayer) {
+                document.getElementById('next-prayer-name').innerText = `الهدف الروحي القادم: صلاة ${nextPrayer.ar}`;
+                
+                const hrs = Math.floor(minDiff / 60);
+                const mins = Math.floor(minDiff % 60);
+                const secs = Math.floor((minDiff * 60) % 60);
+
+                document.getElementById('countdown').innerText = 
+                    `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                // تفعيل الأذان عند الصفر
+                if (hrs === 0 && mins === 0 && secs === 0) {
+                    document.getElementById('athanAudio').play().catch(e => console.log("Auto-play blocked"));
+                    showToast(`[SYSTEM] حان الآن موعد أذان ${nextPrayer.ar}! تجهز للاتصال.`);
+                }
+            }
+        }, 1000);
+    }
+
+    // ==========================================
+    // 4. QIBLA COMPASS
+    // ==========================================
+    let qiblaDirection = 0;
+    function calculateQibla(lat, lon) {
+        const makkahLat = 21.422487, makkahLon = 39.826206;
+        const toRad = (deg) => (deg * Math.PI) / 180;
+        const toDeg = (rad) => (rad * 180) / Math.PI;
+
+        const phiK = toRad(makkahLat), lambdaK = toRad(makkahLon);
+        const phi = toRad(lat), lambda = toRad(lon);
+
+        const y = Math.sin(lambdaK - lambda);
+        const x = Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda);
+        
+        qiblaDirection = (toDeg(Math.atan2(y, x)) + 360) % 360;
+    }
+
+    function initCompass() {
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', (e) => {
+                let heading = e.webkitCompassHeading || (360 - e.alpha);
+                if (heading) {
+                    let finalAngle = qiblaDirection - heading;
+                    document.getElementById('compass').style.transform = `rotate(${finalAngle}deg)`;
+                }
+            });
+        }
+    }
+
+    // ==========================================
+    // UTILS & INIT
+    // ==========================================
+    function showToast(msg) {
+        const cont = document.getElementById('toastContainer');
+        const t = document.createElement('div');
+        t.className = 'toast sys-font text-sm';
+        t.innerHTML = msg;
+        cont.appendChild(t);
+        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 4000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. تحميل الإحصائيات
+        PlayerStats.init();
+
+        // 2. تحميل الهالة السيادية (Global Aura System)
+        const savedAura = localStorage.getItem('sovereign_aura_color');
+        if(savedAura) {
+            document.documentElement.style.setProperty('--sys-cyan', savedAura);
+            document.documentElement.style.setProperty('--sys-cyan-glow', savedAura + '99');
+        }
+
+        // 3. تحديد الموقع وتشغيل النظام
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude, lon = pos.coords.longitude;
+                    fetchPrayerData(lat, lon, false);
+                    calculateQibla(lat, lon);
+                    initCompass();
+                },
+                (err) => {
+                    fetchPrayerData(MESSAAD_LAT, MESSAAD_LON, true);
+                    calculateQibla(MESSAAD_LAT, MESSAAD_LON);
+                    initCompass();
+                }
+            );
+        } else {
+            fetchPrayerData(MESSAAD_LAT, MESSAAD_LON, true);
+            calculateQibla(MESSAAD_LAT, MESSAAD_LON);
+        }
+    });
+
+</script>
 </body>
 </html>
