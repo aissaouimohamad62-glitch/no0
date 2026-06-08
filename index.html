@@ -151,11 +151,62 @@
     
 }
 
-/* صنف (Class) يضاف برمجياً لإظهار اللقب */
-.monarch-title-badge.active {
-    display: inline-block;
+/* تأثير بروفايل العاهل الدائري المتطور */
+.monarch-profile-card {
+    background: rgba(4, 8, 20, 0.9);
+    border: 1px solid var(--sys-cyan);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05);
+    backdrop-filter: blur(12px);
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%; /* تحويل كامل الإطار لدائرة مطلقة */
+    border: 2px solid var(--sys-cyan);
+    box-shadow: 0 0 15px var(--sys-cyan-glow);
+    overflow: hidden;
+    background: #02040a;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-wrapper:hover {
+    border-color: var(--sys-purple);
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.6);
+    transform: scale(1.03);
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9) contrast(1.1);
+}
+
+.avatar-uploader-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    color: var(--sys-cyan);
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-align: center;
+    border-radius: 50%; /* تطابق التراكب السحابي ليصبح دائرياً */
+}
+
+.avatar-wrapper:hover .avatar-uploader-overlay {
+    opacity: 1;
 }
     </style>
+    
 <base target="_blank">
 <base target="_blank">
 </head>
@@ -222,144 +273,149 @@
                         <h2 class="sys-font text-lg font-black tracking-[0.3em] text-[var(--sys-cyan)] uppercase text-center">STATUS</h2>
                     </div>
                 </div>
+<div class="monarch-profile-card rounded-xl p-5 mb-6 relative overflow-hidden" dir="rtl">
+    
+    <div class="flex items-center justify-between gap-4 border-b border-[var(--sys-cyan)]/10 pb-4 mb-4">
+        <div class="flex items-center gap-4">
+            <div class="avatar-wrapper flex-shrink-0">
+                <img id="monarch-avatar-display" class="avatar-image" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f0ff'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Monarch Avatar">
+                <label for="avatar-file-input" class="avatar-uploader-overlay">
+                    <span>⚡</span>
+                    <span>دمج الهالة</span>
+                </label>
+                <input type="file" id="avatar-file-input" accept="image/*" class="hidden" onchange="PlayerState.updateAvatar(event)">
+            </div>
 
-                <div class="flex items-start justify-center gap-6 mb-6">
-                    <div class="text-center">
-                        <div class="sys-font text-5xl font-black text-white leading-none drop-shadow-[0_0_15px_rgba(0,240,255,0.6)]" id="currentLevel">𝟏</div>
-                        <div class="sys-font text-[10px] tracking-[0.2em] text-[var(--sys-cyan)] font-bold mt-1">𝐋𝐄𝐕𝐄𝐋</div>
-                    </div>
-                    
-                    <div class="pt-2 text-left">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="sys-font text-[10px] text-[var(--sys-purple)] font-bold uppercase">𝐉𝐎𝐁 : </span>
-                            <!-- حاوية عرض اللقب المجهز -->
-<span id="monarch-active-title" class="monarch-title-badge"></span>
-                        </div>
-                        <br>
-                        
-                    </div>
-                    
-                    
+            <div class="space-y-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="sys-font text-[10px] text-[var(--sys-purple)] font-bold uppercase tracking-wider">JOB :</span>
+                    <span id="monarch-active-title" class="monarch-title-badge px-2 py-0.5 text-[10px] bg-purple-950/40 border border-purple-500/50 text-purple-300 rounded font-black"></span>
                 </div>
-                <div class="text-center">
-                        <div class="sys-font text-5xl font-black text-white leading-none drop-shadow-[0_0_15px_rgba(0,240,255,0.6)]" id="currentLevel"></div>
-                        <div class="sys-font text-[14px] tracking-[0.2em] text-[var(--sys-cyan)] font-bold mt-1">  𝐀𝐈𝐒𝐒𝐀𝐎𝐔𝐈 𝐌𝐎𝐇𝐀𝐌𝐀𝐃 𝐀𝐁𝐃𝐀𝐋𝐋𝐀𝐇 </div>
-                        <DIv class="monarch-title-badgi" > 𝐎𝐖𝐀𝐈𝐒 </DIv>
-                    </div>
-<br>
-                <div class="space-y-3 mb-6 px-2">
-                    <div class="flex items-center gap-3">
-                        <span class="sys-font text-[10px] font-black text-red-400 w-8 text-right">HP</span>
-                        <div class="flex-1 h-3 bg-slate-900/80 border border-slate-700 relative overflow-hidden rounded-sm">
-                            <div id="hpBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-red-900 to-red-600 w-[85%] shadow-[0_0_10px_rgba(220,38,38,0.4)] transition-all duration-700"></div>
-                            <span id="hpText" class="absolute inset-0 flex items-center justify-center sys-font text-[9px] font-bold text-white/80 tracking-wider">4320/5100</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span class="sys-font text-[10px] font-black text-[var(--sys-cyan)] w-8 text-right">MP</span>
-                        <div class="flex-1 h-3 bg-slate-900/80 border border-slate-700 relative overflow-hidden rounded-sm">
-                            <div id="mpBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-900 to-[var(--sys-cyan)] w-[72%] shadow-[0_0_10px_rgba(0,240,255,0.4)] transition-all duration-700"></div>
-                            <span id="mpText" class="absolute inset-0 flex items-center justify-center sys-font text-[9px] font-bold text-white/80 tracking-wider">840/1170</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span class="sys-font text-[10px] font-black text-emerald-400 w-8 text-right">XP</span>
-                        <div class="flex-1 h-3 bg-slate-900/80 border border-slate-700 relative overflow-hidden rounded-sm">
-                            <div id="xpBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-emerald-900 to-emerald-500 w-0% shadow-[0_0_10px_rgba(16,185,129,0.4)] transition-all duration-700"></div>
-                            <span id="xpText" class="absolute inset-0 flex items-center justify-center sys-font text-[9px] font-bold text-white/80 tracking-wider">0 / 100</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span class="sys-font text-[10px] font-black text-yellow-500 w-8 text-right">FATIGUE</span>
-                        <div class="flex-1 h-3 bg-slate-900/80 border border-slate-700 relative overflow-hidden rounded-sm">
-                            <div id="fatigueBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-900 to-yellow-600 w-[15%] shadow-[0_0_10px_rgba(202,138,4,0.4)] transition-all duration-700"></div>
-                            <span id="fatigueText" class="absolute inset-0 flex items-center justify-center sys-font text-[9px] font-bold text-white/80 tracking-wider">0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border border-[var(--sys-purple)]/30 bg-black/20 p-4 relative">
-                    <div class="absolute -top-2 left-4 bg-[var(--sys-bg-dark)] px-2">
-                        <span class="sys-font text-[9px] text-[var(--sys-purple)] font-bold tracking-widest">ATTRIBUTES</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-x-6 gap-y-3">
-                        <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('str')">
-                            <div class="flex items-center gap-2">
-                                <span class="text-red-400 text-xs">⚔️</span>
-                                <span class="monarch-title-badgie">𝑺𝑻𝑹 </span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span id="stat-str" class="monarch-title-badgiex">10</span>
-                                <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('vit')">
-                            <div class="flex items-center gap-2">
-                                <span class="text-emerald-400 text-xs">🛡️</span>
-                                <span class="monarch-title-badgie">𝐕𝐈𝐓 </span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span id="stat-vit" class="monarch-title-badgiex">10</span>
-                                <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('agi')">
-                            <div class="flex items-center gap-2">
-                                <span class="text-sky-400 text-xs">⚡</span>
-                                <span class="monarch-title-badgie">𝐀𝐆𝐈 </span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span id="stat-agi" class="monarch-title-badgiex">10</span>
-                                <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+7</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('int')">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[var(--sys-cyan)] text-xs">🧠</span>
-                                <span class="monarch-title-badgie">𝐈𝐍𝐓 </span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span id="stat-int" class="monarch-title-badgiex">10</span>
-                                <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('sen')">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[var(--sys-purple)] text-xs">👁️</span>
-                                <span class="monarch-title-badgie">𝐏𝐄𝐑 </span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span id="stat-sen" class="monarch-title-badgiex">10</span>
-                                <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between border-t border-slate-800 pt-2 mt-1 col-span-2">
-                            <span class="sys-font text-[10px] text-[var(--sys-purple)] font-bold tracking-widest">AVAILABLE AP</span>
-                            <span id="availablePoints" class="sys-font text-2xl font-black text-[var(--sys-cyan)] drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]">0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-4 flex justify-between items-center px-2">
-                    <div class="text-center">
-                        <div class="sys-font text-[10px] text-slate-500 uppercase tracking-widest mb-1">GOLD</div>
-                        <div class="flex items-center gap-1">
-                            <span class="text-yellow-500 text-sm">🪙</span>
-                            <span id="playerGold" class="sys-font text-lg font-bold text-yellow-400">0</span>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <div class="sys-font text-[10px] text-slate-500 uppercase tracking-widest mb-1">AUTHORITY</div>
-                        <div class="sys-font text-lg font-bold text-[var(--sys-purple)]" id="stat-authority">0</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="sys-font text-[10px] text-slate-500 uppercase tracking-widest mb-1">LETHALITY</div>
-                        <div class="sys-font text-lg font-bold text-rose-400" id="stat-lethality">0%</div>
-                    </div>
-                </div>
+                <h2 class="sys-font text-[14px] tracking-wider text-[var(--sys-cyan)] font-bold uppercase">AISSAOUI MOHAMED ABDALLAH</h2>
+                <div class="inline-block px-3 py-0.5 bg-cyan-950/30 border border-cyan-500/30 text-cyan-400 text-xs font-black tracking-widest rounded">OWEIS</div>
             </div>
         </div>
+
+        <div class="text-center bg-black/40 border border-slate-800 rounded-lg px-4 py-2 min-w-[75px]">
+            <div class="sys-font text-3xl font-black text-white leading-none drop-shadow-[0_0_12px_rgba(0,240,255,0.6)]" id="currentLevel">1</div>
+            <div class="sys-font text-[9px] tracking-[0.1em] text-[var(--sys-cyan)] font-bold mt-1 uppercase">LEVEL</div>
+        </div>
+    </div>
+
+    <div class="space-y-2.5 mb-5 px-1">
+        <div class="flex items-center gap-3">
+            <span class="sys-font text-[10px] font-black text-red-400 w-12 text-left tracking-wider">HP</span>
+            <div class="flex-1 h-3 bg-slate-900/80 border border-slate-700 relative overflow-hidden rounded-sm">
+                <div id="hpBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-red-900 to-red-600 w-[85%] shadow-[0_0_10px_rgba(220,38,38,0.4)] transition-all duration-700"></div>
+                <span id="hpText" class="absolute inset-0 flex items-center justify-center sys-font text-[9px] font-bold text-white/90 tracking-wider">4320/5100</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="sys-font text-[10px] font-black text-[var(--sys-cyan)] w-12 text-left tracking-wider">MP</span>
+            <div class="flex-1 h-3 bg-slate-900/80 border border-slate-700 relative overflow-hidden rounded-sm">
+                <div id="mpBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-900 to-[var(--sys-cyan)] w-[72%] shadow-[0_0_10px_rgba(0,240,255,0.4)] transition-all duration-700"></div>
+                <span id="mpText" class="absolute inset-0 flex items-center justify-center sys-font text-[9px] font-bold text-white/90 tracking-wider">840/1170</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="sys-font text-[10px] font-black text-emerald-400 w-12 text-left tracking-wider">XP</span>
+            <div class="flex-1 h-3 bg-slate-900/80 border border-slate-700 relative overflow-hidden rounded-sm">
+                <div id="xpBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-emerald-900 to-emerald-500 w-[0%] shadow-[0_0_10px_rgba(16,185,129,0.4)] transition-all duration-700"></div>
+                <span id="xpText" class="absolute inset-0 flex items-center justify-center sys-font text-[9px] font-bold text-white/90 tracking-wider">0 / 100</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="sys-font text-[10px] font-black text-yellow-500 w-12 text-left tracking-wider">FATIGUE</span>
+            <div class="flex-1 h-3 bg-slate-900/80 border border-slate-700 relative overflow-hidden rounded-sm">
+                <div id="fatigueBar" class="absolute inset-y-0 left-0 bg-gradient-to-r from-yellow-900 to-yellow-600 w-[15%] shadow-[0_0_10px_rgba(202,138,4,0.4)] transition-all duration-700"></div>
+                <span id="fatigueText" class="absolute inset-0 flex items-center justify-center sys-font text-[9px] font-bold text-white/90 tracking-wider">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="border border-[var(--sys-purple)]/30 bg-black/40 p-4 relative rounded-md mb-4">
+        <div class="absolute -top-2.5 left-4 bg-[#02040a] px-2 border-x border-[var(--sys-purple)]/30">
+            <span class="sys-font text-[9px] text-[var(--sys-purple)] font-bold tracking-widest uppercase">ATTRIBUTES</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-x-6 gap-y-2.5">
+            <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('str')">
+                <div class="flex items-center gap-2">
+                    <span class="text-red-400 text-xs">⚔️</span>
+                    <span class="monarch-title-badgie font-bold text-xs text-slate-300">STR</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="stat-str" class="monarch-title-badgiex font-mono text-sm text-white font-bold">10</span>
+                    <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('vit')">
+                <div class="flex items-center gap-2">
+                    <span class="text-emerald-400 text-xs">🛡️</span>
+                    <span class="monarch-title-badgie font-bold text-xs text-slate-300">VIT</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="stat-vit" class="monarch-title-badgiex font-mono text-sm text-white font-bold">10</span>
+                    <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('agi')">
+                <div class="flex items-center gap-2">
+                    <span class="text-sky-400 text-xs">⚡</span>
+                    <span class="monarch-title-badgie font-bold text-xs text-slate-300">AGI</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="stat-agi" class="monarch-title-badgiex font-mono text-sm text-white font-bold">10</span>
+                    <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+7</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('int')">
+                <div class="flex items-center gap-2">
+                    <span class="text-[var(--sys-cyan)] text-xs">🧠</span>
+                    <span class="monarch-title-badgie font-bold text-xs text-slate-300">INT</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="stat-int" class="monarch-title-badgiex font-mono text-sm text-white font-bold">10</span>
+                    <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between group cursor-pointer" onclick="PlayerState.spendAP('sen')">
+                <div class="flex items-center gap-2">
+                    <span class="text-[var(--sys-purple)] text-xs">👁️</span>
+                    <span class="monarch-title-badgie font-bold text-xs text-slate-300">PER</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="stat-sen" class="monarch-title-badgiex font-mono text-sm text-white font-bold">10</span>
+                    <span class="ap-btn hidden sys-font text-[10px] font-bold text-emerald-400 group-hover:inline-block">+5</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-800 pt-2 mt-1 col-span-2">
+                <span class="sys-font text-[10px] text-[var(--sys-purple)] font-bold tracking-widest uppercase">AVAILABLE AP</span>
+                <span id="availablePoints" class="sys-font text-2xl font-black text-[var(--sys-cyan)] drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-between items-center px-1 bg-black/20 p-2.5 rounded border border-slate-900">
+        <div class="text-center">
+            <div class="sys-font text-[9px] text-slate-500 uppercase tracking-widest mb-0.5">GOLD</div>
+            <div class="flex items-center justify-center gap-1">
+                <span class="text-yellow-500 text-xs">🪙</span>
+                <span id="playerGold" class="sys-font text-base font-bold text-yellow-400">0</span>
+            </div>
+        </div>
+        <div class="text-center">
+            <div class="sys-font text-[9px] text-slate-500 uppercase tracking-widest mb-0.5">AUTHORITY</div>
+            <div class="sys-font text-base font-bold text-[var(--sys-purple)]" id="stat-authority">0</div>
+        </div>
+        <div class="text-center">
+            <div class="sys-font text-[9px] text-slate-500 uppercase tracking-widest mb-0.5">LETHALITY</div>
+            <div class="sys-font text-base font-bold text-rose-400" id="stat-lethality">0%</div>
+        </div>
+    </div>
+
+</div>
+               
 
         <div class="sl-panel p-4 animate-system-pop" style="animation-delay: 0.1s;">
             <div class="sys-font text-[10px] text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-800 pb-2">
@@ -995,189 +1051,134 @@ const AnimePopup = {
 };
 
 // ==========================================
-// PLAYER STATE (RPG MECHANICS - DATA OVERWRITE SHIELD APPLIED)
+// SYSTEM PLAYER STATE ENGINE (ANTI-OVERWRITE SHIELD)
 // ==========================================
 const PlayerState = {
     data: {
         level: 1,
-        xp: 20,
+        xp: 0,
         gold: 0,
-        ap: 0,
-        stats: { str: 10, vit: 10, agi: 10, int: 10, sen: 10 },
-        authority: 0,
-        lethality: 0
+        title: "[مبتدئ الكتل]", // حماية اللقب الافتراضي
+        avatar: "", // كود الصورة المشفر
+        stats: { str: 10, vit: 10, agi: 10, int: 10, sen: 10 }, // حماية الخصائص الفردية
+        inventory: [] // حماية قائمة العناصر والمقتنيات
     },
 
     init() {
         const saved = localStorage.getItem('monarch_system_data');
         if (saved) {
-            try { 
-                const parsedData = JSON.parse(saved);
-                // دمج الخصائص الرئيسية مع الحفاظ على البيانات العميقة المتشعبة (stats وغيرها)
-                this.data = { 
-                    ...this.data, 
-                    ...parsedData,
-                    stats: { ...this.data.stats, ...(parsedData.stats || {}) }
-                }; 
-            } catch(e) {}
-        }
-        this.updateDynamicStats();
-        this.updateUI();
-        this.startScheduleSync();
-    },
-
-    updateDynamicStats() {
-        const now = new Date();
-        const minutesPassed = (now.getHours() * 60) + now.getMinutes();
-        const fatiguePercentage = Math.floor((minutesPassed / 1440) * 100);
-
-        const baseHP = 1000;
-        const maxHP = baseHP + (this.data.level * 100) + (this.data.stats.vit * 50);
-        const baseMP = 500;
-        const maxMP = baseMP + (this.data.level * 50) + (this.data.stats.int * 40);
-
-        if(document.getElementById('fatigueText')) document.getElementById('fatigueText').textContent = fatiguePercentage;
-        if(document.getElementById('fatigueBar')) document.getElementById('fatigueBar').style.width = `${fatiguePercentage}%`;
-        if(document.getElementById('hpText')) document.getElementById('hpText').textContent = `${maxHP}/${maxHP}`;
-        if(document.getElementById('hpBar')) document.getElementById('hpBar').style.width = '85%';
-        if(document.getElementById('mpText')) document.getElementById('mpText').textContent = `${maxMP}/${maxMP}`;
-        if(document.getElementById('mpBar')) document.getElementById('mpBar').style.width = '72%';
-    },
-
-    analyzeQuestAndReward(questTitle) {
-        let title = questTitle.toLowerCase();
-        let statGained = '';
-        if (title.match(/عضلات|قوة|مواي تاي|جوجيتسو|ضغط|أوزان/)) { this.data.stats.str += 1; statGained = 'STR'; }
-        else if (title.match(/برمجة|ذكاء|دراسة|تطوير|كود|ai|اصطناعي/)) { this.data.stats.int += 1; statGained = 'INT'; }
-        else if (title.match(/جري|سرعة|ركض/)) { this.data.stats.agi += 1; statGained = 'AGI'; }
-        else if (title.match(/تأمل|تركيز|ملاحظة/)) { this.data.stats.sen += 1; statGained = 'PER'; }
-        else if (title.match(/تحمل|صيام|عمل/)) { this.data.stats.vit += 1; statGained = 'VIT'; }
-        else { this.data.ap += 1; statGained = 'AP (Free Point)'; }
-        this.save();
-        return statGained;
-    },
-
-    spendAP(statName) {
-        if (this.data.ap > 0 && this.data.stats[statName] !== undefined) {
-            this.data.ap -= 1;
-            this.data.stats[statName] += 1;
-            if (typeof SoundEffects !== 'undefined') SoundEffects.playSystemClick();
-            if (typeof Toast !== 'undefined') Toast.show(`Stat ${statName.toUpperCase()} structurally upgraded!`, 'success');
+            try {
+                const parsed = JSON.parse(saved);
+                
+                // دمج ذكي عميق (Deep Merge) لمنع إسقاط الميزات الفرعية أثناء المزامنة
+                this.data = {
+                    ...this.data,
+                    ...parsed,
+                    stats: { ...this.data.stats, ...(parsed.stats || {}) },
+                    inventory: parsed.inventory || []
+                };
+            } catch (e) {
+                console.error("[System Shield]: خطأ أثناء دمج السجلات المركزية", e);
+            }
+        } else {
             this.save();
         }
-    },
-
-    addXP(amount) {
-        this.data.xp += amount;
-        if (this.data.xp < 0) {
-            if (this.data.level > 1) {
-                this.data.level -= 1;
-                this.data.xp += (this.data.level * 100);
-            } else {
-                this.data.xp = 0;
-            }
-        }
-        const xpNeeded = this.data.level * 100;
-        if (this.data.xp >= xpNeeded) {
-            this.data.xp -= xpNeeded;
-            this.levelUp();
-        }
-        this.save();
-    },
-
-    addGold(amount) { 
-        this.data.gold += amount; 
-        this.save();
-    },
-
-    addStat(statName, amount) {
-        if (this.data.stats[statName] !== undefined) { 
-            this.data.stats[statName] += amount;
-            this.save(); 
-        }
-    },
-
-    levelUp() {
-        this.data.level += 1;
-        this.data.ap += 3;
-        Object.keys(this.data.stats).forEach(k => this.data.stats[k] += 1);
-        this.save();
-
-        if (typeof SoundEffects !== 'undefined') SoundEffects.playLevelUp();
-        if (typeof confetti !== 'undefined') confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 }, colors: ['#00f0ff', '#9d4edd', '#ffffff'] });
-
-        const modal = document.getElementById('milestoneModal');
-        if(modal) {
-            document.getElementById('milestoneOldLevel').textContent = this.data.level - 1;
-            document.getElementById('milestoneLevelText').textContent = this.data.level;
-            document.getElementById('milestoneMessage').innerHTML = `State recovered.<br>All stats increased by +1<br>Acquired 3 Free AP.`;
-            modal.classList.remove('hidden');
-        }
-    },
-
-    startScheduleSync() {
-        const updateSystemBroadcast = () => {
-            const now = new Date();
-            const currentTimeDec = now.getHours() + now.getMinutes() / 60;
-            let msg = "[SYSTEM STATUS]: Searching current operational sector...";
-            if (currentTimeDec >= 5 && currentTimeDec < 6) msg = "⚡ ACTIVE BLOCK: [SPIRITUAL CORE] -> Quran recitation & Fajr Adhkar.";
-            else if (currentTimeDec >= 6 && currentTimeDec < 8.5) msg = "💻 ACTIVE BLOCK: [DEEP ARCHITECTURE DEV] -> Programming AiMoha Project.";
-            else if (currentTimeDec >= 8.5 && currentTimeDec < 10.5) msg = "🤖 ACTIVE BLOCK: [AI ACADEMY] -> Machine Learning training.";
-            else if (currentTimeDec >= 15 && currentTimeDec < 16.5) msg = "🏋️ ACTIVE BLOCK: [EVOLUTIONARY PPL ENGINE] -> Physical conditioning.";
-            else if (currentTimeDec >= 20.5 && currentTimeDec < 21.5) msg = "🧠 ACTIVE BLOCK: [COGNITIVE DOMINATION] -> Brain Dungeons active.";
-            else msg = "⚔️ ACTIVE BLOCK: [FLEXIBLE ENGAGEMENT] -> Check operational charter.";
-            if(document.getElementById('motivationalQuote')) document.getElementById('motivationalQuote').textContent = msg;
-        };
-        updateSystemBroadcast();
-        setInterval(updateSystemBroadcast, 60000);
+        this.updateUI();
     },
 
     save() {
-    // 🛡️ Advanced Sovereign Merge Protocol: يمنع تراجع الإحصائيات للوراء بشكل قاطع
-    try {
-        const savedData = JSON.parse(localStorage.getItem('monarch_system_data') || '{}');
-        
-        // دمج ذكي للإحصائيات: اختيار القيمة الأعلى دائماً (Math.max)
-        const mergedStats = {};
-        const statKeys = ['str', 'vit', 'agi', 'int', 'sen'];
-        
-        statKeys.forEach(k => {
-            const savedVal = (savedData.stats && savedData.stats[k]) ? savedData.stats[k] : 0;
-            const localVal = (this.data.stats && this.data.stats[k]) ? this.data.stats[k] : 0;
-            mergedStats[k] = Math.max(savedVal, localVal); // النظام يقبل التطور فقط
-        });
+        try {
+            // الحفاظ على الكائن كاملاً وبشكل موحد دون حذف أي مدخلات
+            localStorage.setItem('monarch_system_data', JSON.stringify(this.data));
+            
+            // إطلاق حدث لمزامنة التغييرات فوراً مع الصفحات المفتوحة الأخرى (مثل ppo.html و active-quests)
+            if (typeof BroadcastChannel !== 'undefined') {
+                const bc = new BroadcastChannel('sovereign_sync');
+                bc.postMessage({ type: 'SYSTEM_DATA_UPDATED' });
+            }
+        } catch (e) {
+            console.error("[System Shield]: فشل تأمين الحفظ السحابي المحلي", e);
+        }
+    },
 
-        this.data = {
-            ...savedData,
-            ...this.data,
-            stats: mergedStats
+    // دالة إضافة الإحصائيات الآمنة (قوة، ذكاء، بصيرة...) لمنع تصفير الأرقام
+    addStat(statName, amount) {
+        if (this.data.stats[statName] !== undefined) {
+            this.data.stats[statName] += amount;
+            this.save();
+            this.updateUI();
+        }
+    },
+
+    // ميزة معالجة وحفظ صورة البروفايل وتشفيرها بنمط عصري
+    updateAvatar(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // التحقق من حجم الملف لحماية الذاكرة المحلية
+        if (file.size > 1.5 * 1024 * 1024) {
+            if(window.Toast) Toast.show("⚠️ حجم الصورة كبير جداً! اختر صورة أقل من 1.5 ميجابايت", "error");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64Image = e.target.result;
+            this.data.avatar = base64Image;
+            
+            // تحديث العرض والحفظ الفوري دون المساس باللقب أو الموارد
+            document.getElementById('monarch-avatar-display').src = base64Image;
+            this.save();
+            if(window.Toast) Toast.show("🔮 تم دمج ملامح الهالة السيادية بنجاح", "success");
         };
-    } catch(e) {
-        console.error("System save error", e);
-    }
-    
-    localStorage.setItem('monarch_system_data', JSON.stringify(this.data));
-    this.updateDynamicStats();
-    this.updateUI();
-},
+        reader.readAsDataURL(file);
+    },
+
+    addReward(xpAmount, goldAmount) {
+        this.data.xp += xpAmount;
+        this.data.gold += goldAmount;
+        
+        let xpNeeded = this.data.level * 100;
+        while (this.data.xp >= xpNeeded) {
+            this.data.xp -= xpNeeded;
+            this.data.level++;
+            xpNeeded = this.data.level * 100;
+            if(window.SoundEffects) SoundEffects.playLevelUp();
+        }
+        this.save();
+        this.updateUI();
+    },
 
     updateUI() {
-        ['str', 'vit', 'agi', 'int', 'sen'].forEach(stat => {
-            if(document.getElementById(`stat-${stat}`)) document.getElementById(`stat-${stat}`).textContent = this.data.stats[stat];
-        });
-        if(document.getElementById('playerGold')) document.getElementById('playerGold').textContent = this.data.gold;
-        if(document.getElementById('availablePoints')) document.getElementById('availablePoints').textContent = this.data.ap;
-        if(document.getElementById('currentLevel')) document.getElementById('currentLevel').textContent = this.data.level;
+        // تحديث الموارد الأساسية
+        if(document.getElementById('player-level')) document.getElementById('player-level').textContent = this.data.level;
+        if(document.getElementById('player-gold')) document.getElementById('player-gold').textContent = this.data.gold;
+        
+        // تحديث شريط الخبرة
+        const barEl = document.getElementById('player-xp-bar');
+        if (barEl) {
+            let xpNeeded = this.data.level * 100;
+            let percentage = Math.min((this.data.xp / xpNeeded) * 100, 100);
+            barEl.style.width = `${percentage}%`;
+        }
 
-        const nextLevelXP = this.data.level * 100;
-        if(document.getElementById('xpText')) document.getElementById('xpText').textContent = `${this.data.xp} / ${nextLevelXP}`;
+        // تحديث اللقب وحمايته من التصفير
+        const titleBadge = document.getElementById('monarch-title-badge');
+        if (titleBadge) {
+            titleBadge.textContent = this.data.title || "[العاهل المستيقظ]";
+        }
 
-        const xpPercent = Math.min((this.data.xp / nextLevelXP) * 100, 100);
-        if(document.getElementById('xpBar')) document.getElementById('xpBar').style.width = `${xpPercent}%`;
+        // تحديث صورة البروفايل إذا كانت موجودة ومخزنة
+        if (this.data.avatar && document.getElementById('monarch-avatar-display')) {
+            document.getElementById('monarch-avatar-display').src = this.data.avatar;
+        }
 
-        document.querySelectorAll('.ap-btn').forEach(btn => {
-            btn.classList.toggle('hidden', this.data.ap <= 0);
-        });
+        // تحديث أرقام الخصائص الفردية في واجهة القيادة تلقائياً إذا وجدت المعرفات
+        if(document.getElementById('stat-str-val')) document.getElementById('stat-str-val').textContent = this.data.stats.str;
+        if(document.getElementById('stat-vit-val')) document.getElementById('stat-vit-val').textContent = this.data.stats.vit;
+        if(document.getElementById('stat-agi-val')) document.getElementById('stat-agi-val').textContent = this.data.stats.agi;
+        if(document.getElementById('stat-int-val')) document.getElementById('stat-int-val').textContent = this.data.stats.int;
+        if(document.getElementById('stat-sen-val')) document.getElementById('stat-sen-val').textContent = this.data.stats.sen;
     }
 };
 
@@ -1413,7 +1414,7 @@ week1: {
       { start: 12.0, end: 13.0, title: ' Applied Technical Lab / مختبر تقني تطبيقي و نقل مهاراتك في إكسيل إلى بايثون وفهم لغة الأرقام',                  desc: 'Rest & Recovery / System Architecture Monitoring & Updates / راحة وتعافي / مراقبة وتحديثات هيكل النظام' },
       { start: 13.0, end: 15.0, title: 'Long Break / استراحة طويلة + Applied Technical Lab / مختبر تقني تطبيقي و نقل مهاراتك في إكسيل إلى بايثون وفهم لغة الأرقام', desc: 'Rest & Recovery / System Architecture Monitoring & Updates / راحة وتعافي / مراقبة وتحديثات هيكل النظام + Dhuhr Prayer + Protein-Rich Lunch / صلاة الظهر + غداء غني بالبروتين + قيلولة' },
       { start: 15.0, end: 16.5, title: 'Advanced Physical Development (PPL) / تطوير بدني متقدم', desc: 'Push/Pull/Leg Exercises  / تمارين الدفع/السحب/الأرجل' },
-      { start: 16.5, end: 17.5, title: 'Sheikh Al-Raslan / الشيخ الرسلان أو مواعض دينية لشيوخ مختلفة',          desc: 'Sheikh Al-Raslan /  الشيخ الرسلان مواعض دينية' },
+      { start: 16.5, end: 17.5, title: 'Sheikh Al-Raslan / الشيخ الرسلان',          desc: 'Sheikh Al-Raslan / الشيخ الرسلان' },
       { start: 17.5, end: 19.5, title: 'Experimental Sciences / العلوم التجريبية',      desc: 'Academic Focus: Mathematics (Sunday/Wednesday), Science (Monday/Friday), Physics (Tuesday/Saturday) / تركيز أكاديمي: رياضيات (الأحد/الأربعاء)، علوم (الإثنين/الجمعة)، فيزياء (الثلاثاء/السبت)' },
       { start: 19.5, end: 20.5, title: 'Mental and Physical Development / تطوير عقلي وبدني',      desc: 'Reading + Documentaries + Brain Games + Physical Rest / قراءة + أفلام وثائقية + ألعاب عقلية + راحة بدنية' },
       { start: 20.5, end: 22.0, title: 'System Setup / إعداد النظام',         desc: 'Creating Your Schedule + Evening Adhkar + Muscle and Mind Relaxation (Sleep) / إنشاء جدولك + أذكار المساء + استرخاء العضلات والعقل (النوم)' }
@@ -1572,7 +1573,7 @@ week3: {
       { start: 12.0, end: 13.0, title: ' Rest & Useful Learning / راحة واستجمام وتعلم مفيد',              desc: 'دورات برنامج بلاندر البرتقالي للرسومات التعلم العميق' },
       { start: 13.0, end: 15.0, title: ' Grand Rest / استراحة طويلة + Rest & Useful Learning / راحة واستجمام وتعلم مفيد', desc: 'دورات برنامج بلاندر البرتقالي للرسومات التعلم العميق + صلاة الظهر + غداء غني بالبروتين + قيلولة' },
       { start: 15.0, end: 16.5, title: 'PPL & Calisthenics / برنامج التطوير البدني المتقدم', desc: 'تمارين الدفع والسحب وتمارين الأرجل + الجمباز والكاليستينكس التمارين الرياضية' },
-      { start: 16.5, end: 17.5, title: 'Rest & Dinner / راحة من التعب / Sheikh Al-Raslan / الشيخ الرسلان أو مواعض دينية لشيوخ مختلفة',       desc: 'راحة من التعب Sheikh Al-Raslan / الشيخ الرسلان أو مواعض دينية لشيوخ مختلفة' },
+      { start: 16.5, end: 17.5, title: 'Rest & Dinner / راحة من التعب ونشاط وعشاء',       desc: 'راحة من التعب' },
       { start: 17.5, end: 19.5, title: 'Academic Focus / العلوم التجريبية',          desc: 'المناهج الدراسية: الرياضيات (الأحد/الأربعاء)، العلوم (الاثنين/الجمعة)، الفيزياء (الثلاثاء/السبت)' },
       { start: 19.5, end: 20.5, title: 'Mental & Physical Dev / التنمية الذهنية والبدنية',  desc: 'قراءة + أفلام وثائقية + ألعاب ذهنية + راحة بدنية' },
       { start: 20.5, end: 22.0, title: 'System Prep / إعداد النظام',              desc: 'إنشاء جدولك + أذكار المساء + استرخاء العضلات والعقل' }
@@ -1648,7 +1649,7 @@ week4: {
       { start: 12.0, end: 13.0, title: 'Rest & Useful Learning / راحة واستجمام وتعلم مفيد',              desc: 'دورات برنامج بلاندر البرتقالي للرسومات التعلم العميق' },
       { start: 13.0, end: 15.0, title: ' Grand Rest / استراحة طويلة+ Rest & Useful Learning / راحة واستجمام وتعلم مفيد', desc: 'دورات برنامج بلاندر البرتقالي للرسومات التعلم العميق + صلاة الظهر + غداء غني بالبروتين + قيلولة' },
       { start: 15.0, end: 16.5, title: 'PPL & Calisthenics / برنامج التطوير البدني المتقدم', desc: 'تمارين الدفع والسحب وتمارين الأرجل + الجمباز والكاليستينكس التمارين الرياضية' },
-      { start: 16.5, end: 17.5, title: 'Rest & Dinner / راحة / Sheikh Al-Raslan / الشيخ الرسلان أو مواعض دينية لشيوخ مختلفة',       desc: 'راحة من التعب / Sheikh Al-Raslan / الشيخ الرسلان أو مواعض دينية لشيوخ مختلفة' },
+      { start: 16.5, end: 17.5, title: 'Rest & Dinner / راحة من التعب ونشاط وعشاء',       desc: 'راحة من التعب' },
       { start: 17.5, end: 19.5, title: 'Academic Focus / العلوم التجريبية',          desc: 'المناهج الدراسية: الرياضيات (الأحد/الأربعاء)، العلوم (الاثنين/الجمعة)، الفيزياء (الثلاثاء/السبت)' },
       { start: 19.5, end: 20.5, title: 'Mental & Physical Dev / التنمية الذهنية والبدنية',  desc: 'قراءة + أفلام وثائقية + ألعاب ذهنية + راحة بدنية' },
       { start: 20.5, end: 22.0, title: 'System Prep / إعداد النظام + Opening the pelvis / فتح الحوض',              desc: 'إنشاء جدولك + أذكار المساء + استرخاء العضلات والعقل + Opening the pelvis / فتح الحوض' }
@@ -1724,7 +1725,7 @@ week5: {
       { start: 12.0, end: 13.0, title: ' ؟؟؟ ',              desc: 'مخير من البرامج السابقة (لديك حرية الإختيار أيها العاهل الشاب)' },
       { start: 13.0, end: 15.0, title: '؟؟؟ + Grand Rest / استراحة طويلة ',                                        desc: 'مخير من البرامج السابقة (لديك حرية الإختيار أيها العاهل الشاب)' },
       { start: 15.0, end: 16.5, title: 'PPL & Calisthenics / برنامج التطوير البدني المتقدم', desc: 'تمارين الدفع والسحب وتمارين الأرجل + الجمباز والكاليستينكس التمارين الرياضية' },
-      { start: 16.5, end: 17.5, title: 'Rest & Dinner / راحة من التعب / Sheikh Al-Raslan / الشيخ الرسلان أو مواعض دينية لشيوخ مختلفة',       desc: 'راحة من التعب / Sheikh Al-Raslan / الشيخ الرسلان أو مواعض دينية لشيوخ مختلفة' },
+      { start: 16.5, end: 17.5, title: 'Rest & Dinner / راحة من التعب ونشاط وعشاء',       desc: 'راحة من التعب' },
       { start: 17.5, end: 19.5, title: 'Academic Focus / العلوم التجريبية',          desc: 'المناهج الدراسية: الرياضيات (الأحد/الأربعاء)، العلوم (الاثنين/الجمعة)، الفيزياء (الثلاثاء/السبت)' },
       { start: 19.5, end: 20.5, title: '؟؟؟',                                        desc: 'مخير من البرامج السابقة (لديك حرية الإختيار أيها العاهل الشاب)' },
       { start: 20.5, end: 22.0, title: 'System Prep / إعداد النظام + Opening the pelvis / فتح الحوض',              desc: 'إنشاء جدولك + أذكار المساء + استرخاء العضلات والعقل + Opening the pelvis / فتح الحوض' }
@@ -2259,7 +2260,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
-
 
 
