@@ -173,7 +173,7 @@
             <nav class="flex flex-wrap justify-center gap-2 md:gap-4 text-sm font-bold">
                 <nav id="sovereign-nav" class="flex flex-wrap gap-3 justify-center md:justify-start items-center p-4 bg-slate-950/60 border border-slate-850/50 backdrop-blur-md rounded-lg shadow-[inset_0_0_15px_rgba(0,0,0,0.8)] my-4 select-none">
     
-    <a href="index.html" class="nav-item px-4 py-2.5 text-xs font-mono rounded font-bold transition-all duration-300 ease-out flex items-center gap-1.5 border border-slate-800 bg-slate-900/40 text-slate-400 hover:text-[var(--sys-cyan)] hover:border-[var(--sys-cyan)] hover:shadow-[0_0_12px_rgba(0,240,255,0.2)]">
+    <a href="index11.html" class="nav-item px-4 py-2.5 text-xs font-mono rounded font-bold transition-all duration-300 ease-out flex items-center gap-1.5 border border-slate-800 bg-slate-900/40 text-slate-400 hover:text-[var(--sys-cyan)] hover:border-[var(--sys-cyan)] hover:shadow-[0_0_12px_rgba(0,240,255,0.2)]">
         <span>🏠</span> <span>DASHBOARD</span>
     </a>
 
@@ -221,7 +221,7 @@
 <script>
     function activateCurrentNavigationTab() {
         const currentPath = window.location.pathname;
-        const currentPage = currentPath.substring(currentPath.lastIndexOf('/') + 1) || 'index.html';
+        const currentPage = currentPath.substring(currentPath.lastIndexOf('/') + 1) || 'index11.html';
         const navLinks = document.querySelectorAll('#sovereign-nav .nav-item');
 
         navLinks.forEach(link => {
@@ -495,7 +495,7 @@ let state = {
 
 const tasbeehNames = { subhanallah: 'سبحان الله', alhamdulillah: 'الحمد لله', allahuakbar: 'الله أكبر', lailahaillallah: 'لا إله إلا الله', astaghfirullah: 'أستغفر الله', salawat: 'الصلاة على النبي' };
 
-// ==================== AUDIO/SFX (From index.html) ====================
+// ==================== AUDIO/SFX (From index11.html) ====================
 const SoundEffects = {
     playSystemClick() {
         try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gain.gain.setValueAtTime(0.05, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1); osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.1); } catch(e) {}
