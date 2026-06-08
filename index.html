@@ -1132,22 +1132,33 @@ const PlayerState = {
     },
 
     save() {
-        // 🛡️ Safe Merge Protocol: يمنع الكتابة الفوقية والمسح العرضي للبيانات التي يتم تحديثها في الملفات الأخرى
-        try {
-            const savedData = JSON.parse(localStorage.getItem('monarch_system_data') || '{}');
-            this.data = { 
-                ...savedData, 
-                ...this.data, 
-                stats: { ...(savedData.stats || {}), ...this.data.stats } 
-            };
-        } catch(e) {
-            console.error("System save error", e);
-        }
+    // 🛡️ Advanced Sovereign Merge Protocol: يمنع تراجع الإحصائيات للوراء بشكل قاطع
+    try {
+        const savedData = JSON.parse(localStorage.getItem('monarch_system_data') || '{}');
         
-        localStorage.setItem('monarch_system_data', JSON.stringify(this.data));
-        this.updateDynamicStats();
-        this.updateUI();
-    },
+        // دمج ذكي للإحصائيات: اختيار القيمة الأعلى دائماً (Math.max)
+        const mergedStats = {};
+        const statKeys = ['str', 'vit', 'agi', 'int', 'sen'];
+        
+        statKeys.forEach(k => {
+            const savedVal = (savedData.stats && savedData.stats[k]) ? savedData.stats[k] : 0;
+            const localVal = (this.data.stats && this.data.stats[k]) ? this.data.stats[k] : 0;
+            mergedStats[k] = Math.max(savedVal, localVal); // النظام يقبل التطور فقط
+        });
+
+        this.data = {
+            ...savedData,
+            ...this.data,
+            stats: mergedStats
+        };
+    } catch(e) {
+        console.error("System save error", e);
+    }
+    
+    localStorage.setItem('monarch_system_data', JSON.stringify(this.data));
+    this.updateDynamicStats();
+    this.updateUI();
+},
 
     updateUI() {
         ['str', 'vit', 'agi', 'int', 'sen'].forEach(stat => {
@@ -2237,4 +2248,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
