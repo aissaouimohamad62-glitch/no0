@@ -2196,7 +2196,7 @@ window.Router = Router;
 
 
 </script>
-    <script>
+<script>
     // تفعيل الهالة السيادية المحفوظة فور تحميل الصفحة
     const savedAura = localStorage.getItem('sovereign_aura_color');
     if(savedAura) {
@@ -2205,8 +2205,36 @@ window.Router = Router;
         // للاندماج المطلق يمكنك توحيد اللونين الأساسيين
         // document.documentElement.style.setProperty('--sys-purple', savedAura); 
     }
+    // مصفوفة المزامنة السيادية للهالة
+function applyAura() {
+    const savedAura = localStorage.getItem('sovereign_aura_color');
+    if(savedAura) {
+        // تحديث اللون الأساسي للنظام
+        document.documentElement.style.setProperty('--sys-cyan', savedAura);
+        // تحديث التوهج السينمائي ليتناسب مع الهالة الجديدة
+        document.documentElement.style.setProperty('--sys-cyan-glow', `${savedAura}66`); 
+    }
+}
+
+// الاستماع اللحظي للتغييرات القادمة من المتجر (Cross-Tab Live Sync)
+window.addEventListener('storage', (e) => {
+    if (e.key === 'sovereign_aura_color') {
+        applyAura();
+        if (typeof Toast !== 'undefined') {
+            Toast.show('⚡ استشعار طاقة خارجية: تم تحديث الهالة السيادية للنظام!', 'info');
+        }
+    }
+    // الحفاظ على كود مزامنة الذهب والمستوى الحالي لديك
+    if (e.key === 'monarch_system_data') {
+        if (typeof loadMonarchTitle === 'function') loadMonarchTitle();
+    }
+});
+
+// تشغيل المزامنة فور تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    applyAura();
+});
 </script>
 </body>
 </html>
-
 
