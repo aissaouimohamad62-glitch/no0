@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام العاهل - الأرشيف السماوي</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <!-- مكتبة قصاصات الورق الملونة الفاخرة للاحتفال الإنجازي -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -431,7 +430,6 @@
 <body>
 
     <div class="system-window">
-        <!-- شريط معلومات العاهل المحدث دائماً والمترابط مع index.html -->
         <div class="monarch-status-header">
             <div class="flex items-center gap-3" style="display: flex; align-items: center; gap: 15px;">
                 <div class="status-badge" style="color: #ffd700; border-color: #ffd700;">
@@ -490,7 +488,6 @@
     </a>
 </nav>
             </div>
-            <!-- اختيار القارئ المفضل -->
             <div>
                 <select id="reciter-select" class="reciter-select-menu" onchange="changeReciter()">
                     <option value="afs">مشاري العفاسي</option>
@@ -505,9 +502,9 @@
         </div>
 
         <div id="main-view" style="display: flex; flex-direction: column; height: 100%;">
-            <div class="system-header">
+            <div class="system-headeri">
                 <span>[ الأرشيف السماوي : القرآن الكريم ]</span>
-                <button onclick="window.location.href='index.html'" class="btn-system">🏠 لوحة التحكم</button>
+                <button onclick="window.location.href='ppo.html'" class="btn-system">🏠 لوحة التحكم القرانية</button>
             </div>
             
             <div class="search-container">
@@ -532,7 +529,6 @@
             
             <div class="ayah-container" id="ayah-container"></div>
 
-            <!-- لوحة الصوت والمراقبة الذكية للأثمان -->
             <div class="audio-player-control-panel">
                 <div class="progress-and-tracker-bar">
                     <div>
@@ -725,7 +721,7 @@
                         this.saveToStorage();
                         this.renderThumnStatus();
                         
-                        // إضافة المكافأة (1 XP و 1 ذهب)
+                        // إضافة المكافأة الثابتة (1 XP و 1 ذهب)
                         PlayerSync.addRewards(1, 1);
                         
                         // تنبيه بنجاح وتفجير احتفال صغير
@@ -739,14 +735,12 @@
                     }
                 }
 
-                // التحقق من إكمال السورة بالكامل
+                // التحقق من إكمال السورة بالكامل (تم إزالة المكافأة الإضافية الكبرى بناء على طلبك)
                 if (percentage >= 99 && !this.completedSurahs[this.currentSurahKey].fullyCompleted) {
                     this.completedSurahs[this.currentSurahKey].fullyCompleted = true;
                     this.saveToStorage();
                     
-                    // مكافأة إضافية لإكمال السورة كاملة (+20 XP / +20 ذهب)
-                    PlayerSync.addRewards(20, 20);
-                    showToast("🏆 عظيم! أكملت استماع السورة كاملة: +20 XP / +20 ذهب");
+                    showToast("🏆 عظيم! لقد أكملت استماع السورة كاملة بنجاح!");
                     
                     confetti({
                         particleCount: 100,
@@ -965,3 +959,81 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
