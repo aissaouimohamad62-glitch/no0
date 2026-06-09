@@ -449,11 +449,20 @@
             </div>
             <div>
                 <select id="reciter-select" class="reciter-select-menu" onchange="changeReciter()">
-                    <option value="afs">مشاري العفاسي</option>
-                    <option value="maher">ماهر المعيقلي</option>
-                    <option value="husary">محمود خليل الحصري</option>
-                    <option value="luhaidan">محمد اللحيدان</option>
-                </select>
+    <option value="afs">مشاري العفاسي</option>
+    <option value="maher">ماهر المعيقلي</option>
+    <option value="husary">محمود خليل الحصري</option>
+    <option value="luhaidan">محمد اللحيدان</option>
+    
+    <!-- القراء المضافون من الأرشيف الجديد -->
+    <option value="obk">أبو بكر الشاطري</option>
+    <option value="shoraimy">سعود الشريم</option>
+    <option value="tblawi">محمد محمود الطبلاوي</option>
+    <option value="tnjy">خليفة الطنيجي</option>
+    <option value="bari">عبد الباري الثبيتي</option>
+    <option value="yahya">يحيى حوى</option>
+    <option value="salah">صلاح هاشم</option>
+</select>
             </div>
         </div>
 
@@ -523,14 +532,22 @@
         let currentSurahId = null;
         
         // القراء وخوادم الصوت المباشرة والبديلة لتجاوز القيود
-        const RECITERS = {
-            afs: { name: "مشاري العفاسي", server: "https://server8.mp3quran.net/afs/" },
-            maher: { name: "ماهر المعيقلي", server: "https://server12.mp3quran.net/maher/" },
-           
-            husary: { name: "محمود خليل الحصري", server: "https://server13.mp3quran.net/husr/" },
-            
-            luhaidan: { name: "محمد اللحيدان", server: "https://server8.mp3quran.net/lhdan/" }
-        };
+       // القراء وخوادم الصوت المباشرة والبديلة لتجاوز القيود
+const RECITERS = {
+    afs: { name: "مشاري العفاسي", server: "https://server8.mp3quran.net/afs/" },
+    maher: { name: "ماهر المعيقلي", server: "https://server12.mp3quran.net/maher/" },
+    husary: { name: "محمود خليل الحصري", server: "https://server13.mp3quran.net/husr/" },
+    luhaidan: { name: "محمد اللحيدان", server: "https://server8.mp3quran.net/lhdan/" },
+    
+    // قواعد البيانات المضافة من الخادم 12
+    obk: { name: "أبو بكر الشاطري", server: "https://server12.mp3quran.net/obk/" },
+    shoraimy: { name: "سعود الشريم", server: "https://server12.mp3quran.net/shoraimy/" },
+    tblawi: { name: "محمد محمود الطبلاوي", server: "https://server12.mp3quran.net/tblawi/" },
+    tnjy: { name: "خليفة الطنيجي", server: "https://server12.mp3quran.net/tnjy/" },
+    bari: { name: "عبد الباري الثبيتي", server: "https://server12.mp3quran.net/bari/" },
+    yahya: { name: "يحيى حوى", server: "https://server12.mp3quran.net/yahya/" },
+    salah: { name: "صلاح هاشم", server: "https://server12.mp3quran.net/salah_hashim_m/" }
+};
 
         let activeReciterKey = localStorage.getItem('sovereign_reciter_key') || 'afs';
 
@@ -914,6 +931,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
