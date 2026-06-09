@@ -373,12 +373,21 @@
                 </div>
             </div>
              <div class="mt-8">
-    <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
-        <div class="flex items-center gap-2">
-            <span class="text-2xl">🧪</span>
-            <h2 class="text-lg font-black text-white font-cairo">الجرعات واللفائف السيادية</h2>
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 pb-2 border-b border-white/10 gap-4">
+        <div class="flex items-center justify-between w-full md:w-auto">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">🧪</span>
+                <h2 class="text-lg font-black text-white font-cairo">الجرعات واللفائف السيادية</h2>
+            </div>
+            <span class="md:hidden text-[10px] font-mono px-2 py-0.5 bg-sys-green/10 text-sys-green rounded border border-sys-green/20">CONSUMABLES</span>
         </div>
-        <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-green/10 text-sys-green rounded border border-sys-green/20">CONSUMABLES</span>
+        
+        <div class="flex items-center gap-4 w-full md:w-1/2">
+            <input type="text" id="consumables-search" placeholder="🔍 ابحث في الجرعات..." 
+                   class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-green focus:outline-none transition-colors"
+                   oninput="ShopSystem.filterConsumables(this.value)">
+            <span class="hidden md:inline-block text-[10px] font-mono px-2 py-0.5 bg-sys-green/10 text-sys-green rounded border border-sys-green/20">CONSUMABLES</span>
+        </div>
     </div>
     <div id="consumables-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
 </div>
@@ -391,6 +400,13 @@
         </div>
         <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-orange/10 text-sys-orange rounded border border-sys-orange/20">VOUCHERS</span>
     </div>
+    <div class="flex items-center gap-4 w-full md:w-1/2">
+            <input type="text" id="vouchers-search" placeholder="🔍 ابحث في التراخيص..." 
+                   class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-orange focus:outline-none transition-colors"
+                   oninput="ShopSystem.filterVouchers(this.value)">
+            <span class="hidden md:inline-block text-[10px] font-mono px-2 py-0.5 bg-sys-orange/10 text-sys-orange rounded border border-sys-orange/20">VOUCHERS</span>
+        </div>
+    </div>
     <div id="vouchers-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
 </div>
 
@@ -402,6 +418,15 @@
         </div>
         <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-cyan/10 text-sys-cyan rounded border border-sys-cyan/20">AURAS</span>
     </div>
+    <div class="flex items-center gap-4 w-full md:w-1/2">
+            <input type="text" id="auras-search" placeholder="🔍 ابحث في الهالات..." 
+                   class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-cyan focus:outline-none transition-colors"
+                   oninput="ShopSystem.filterAuras(this.value)">
+            <span class="hidden md:inline-block text-[10px] font-mono px-2 py-0.5 bg-sys-cyan/10 text-sys-cyan rounded border border-sys-cyan/20">AURAS</span>
+        </div>
+    </div>
+    <div id="consumables-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+</div>
     <div id="auras-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
 </div>
 <!-- شريط بحث الألقاب -->
@@ -565,14 +590,24 @@ const SYSTEM_ITEMS_DATA = {
         { id: "cons-ap", nameAr: "بلورة السمات النقية", nameEn: "Pure AP Gem", reqLevel: 5, price: 2000, desc: "تستهلك فوراً وتمنحك نقطة سمات حرة (+1 AP).", type: "free_ap" }
     ],
     vouchers: [
-        { id: "vch-rest", nameAr: "تصريح استراحة المحارب", nameEn: "Entertainment Pass", reqLevel: 1, price: 150, desc: "رخصة شرعية للعب أو مشاهدة أنمي لمدة ساعة دون عقوبة.", icon: "🎮" },
+        // تصاريح استراحة المحارب المتدرجة
+        { id: "vch-rest-1h", nameAr: "استراحة المحارب (ساعة)", nameEn: "Warrior Rest (1h)", reqLevel: 1, price: 150, desc: "رخصة شرعية للعب أو مشاهدة أنمي لمدة ساعة دون عقوبة.", icon: "⏳" },
+        { id: "vch-rest-5h", nameAr: "استراحة المحارب (5 ساعات)", nameEn: "Warrior Rest (5h)", reqLevel: 5, price: 650, desc: "رخصة مطورة تمنحك 5 ساعات من الترفيه المتواصل بسعر اقتصادي.", icon: "⌛" },
+        { id: "vch-rest-10h", nameAr: "استراحة المحارب (10 ساعات)", nameEn: "Warrior Rest (10h)", reqLevel: 10, price: 1200, desc: "رخصة النخبة لترفيه يمتد لـ 10 ساعات متواصلة دون المساس بنقاطك.", icon: "🕹️" },
+        { id: "vch-rest-24h", nameAr: "استراحة المحارب (يوم كامل)", nameEn: "Warrior Rest (24h)", reqLevel: 15, price: 2500, desc: "يوم كامل من التحرر التام من قيود النظام. استرداد شامل للأنفاس.", icon: "⛺" },
+        
+        // التصاريح الأخرى
         { id: "vch-cheat", nameAr: "تصريح الغش الغذائي", nameEn: "Cheat Meal Ticket", reqLevel: 2, price: 800, desc: "وجبة غش واحدة معفاة من تأثيرات نظامك الصارم.", icon: "🍔" },
         { id: "vch-skip", nameAr: "تصريح التخطي الطارئ", nameEn: "Quest Skip Token", reqLevel: 1, price: 200, desc: "يسمح بتأجيل مهمة كبرى للغد دون خسارة سلسلة إنجازاتك.", icon: "⏩" }
     ],
     auras: [
         { id: "aura-blood", nameAr: "هالة الغضب", nameEn: "Blood Monarch Aura", reqLevel: 10, price: 1500, desc: "توهج أحمر قاني يغلف لوحات النظام.", color: "#e11d48" },
         { id: "aura-gold", nameAr: "هالة الإمبراطور", nameEn: "Golden Sovereign Aura", reqLevel: 15, price: 3000, desc: "توهج ذهبي ملكي يدل على السلطة المطلقة.", color: "#ffd700" },
-        { id: "aura-emerald", nameAr: "هالة الظل السام", nameEn: "Toxic Shadow Aura", reqLevel: 5, price: 1000, desc: "توهج زمردي مشع وخطير.", color: "#10b981" }
+        { id: "aura-emerald", nameAr: "هالة الظل السام", nameEn: "Toxic Shadow Aura", reqLevel: 5, price: 1000, desc: "توهج زمردي مشع وخطير.", color: "#10b981" },
+        // الهالات الجديدة
+        { id: "aura-shadow", nameAr: "هالة حاكم الظلال", nameEn: "Shadow Monarch Aura", reqLevel: 20, price: 5000, desc: "هالة سوداء وبنفسجية داكنة تبتلع الضوء المحيط بك.", color: "#4c1d95" },
+        { id: "aura-lightning", nameAr: "هالة البرق السيادي", nameEn: "Azure Lightning Aura", reqLevel: 12, price: 2500, desc: "شرارات زرقاء نيون عالية التباين تومض حولك.", color: "#00f0ff" },
+        { id: "aura-abyss", nameAr: "هالة الهاوية المطلقة", nameEn: "Absolute Abyss Aura", reqLevel: 25, price: 8000, desc: "ظلام دامس يمتص كل شيء، يعكس تركيزاً لا يُقهر.", color: "#111827" }
     ]
 };
 
@@ -1317,38 +1352,67 @@ const ShopSystem = {
         this.showAlert("🔮 تم تفعيل الهالة", "تغير التردد البصري للنظام بالكامل.", "sys-purple");
     },
     // ==========================================
-// SEARCH SYSTEM
-// ==========================================
+// ...existing code...
+    filterLinks(query) {
+        const container = document.getElementById('links-grid');
+        const items = container.querySelectorAll('.shop-card');
+        const lowerQuery = query.toLowerCase().trim();
+        
+        items.forEach(item => {
+            const match = item.textContent.toLowerCase().includes(lowerQuery);
+            item.style.display = match ? '' : 'none';
+        });
+    },
 
-filterLinks(query) {
-    const container = document.getElementById('links-grid');
-    const items = container.querySelectorAll('.shop-card');
-    const lowerQuery = query.toLowerCase().trim();
-    
-    items.forEach(item => {
-        const name = item.querySelector('h3')?.textContent || '';
-        const desc = item.querySelector('p')?.textContent || '';
-        const match = name.toLowerCase().includes(lowerQuery) || 
-                      desc.toLowerCase().includes(lowerQuery);
-        item.style.display = match ? '' : 'none';
-    });
-},
+    filterConsumables(query) {
+        const q = query.toLowerCase().trim();
+        const filtered = SYSTEM_ITEMS_DATA.consumables.filter(item =>
+            item.nameAr.toLowerCase().includes(q) ||
+            item.nameEn.toLowerCase().includes(q) ||
+            item.desc.toLowerCase().includes(q)
+        );
+        this.renderConsumables(filtered);
+    },
 
-filterTitles(query) {
-    const container = document.getElementById('titles-grid');
-    const items = container.querySelectorAll('.shop-card');
-    const lowerQuery = query.toLowerCase().trim();
-    
-    items.forEach(item => {
-        const nameAr = item.querySelector('.font-cairo.font-bold')?.textContent || '';
-        const nameEn = item.querySelector('.font-orbitron')?.textContent || '';
-        const desc = item.querySelector('p')?.textContent || '';
-        const match = nameAr.toLowerCase().includes(lowerQuery) || 
-                      nameEn.toLowerCase().includes(lowerQuery) ||
-                      desc.toLowerCase().includes(lowerQuery);
-        item.style.display = match ? '' : 'none';
-    });
-},
+    filterVouchers(query) {
+        const q = query.toLowerCase().trim();
+        const filtered = SYSTEM_ITEMS_DATA.vouchers.filter(item =>
+            item.nameAr.toLowerCase().includes(q) ||
+            item.nameEn.toLowerCase().includes(q) ||
+            item.desc.toLowerCase().includes(q)
+        );
+        this.renderVouchers(filtered);
+    },
+
+    filterAuras(query) {
+        const q = query.toLowerCase().trim();
+        const filtered = SYSTEM_ITEMS_DATA.auras.filter(item =>
+            item.nameAr.toLowerCase().includes(q) ||
+            item.nameEn.toLowerCase().includes(q) ||
+            item.desc.toLowerCase().includes(q)
+        );
+        this.renderAuras(filtered);
+    },
+
+    filterTitles(query) {
+        const container = document.getElementById('titles-grid');
+        const items = container.querySelectorAll('.shop-card');
+        const lowerQuery = query.toLowerCase().trim();
+        
+        items.forEach(item => {
+            const match = item.textContent.toLowerCase().includes(lowerQuery);
+            item.style.display = match ? '' : 'none';
+        });
+    },
+
+    getPrice(item) {
+        return (this.playerData.level >= item.reqLevel) ? item.discPrice : item.basePrice;
+    },
+
+    equipTitle() {
+        this.showAlert("🔮 تم تجهيز اللقب", "تغيرت هالة لوحة القيادة إلى السمة المجهزة الجديدة.", "sys-cyan");
+    },
+
 
     init() {
     this.loadState();
