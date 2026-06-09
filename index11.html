@@ -278,6 +278,9 @@
     
     <div class="flex items-center justify-between gap-4 border-b border-[var(--sys-cyan)]/10 pb-4 mb-4">
         <div class="flex items-center gap-4">
+            <div id="avatar-container" class="relative w-26 h-26 rounded-full p-1 transition-all duration-500">
+    
+
             <div class="avatar-wrapper flex-shrink-0">
                 <img id="monarch-avatar-display" class="avatar-image" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f0ff'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Monarch Avatar">
                 <label for="avatar-file-input" class="avatar-uploader-overlay">
@@ -286,7 +289,7 @@
                 </label>
                 <input type="file" id="avatar-file-input" accept="image/*" class="hidden" onchange="PlayerState.updateAvatar(event)">
             </div>
-
+</div>
             <div class="space-y-1">
                 <div class="flex items-center gap-1.5 flex-wrap">
                     <span class="sys-font text-[10px] text-[var(--sys-purple)] font-bold uppercase tracking-wider">JOB :</span>
@@ -660,6 +663,42 @@
 <div id="toastContainer" class="fixed top-5 right-5 z-[10000] flex flex-col gap-3 pointer-events-none"></div>
 
 <script>
+    // مصفوفة مرجعية لمطابقة المعرفات بالكلاسات لضمان الحماية
+const BORDER_STYLES_MAP = {
+    "border-shadow-recruit": "border-2 border-purple-900/60 shadow-[0_0_12px_rgba(176,38,255,0.4)]",
+    "border-elite-knight": "border-2 border-[var(--sys-cyan,#00f0ff)] shadow-[0_0_18px_rgba(0,240,255,0.7)] animate-pulse",
+    "border-shadow-commander": "border-4 border-double border-purple-600 shadow-[0_0_25px_rgba(147,51,234,0.9)]",
+    "border-shadow-monarch": "border-2 border-sys-gold shadow-[0_0_35px_rgba(255,215,0,0.95),_inset_0_0_15px_rgba(176,38,255,0.6)]"
+};
+
+function applyEquippedAvatarBorder() {
+    const avatarContainer = document.getElementById('avatar-container');
+    if (!avatarContainer) return;
+
+    // جلب الإطار الحالي المفعل من المتجر
+    const currentBorderId = localStorage.getItem('equipped_avatar_border');
+
+    // تنظيف الحاوية من أي كلاسات إطارات سابقة للحفاظ على الأداء الإنسيابي
+    Object.values(BORDER_STYLES_MAP).forEach(cssClass => {
+        cssClass.split(" ").forEach(cls => avatarContainer.classList.remove(cls));
+    });
+
+    // تطبيق الإطار المختار الجديد إذا وُجد
+    if (currentBorderId && BORDER_STYLES_MAP[currentBorderId]) {
+        const targetClasses = BORDER_STYLES_MAP[currentBorderId].split(" ");
+        targetClasses.forEach(cls => avatarContainer.classList.add(cls));
+    }
+}
+
+// تشغيل المزامنة اللحظية فور تحميل واجهة المستخدم
+window.addEventListener('DOMContentLoaded', applyEquippedAvatarBorder);
+
+// تفعيل ميزة الاستماع لـ Storage (تحديث الإطار تلقائياً بدون الحاجة لإعادة تحميل الهوم بيج إذا كانت الصفحتين مفتوحتين معاً)
+window.addEventListener('storage', (e) => {
+    if (e.key === 'equipped_avatar_border') {
+        applyEquippedAvatarBorder();
+    }
+});
 // ==========================================
 // UTILITIES & UI
 // ==========================================
@@ -2336,6 +2375,7 @@ window.addEventListener('storage', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     applyAura();
 });
+// مصفوفة مرجعية لمطابقة المعرفات بالكلاسات لضمان الحماي
 </script>
 </body>
 </html>
