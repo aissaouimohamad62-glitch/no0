@@ -372,6 +372,26 @@
                     <!-- Dynamic Generation via JS -->
                 </div>
             </div>
+            <div class="mt-8">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">🔮</span>
+            <h2 class="text-lg font-black text-white font-cairo">بوابات استدعاء جنود الظلال</h2>
+        </div>
+        <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-purple/10 text-sys-purple rounded border border-sys-purple/20">SHADOW SUMMONS</span>
+    </div>
+    
+    <div class="mb-4">
+        <input type="text" 
+               id="shadows-search" 
+               placeholder="🔍 ابحث عن جندي أو رتبة في جيش الظلال..." 
+               class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-purple focus:outline-none transition-colors"
+               oninput="ShopSystem.filterShadows(this.value)">
+    </div>
+    
+    <div id="shadows-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </div>
+</div>
              <!-- AURAS -->
               <div class="mt-8">
     <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
@@ -645,7 +665,7 @@ const SOVEREIGN_BORDERS_DATA = [
     },
     { 
         id: "border-elite-knight", 
-        nameAr: "إطار الفارس النخبة (إيغريس)", 
+        nameAr: "إطار الفارس النخبة (أويس) / OWAIS ", 
         nameEn: "Elite Knight Border", 
         price: 2500, 
         reqLevel: 5, 
@@ -654,7 +674,7 @@ const SOVEREIGN_BORDERS_DATA = [
     },
     { 
         id: "border-shadow-commander", 
-        nameAr: "إطار قائد الجيش (بيرو)", 
+        nameAr: "إطار قائد الجيش (إليانور) / ELEANOR ", 
         nameEn: "Shadow Commander", 
         price: 10000, 
         reqLevel: 15, 
@@ -663,7 +683,7 @@ const SOVEREIGN_BORDERS_DATA = [
     },
     { 
         id: "border-shadow-monarch", 
-        nameAr: "تاج عاهل الظلال (سونغ جين وو)", 
+        nameAr: "تاج عاهل الظلال (لوسيان الإصلاح الشامل) / LUCIAN OVERHAUL ", 
         nameEn: "Shadow Monarch Crown", 
         price: 50000, 
         reqLevel: 30, 
@@ -698,6 +718,38 @@ const SYSTEM_ITEMS_DATA = {
         { id: "aura-abyss", nameAr: "هالة الهاوية المطلقة", nameEn: "Absolute Abyss Aura", reqLevel: 25, price: 8000, desc: "ظلام دامس يمتص كل شيء، يعكس تركيزاً لا يُقهر.", color: "#111827" }
     ]
 };
+const SOVEREIGN_SHADOWS_DATA = [
+    {
+        id: "shadow-igris",
+        nameAr: "الفارس الأحمر: إيغريس",
+        nameEn: "Blood Knight: Igris",
+        price: 5000,
+        reqLevel: 8,
+        desc: "جندي الظل الأكثر وفاءً وبسالة. يتميز بهالة بريق البرق الأحمر القاني وحركات السيف القاطعة.",
+        imgUrl: "https://i.postimg.co/X7fX9Z7B/igris-shadow.png", // رابط تعبيري كمثال (استبدله برابط صورتك المفضلة)
+        glowClass: "shadow-glow-cyan"
+    },
+    {
+        id: "shadow-beru",
+        nameAr: "ملك النمل: بيرو",
+        nameEn: "Ant King: Beru",
+        price: 20000,
+        reqLevel: 18,
+        desc: "قائد جيش الظلال الملقب بملك النمل. يمتلك طاقة أرجوانية مرعبة وصوت صراخ مدمّر يهز أرجاء الزنزانة.",
+        imgUrl: "https://i.postimg.co/zB3y878Q/beru-shadow.png",
+        glowClass: "shadow-glow-purple"
+    },
+    {
+        id: "shadow-jinwoo",
+        nameAr: "عاهل الظلال: سونغ جين وو",
+        nameEn: "Monarch: Sung Jin-Woo",
+        price: 75000,
+        reqLevel: 35,
+        desc: "المستوى المطلق للسيادة. ظهور حاكم الظلال بكامل طاقته وعيونه المتوهجة باللون الأزرق النيون الفاخر.",
+        imgUrl: "https://i.postimg.co/8cnZ0Kff/jinwoo-monarch.png",
+        glowClass: "shadow-glow-monarch"
+    }
+];
 
 const SOVEREIGN_TITLES_DATA = [
     { id: "title-novice", nameAr: "المبرمج المبتدئ", nameEn: "Novice Coder", week: 1, reqLevel: 1, basePrice: 50, discPrice: 5, desc: "لقب يثبت اجتيازك للأسبوع التأسيسي الأول لبناء الواجهات الأساسية." },
@@ -1317,6 +1369,7 @@ const ShopSystem = {
         
         
     },
+    
     renderConsumables() {
         const container = document.getElementById('consumables-grid');
         if(!container) return;
@@ -1370,6 +1423,86 @@ ShopSystem.renderBorders = function(searchQuery = "") {
     const filtered = SOVEREIGN_BORDERS_DATA.filter(b => 
         b.nameAr.includes(searchQuery) || b.nameEn.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    // دالة رسم جنود الظلال في المتجر
+ShopSystem.renderShadows = function(searchQuery = "") {
+    const container = document.getElementById('shadows-grid');
+    if (!container) return;
+    container.innerHTML = "";
+
+    let purchasedShadows = JSON.parse(localStorage.getItem('purchased_shadows') || '[]');
+    let equippedShadow = localStorage.getItem('equipped_shadow_companion') || "";
+    
+    const currentGold = this.playerData.gold || 0;
+    const currentLevel = this.playerData.level || 1;
+
+    const filtered = SOVEREIGN_SHADOWS_DATA.filter(s => 
+        s.nameAr.includes(searchQuery) || s.nameEn.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    filtered.forEach(item => {
+        let btnHtml = "";
+        const isPurchased = purchasedShadows.includes(item.id);
+        const isEquipped = equippedShadow === item.id;
+
+        if (isEquipped) {
+            btnHtml = `<button class="w-full text-xs font-black py-2 px-3 rounded border border-sys-purple bg-sys-purple/20 text-sys-purple shadow-[0_0_12px_rgba(176,38,255,0.4)] select-none">🔮 مستدعى حالياً</button>`;
+        } else if (isPurchased) {
+            btnHtml = `<button onclick="ShopSystem.equipShadow('${item.id}', '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-cyan bg-sys-cyan/10 text-sys-cyan hover:bg-sys-cyan hover:text-black transition duration-300">⚡ استدعاء للجبهة</button>`;
+        } else {
+            const hasLevel = currentLevel >= item.reqLevel;
+            const finalPrice = hasLevel ? Math.floor(item.price * 0.1) : item.price; // خصم النظام السيادي عند بلوغ المستوى
+
+            if (currentGold >= finalPrice) {
+                btnHtml = `<button onclick="ShopSystem.buyShadow('${item.id}', ${finalPrice}, '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-green bg-sys-green/10 text-sys-green hover:bg-sys-green hover:text-black transition duration-300">🪙 فتح البوابة (${finalPrice} G)</button>`;
+            } else {
+                btnHtml = `<button class="w-full text-xs font-bold py-2 px-3 rounded border-slate-850 bg-slate-900 text-slate-600 cursor-not-allowed" disabled>🔒 مغلق (تحتاج ${finalPrice} G)</button>`;
+            }
+        }
+
+        container.innerHTML += `
+            <div class="shop-card rounded-xl p-5 border border-white/5 flex flex-col justify-between relative bg-gradient-to-b from-black/40 to-slate-950/80 group">
+                <div class="text-center pb-3 mb-3 border-b border-white/5">
+                    <div class="w-28 h-28 mx-auto mb-4 bg-black/60 rounded-lg border border-white/5 flex items-center justify-center p-2 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-t from-sys-purple/10 to-transparent"></div>
+                        <img src="${item.imgUrl}" alt="${item.nameEn}" class="max-w-full max-h-full object-contain filter drop-shadow-[0_0_8px_rgba(176,38,255,0.4)] transform group-hover:scale-115 transition duration-500" onerror="this.src='https://placehold.co/150x150/000/fff?text=Shadow'">
+                    </div>
+                    <span class="block text-[9px] font-mono font-black text-sys-purple tracking-widest uppercase">${item.nameEn}</span>
+                    <h3 class="text-base font-black text-white mt-0.5 font-cairo">${item.nameAr}</h3>
+                    <span class="inline-block text-[9px] px-2 py-0.5 mt-1 rounded font-mono bg-sys-purple/5 text-sys-purple border border-sys-purple/10">MINIMUM LVL: ${item.reqLevel}</span>
+                </div>
+                <p class="text-[11px] text-slate-400 text-center leading-relaxed mb-4 h-12 font-cairo">${item.desc}</p>
+                <div>${btnHtml}</div>
+            </div>`;
+    });
+};
+
+// دالة بحث فوري للجنود
+ShopSystem.filterShadows = function(val) {
+    this.renderShadows(val);
+};
+
+// دالة شراء الجندي
+ShopSystem.buyShadow = function(id, price, nameAr) {
+    if (this.playerData.gold < price) return;
+    this.playerData.gold -= price;
+    
+    let purchasedShadows = JSON.parse(localStorage.getItem('purchased_shadows') || '[]');
+    purchasedShadows.push(id);
+    localStorage.setItem('purchased_shadows', JSON.stringify(purchasedShadows));
+    
+    if (this.save) { this.save(); }
+    if (typeof confetti !== 'undefined') { confetti({ particleCount: 80, spread: 60, colors: ['#b026ff', '#00f0ff'] }); }
+    if (typeof Toast !== 'undefined') { Toast.show(`انحنى الجندي ${nameAr} تلبيةً لندائك!`, 'success'); }
+    
+    this.renderShadows();
+};
+
+// دالة التجهيز والاستدعاء
+ShopSystem.equipShadow = function(id, nameAr) {
+    localStorage.setItem('equipped_shadow_companion', id);
+    if (typeof Toast !== 'undefined') { Toast.show(`تم استدعاء ${nameAr} لحراسة العرش الزمني.`, 'success'); }
+    this.renderShadows();
+};
 
     filtered.forEach(item => {
         let btnHtml = "";
