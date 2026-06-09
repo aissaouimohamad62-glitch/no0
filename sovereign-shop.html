@@ -373,6 +373,26 @@
                 </div>
             </div>
              <!-- AURAS -->
+              <div class="mt-8">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">🖼️</span>
+            <h2 class="text-lg font-black text-white font-cairo">إطارات وشارات البروفايل السيادية</h2>
+        </div>
+        <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-gold/10 text-sys-gold rounded border border-sys-gold/20">AVATAR BORDERS</span>
+    </div>
+    
+    <div class="mb-4">
+        <input type="text" 
+               id="borders-search" 
+               placeholder="🔍 ابحث عن إطار أو شارة ظل..." 
+               class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-gold focus:outline-none transition-colors"
+               oninput="ShopSystem.filterBorders(this.value)">
+    </div>
+    
+    <div id="borders-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        </div>
+</div>
 <!-- CONSUMABLES -->
 <div class="mt-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 pb-2 border-b border-white/10 gap-4">
@@ -612,6 +632,44 @@ const SECRET_LINKS_DATA = [
     { id: "link-w97", name: "قلعة القيادة وبناء الإمبراطورية (Leadership & Empire Building Fortress)", week: 97, reqLevel: 97, basePrice: 180000, discPrice: 18000, day: 0, url: "link-w97.html", desc: "فنون القيادة وبناء الإمبراطوريات: الإدارة، التأثير، وبناء المملكة السيادية الرقمية والبدنية." },
     { id: "link-w98", name: "مخطط السيادة المطلقة والإتقان الكوني (Absolute Sovereign Mastery Blueprint)", week: 98, reqLevel: 98, basePrice: 185000, discPrice: 18500, day: 1, url: "link-w98.html", desc: "الملف الاستراتيجي النهائي: دمج كل شيء — برمجة، بدن، روح، عقل — في نظام سيادي واحد لا يُقهر." },
     { id: "link-w99", name: "بوابة اللانهاية والسيادة المطلقة (Infinity & Absolute Sovereignty Gateway)", week: 99, reqLevel: 99, basePrice: 200000, discPrice: 20000, day: 2, url: "link-w99.html", desc: "البوابة النهائية: أنت الآن تتحكم في النظام، تختار برامجك بنفسك، وتدبر أمورك باستقلالية تامة — اللانهاية." }
+];
+const SOVEREIGN_BORDERS_DATA = [
+    { 
+        id: "border-shadow-recruit", 
+        nameAr: "شارة مجند الظل", 
+        nameEn: "Shadow Recruit Badge", 
+        price: 500, 
+        reqLevel: 1, 
+        desc: "إطار بنفسجي خافت التوهج يمثل بداية يقظتك وانضمامك لجيش الظلال.", 
+        cssClass: "border-2 border-purple-900/60 shadow-[0_0_12px_rgba(176,38,255,0.4)]" 
+    },
+    { 
+        id: "border-elite-knight", 
+        nameAr: "إطار الفارس النخبة (إيغريس)", 
+        nameEn: "Elite Knight Border", 
+        price: 2500, 
+        reqLevel: 5, 
+        desc: "توهج نيون أزرق مشع بتأثير البرق الصاعق، يمنح صورتك هيبة قادة النخبة الباسلين.", 
+        cssClass: "border-2 border-sys-cyan shadow-[0_0_18px_rgba(0,240,255,0.7)] animate-pulse" 
+    },
+    { 
+        id: "border-shadow-commander", 
+        nameAr: "إطار قائد الجيش (بيرو)", 
+        nameEn: "Shadow Commander", 
+        price: 10000, 
+        reqLevel: 15, 
+        desc: "إطار مضاعف بهالة ظلال داكنة مرعبة تعكس السطوة المطلقة على زنزانات الأنظمة الكبرى.", 
+        cssClass: "border-4 border-double border-purple-600 shadow-[0_0_25px_rgba(147,51,234,0.9)]" 
+    },
+    { 
+        id: "border-shadow-monarch", 
+        nameAr: "تاج عاهل الظلال (سونغ جين وو)", 
+        nameEn: "Shadow Monarch Crown", 
+        price: 50000, 
+        reqLevel: 30, 
+        desc: "الاندماج المطلق لطاقة المونارك. إطار ملوكي بنبض نيون ذهبي وأرجواني مذهل يخطف الأبصار.", 
+        cssClass: "border-2 border-sys-gold shadow-[0_0_35px_rgba(255,215,0,0.95),_inset_0_0_15px_rgba(176,38,255,0.6)]" 
+    }
 ];
 const SYSTEM_ITEMS_DATA = {
     consumables: [
@@ -1295,6 +1353,100 @@ const ShopSystem = {
                     <div class="relative z-10">${btnHtml}</div>
                 </div>`;
         });
+        // دالة رندرة الإطارات في الصفحة
+ShopSystem.renderBorders = function(searchQuery = "") {
+    const container = document.getElementById('borders-grid');
+    if (!container) return;
+    container.innerHTML = "";
+
+    // جلب الإطارات المشتراة والإطار المجهز حالياً لمنع فقدان الحالة
+    let purchasedBorders = JSON.parse(localStorage.getItem('purchased_borders') || '[]');
+    let equippedBorder = localStorage.getItem('equipped_avatar_border') || "";
+    
+    // استدعاء رصيد الذهب والمستوى الحالي من نظامك المالي
+    const currentGold = this.playerData.gold || 0;
+    const currentLevel = this.playerData.level || 1;
+
+    const filtered = SOVEREIGN_BORDERS_DATA.filter(b => 
+        b.nameAr.includes(searchQuery) || b.nameEn.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    filtered.forEach(item => {
+        let btnHtml = "";
+        const isPurchased = purchasedBorders.includes(item.id);
+        const isEquipped = equippedBorder === item.id;
+
+        if (isEquipped) {
+            btnHtml = `<button class="w-full text-xs font-black py-2 px-3 rounded border border-sys-cyan bg-sys-cyan/20 text-sys-cyan shadow-[0_0_10px_rgba(0,240,255,0.3)] select-none">⚡ مُجهّز حالياً</button>`;
+        } else if (isPurchased) {
+            btnHtml = `<button onclick="ShopSystem.equipBorder('${item.id}', '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-purple bg-sys-purple/10 text-sys-purple hover:bg-sys-purple hover:text-black transition duration-300">⚔️ تجهيز الإطار</button>`;
+        } else {
+            // شروط السعر والخصومات السيادية الخاصة بنظامك لبلوغ المستوى
+            const hasLevel = currentLevel >= item.reqLevel;
+            const finalPrice = hasLevel ? Math.floor(item.price * 0.1) : item.price; // خصم 90% عند بلوغ المستوى المطلوب كما في نظامك
+
+            if (currentGold >= finalPrice) {
+                btnHtml = `<button onclick="ShopSystem.buyBorder('${item.id}', ${finalPrice}, '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-green bg-sys-green/10 text-sys-green hover:bg-sys-green hover:text-black transition duration-300">🪙 شراء (${finalPrice} G) ${hasLevel ? '🔥 خصم' : ''}</button>`;
+            } else {
+                btnHtml = `<button class="w-full text-xs font-bold py-2 px-3 rounded border border-slate-850 bg-slate-900 text-slate-600 cursor-not-allowed" disabled>🔒 مغلق (تحتاج ${finalPrice} G)</button>`;
+            }
+        }
+
+        container.innerHTML += `
+            <div class="shop-card rounded-xl p-4 border border-white/5 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -top-10 -left-10 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+                <div class="text-center pb-2 mb-2 border-b border-white/5 relative z-10">
+                    <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-slate-950 flex items-center justify-center ${item.cssClass}">
+                        <span class="text-lg">👤</span>
+                    </div>
+                    <span class="block text-[10px] font-mono font-black text-sys-gold tracking-widest uppercase">${item.nameEn}</span>
+                    <span class="block text-sm font-bold text-white mt-0.5 font-cairo">${item.nameAr}</span>
+                    <span class="inline-block text-[9px] px-1.5 py-0.5 mt-1 rounded font-mono bg-white/5 text-slate-400">REQ: LVL ${item.reqLevel}</span>
+                </div>
+                <p class="text-[11px] text-slate-400 text-center leading-relaxed mb-4 h-12 font-cairo relative z-10">${item.desc}</p>
+                <div class="relative z-10">${btnHtml}</div>
+            </div>`;
+    });
+};
+
+// دالة تصفية وبحث الإطارات
+ShopSystem.filterBorders = function(val) {
+    this.renderBorders(val);
+};
+
+// دالة شراء الإطار وحسم الذهب
+ShopSystem.buyBorder = function(id, price, nameAr) {
+    if (this.playerData.gold < price) return;
+    
+    // حسم الذهب وتحديث الواجهة المالية للنظام
+    this.playerData.gold -= price;
+    
+    let purchasedBorders = JSON.parse(localStorage.getItem('purchased_borders') || '[]');
+    purchasedBorders.push(id);
+    localStorage.setItem('purchased_borders', JSON.stringify(purchasedBorders));
+    
+    // المزامنة الإجبارية مع محرك النظام الرئيسي الخاص بك (monarch_system_data)
+    if (typeof saveSystemData === 'function') { saveSystemData(); } 
+    else if (this.save) { this.save(); }
+    
+    if (typeof confetti !== 'undefined') { confetti({ particleCount: 60, spread: 40, origin: { y: 0.8 } }); }
+    
+    // إشعار فوري
+    if (typeof Toast !== 'undefined') { Toast.show(`تم فك قفل ${nameAr} بنجاح!`, 'success'); } 
+    else { alert(`تم شراء ${nameAr}!`); }
+
+    this.renderBorders();
+};
+
+// دالة تجهيز الإطار وإرسال طاقته الجمالية إلى الهوم بيج
+ShopSystem.equipBorder = function(id, nameAr) {
+    localStorage.setItem('equipped_avatar_border', id);
+    
+    if (typeof Toast !== 'undefined') { Toast.show(`تم تجهيز ${nameAr} بنظامك السيادي.`, 'success'); } 
+    else { alert(`تم تجهيز ${nameAr}!`); }
+    
+    this.renderBorders();
+};
     },
 
     renderAuras() {
