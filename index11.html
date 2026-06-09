@@ -838,6 +838,9 @@ const DirectiveTimer = {
         this.startTime = savedStartTime || Date.now();
         this.isRunning = true;
         localStorage.setItem('directive_start_time', this.startTime.toString());
+        // مثال عند تفعيل خلفية الظلال المتحركة من المتجر
+localStorage.setItem('active_theme_bg', 'shadow_monarch_video.mp4');
+localStorage.setItem('name_glow_color', '#00f0ff'); // توهج أزرق سيادي للاسم
         this.update();
         this.timerInterval = setInterval(() => this.update(), 1000);
     },
@@ -2336,4 +2339,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
 
