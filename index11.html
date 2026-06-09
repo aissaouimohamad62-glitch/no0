@@ -205,6 +205,22 @@
 .avatar-wrapper:hover .avatar-uploader-overlay {
     opacity: 1;
 }
+/* تأثير الطفو الحركي للشخصية المستدعاة */
+@keyframes shadowIdleFloat {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-12px) scale(1.02); }
+}
+
+/* هالة التوهج النيون المتحركة خلف جندي الظل */
+@keyframes shadowPulseGlow {
+    0%, 100% { filter: drop-shadow(0 0 15px rgba(176,38,255,0.5)) drop-shadow(0 0 30px rgba(0,240,255,0.2)); }
+    50% { filter: drop-shadow(0 0 25px rgba(176,38,255,0.8)) drop-shadow(0 0 45px rgba(0,240,255,0.5)); }
+}
+
+.live-shadow-active {
+    animation: shadowIdleFloat 4s ease-in-out infinite, shadowPulseGlow 3s ease-in-out infinite;
+    transition: all 0.5s ease-in-out;
+}
     </style>
     
 <base target="_blank">
@@ -2377,6 +2393,48 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 // مصفوفة مرجعية لمطابقة المعرفات بالكلاسات لضمان الحماي
 </script>
+<div id="live-shadow-container" class="fixed bottom-4 left-4 z-40 hidden md:flex flex-col items-center pointer-events-none group select-none">
+    <div class="bg-black/90 border border-sys-purple/40 text-[10px] text-slate-300 font-cairo px-3 py-1.5 rounded-lg mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-auto shadow-[0_0_15px_rgba(176,38,255,0.2)]">
+        🔒 حارس النظام في وضع الاستعداد...
+    </div>
+    <div class="w-36 h-48 flex items-end justify-center">
+        <img id="live-shadow-img" src="" alt="Shadow Guardian" class="max-w-full max-h-full object-contain live-shadow-active">
+    </div>
+</div>
+<script>// قاعدة بيانات تطابق الواجهة الرئيسية بجلب صور الجنود
+const SHADOW_ASSETS_MAP = {
+    "shadow-igris": "hd_restoration_result_image.png",
+    "shadow-beru": "https://i.postimg.co/zB3y878Q/beru-shadow.png",
+    "shadow-jinwoo": "https://i.postimg.co/8cnZ0Kff/jinwoo-monarch.png"
+};
+
+function updateSovereignCompanion() {
+    const container = document.getElementById('live-shadow-container');
+    const imgElement = document.getElementById('live-shadow-img');
+    if (!container || !imgElement) return;
+
+    // جلب معرف الجندي المفعل من المتجر حالياً
+    const equippedShadowId = localStorage.getItem('equipped_shadow_companion');
+
+    if (equippedShadowId && SHADOW_ASSETS_MAP[equippedShadowId]) {
+        // إظهار الحاوية وتحديث مصدر الصورة لتبدأ الحركة فوراً
+        imgElement.src = SHADOW_ASSETS_MAP[equippedShadowId];
+        container.classList.remove('hidden');
+    } else {
+        // إخفاء الحاوية تماماً في حال عدم تفعيل أي شخصية
+        container.classList.add('hidden');
+    }
+}
+
+// المزامنة عند الإقلاع والتحميل اللحظي
+window.addEventListener('DOMContentLoaded', updateSovereignCompanion);
+
+// دعم المزامنة الفورية في حال تغيير الخيار والصفحتين مفتوحتين معاً
+window.addEventListener('storage', (e) => {
+    if (e.key === 'equipped_shadow_companion') {
+        updateSovereignCompanion();
+    }
+});</script>
 </body>
 </html>
 
