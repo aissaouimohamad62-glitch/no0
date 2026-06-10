@@ -193,32 +193,7 @@
     </a>
 </nav>
 
-<script>
-    function activateCurrentNavigationTab() {
-        const currentPath = window.location.pathname;
-        const currentPage = currentPath.substring(currentPath.lastIndexOf('/') + 1) || 'index11.html';
-        const navLinks = document.querySelectorAll('#sovereign-nav .nav-item');
 
-        navLinks.forEach(link => {
-            const hrefAttr = link.getAttribute('href');
-            if (currentPage === hrefAttr) {
-                // تطبيق التنسيق النيوني المضيء الخاص بالصفحة النشطة حالياً
-                link.className = "nav-item px-4 py-2.5 text-xs font-mono rounded font-extrabold transition-all duration-300 bg-cyan-950/50 text-[var(--sys-cyan)] border border-[var(--sys-cyan)] shadow-[0_0_15px_rgba(0,240,255,0.35),inset_0_0_8px_rgba(0,240,255,0.2)] pointer-events-none";
-                // إضافة مؤشر بصري صغير قبل النص لتأكيد التفعيل الإحترافي
-                const textSpan = link.querySelector('span:last-child');
-                if(textSpan) {
-                    textSpan.innerHTML = `⚡ ${textSpan.innerHTML}`;
-                }
-            }
-        });
-    }
-    // تشغيل الفحص فوراً عند جاهزية مستندات الـ DOM
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', activateCurrentNavigationTab);
-    } else {
-        activateCurrentNavigationTab();
-    }
-</script>
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <div class="lg:col-span-2 space-y-6">
