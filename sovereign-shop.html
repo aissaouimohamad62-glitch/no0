@@ -392,6 +392,33 @@
     <div id="shadows-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         </div>
 </div>
+<div class="mt-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 pb-2 border-b border-white/10 gap-4">
+        <div class="flex items-center justify-between w-full md:w-auto">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">🧠</span>
+                <h2 class="text-lg font-black text-white font-cairo">متجر استدعاء العقول الاصطناعية (AI CORES)</h2>
+            </div>
+            <span class="md:hidden text-[10px] font-mono px-2 py-0.5 bg-sys-cyan/10 text-sys-cyan rounded border border-sys-cyan/20">
+                AI MODELS
+            </span>
+        </div>
+
+        <div class="flex items-center gap-4 w-full md:w-1/2">
+            <input type="text"
+                   id="ai-models-search"
+                   placeholder="🔍 ابحث عن نموذج ذكاء سيادي..."
+                   class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-cyan focus:outline-none transition-colors"
+                   oninput="ShopSystem.filterAiModels(this.value)">
+            <span class="hidden md:inline-block text-[10px] font-mono px-2 py-0.5 bg-sys-cyan/10 text-sys-cyan rounded border border-sys-cyan/20">
+                AI MODELS
+            </span>
+        </div>
+    </div>
+
+    <div id="ai-models-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </div>
+</div>
              <!-- AURAS -->
               <div class="mt-8">
     <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
@@ -653,6 +680,101 @@ const SECRET_LINKS_DATA = [
     { id: "link-w98", name: "مخطط السيادة المطلقة والإتقان الكوني (Absolute Sovereign Mastery Blueprint)", week: 98, reqLevel: 98, basePrice: 185000, discPrice: 18500, day: 1, url: "link-w98.html", desc: "الملف الاستراتيجي النهائي: دمج كل شيء — برمجة، بدن، روح، عقل — في نظام سيادي واحد لا يُقهر." },
     { id: "link-w99", name: "بوابة اللانهاية والسيادة المطلقة (Infinity & Absolute Sovereignty Gateway)", week: 99, reqLevel: 99, basePrice: 200000, discPrice: 20000, day: 2, url: "link-w99.html", desc: "البوابة النهائية: أنت الآن تتحكم في النظام، تختار برامجك بنفسك، وتدبر أمورك باستقلالية تامة — اللانهاية." }
 ];
+// ==========================================
+// SOVEREIGN AI MODELS DATABASE (PREMIUM CORES)
+// ==========================================
+const SOVEREIGN_AI_MODELS_DATA = [
+    {
+        id: "ai-core-selfdev",
+        nameAr: "نواة النخبة لتطوير الذات والعقلية والمعاملة",
+        nameEn: "Mindset & Charisma AI Core",
+        basePrice: 500000, // نصف مليون ذهبة كعرش باهظ
+        reqLevel: 450,
+        desc: "الذكاء المدبر لبناء كاريزما العواهل وتفكيك السلوكيات البشرية وصقل الانضباط الحديدي (Monk Mode).",
+        icon: "🎭",
+        glowClass: "border-sys-purple/30 shadow-[0_0_15px_rgba(176,38,255,0.2)]"
+    },
+    {
+        id: "ai-core-islamic",
+        nameAr: "مفتي النظام للعلوم الشرعية وأمور الدين الإسلامي",
+        nameEn: "Celestial Sharia AI Scholar",
+        basePrice: 600000,
+        reqLevel: 450,
+        desc: "مرشد روحي متعمق في الفقه، العقيدة، وتفسير كتاب الله لمزامنة تقدمك الدنيوي مع حصنك الإيماني.",
+        icon: "🕋",
+        glowClass: "border-sys-gold/30 shadow-[0_0_15px_rgba(255,215,0,0.2)]"
+    },
+    {
+        id: "ai-core-sports",
+        nameAr: "محرك التكييف البدني والرياضات القتالية",
+        nameEn: "Sovereign Combat & Fitness Coach",
+        basePrice: 450000,
+        reqLevel: 450,
+        desc: "المعمار الرياضي الخاص ببرامج الـ PPL وتقنيات Muay Thai و BJJ لبناء الجسد السيادي الخارق.",
+        icon: "⚔️",
+        glowClass: "border-sys-rose/30 shadow-[0_0_15px_rgba(225,29,72,0.2)]"
+    },
+    {
+        id: "ai-core-academic",
+        nameAr: "مستشار التفوق والموسوعة الأكاديمية للدراسة",
+        nameEn: "Experimental Sciences Academic Oracle",
+        basePrice: 400000,
+        reqLevel: 450,
+        desc: "المرشد المتخصص في العلوم التجريبية والفيزياء الكونية لضمان الهيمنة التامة على المناهج والامتحانات.",
+        icon: "📐",
+        glowClass: "border-sys-green/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+    },
+    {
+        id: "ai-core-tech",
+        nameAr: "نواة هندسة وتطوير الذكاء الاصطناعي الآلي",
+        nameEn: "Advanced Machine Learning Core",
+        basePrice: 750000,
+        reqLevel: 450,
+        desc: "خوارزميات سريالية لتدريب الشبكات العصبية العميقة وبناء وكلاء ذكاء اصطناعي واختراق حدود التقنية.",
+        icon: "🤖",
+        glowClass: "border-sys-cyan/30 shadow-[0_0_15px_rgba(0,240,255,0.2)]"
+    },
+    {
+        id: "ai-core-programming",
+        nameAr: "معمارية الخلفيات والواجهات البرمجية الفائقة",
+        nameEn: "Fullstack Architecture Overlord",
+        basePrice: 700000,
+        reqLevel: 450,
+        desc: "مهندس الأكواد الذي يروض بيئات الـ Fullstack ويمنحك الترسانة المطلقة للتحكم الشامل ببيانات مشاريعك.",
+        icon: "💻",
+        glowClass: "border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+    },
+    {
+        id: "ai-core-crafts",
+        nameAr: "دليل إتقان الحرف اليدوية والهندسة التطبيقية",
+        nameEn: "Master Artisan & Crafting Core",
+        basePrice: 350000,
+        reqLevel: 450,
+        desc: "تحويل التفكير المنطقي إلى مهارات تطبيقية ملموسة وإنتاج إبداعي في العالم الحقيقي خارج الأسطر البرمجية.",
+        icon: "🛠️",
+        glowClass: "border-sys-orange/30 shadow-[0_0_15px_rgba(249,115,22,0.2)]"
+    },
+    {
+        id: "ai-core-capitalism",
+        nameAr: "عقل الرأسمالية والعمل الحر والاقتصاد السيادي",
+        nameEn: "Capitalist Sovereign Wealth Engine",
+        basePrice: 900000, // باهظ جداً يعكس طاقة المال
+        reqLevel: 450,
+        desc: "مهندس الأرباح والاستراتيجيات المالية الرقمية لتعظيم عوائد خدماتك المستقلة وتحقيق التوسع المالي النخبوي.",
+        icon: "📈",
+        glowClass: "border-emerald-400/30 shadow-[0_0_15px_rgba(52,211,153,0.2)]"
+    },
+    {
+        id: "ai-core-omnipotent",
+        nameAr: "الـمـونــارك الـمـطـلـق (يجمع كافة العقول والعلوم)",
+        nameEn: "THE ABSOLUTE MONARCH OMNIPOTENT CORE",
+        basePrice: 2500000, // مليونان ونصف ذهبة - القمة النهائية
+        reqLevel: 450,
+        desc: "الاندماج السري والأسمى لكافة النوى الذكاء الاصطناعي. تحكم لا نهائي، بصيرة كونية، وإشراف مطلق على شؤون دينك، بدنك، وعملك.",
+        icon: "🔮",
+        glowClass: "border-sys-gold shadow-[0_0_25px_rgba(255,215,0,0.5),_inset_0_0_15px_rgba(176,38,255,0.3)] animate-pulse"
+    }
+];
 const SOVEREIGN_BORDERS_DATA = [
     { 
         id: "border-shadow-recruit", 
@@ -719,46 +841,87 @@ const SYSTEM_ITEMS_DATA = {
     ]
 };
 const SOVEREIGN_SHADOWS_DATA = [
+{
+        id: "video-shadow-tank",
+        nameAr:"فيديو متحرك تانك",
+        nameEn: "Tank",
+        price: 100000, // يبدأ من 100 ألف عملة
+        reqLevel: 800,
+        desc: "زعيم الدببة الجليدية المخيف الذي واجهه جين وو في البوابة الحمراء. يتميز بالقوة البدنية العالية والجسد المغطى بالدروع الجليدية القاسية.",
+        videoUrl: "Downloads\\\\01010202.mp4", // تم تحويل الامتداد إلى فيديو
+        glowClass: "shadow-glow-cyan"
+    },
+    {
+        id: "video-shadow-iron",
+        nameAr: "فيديو متحرك آيرون",
+        nameEn: "Iron",
+        price: 175000,
+        reqLevel: 900,
+        desc: "يتميز ببنيته الضخمة، واستخدامه للمطرقة والدروع، وقدرته على استفزاز الأعداء وجذب هجماتهم إليه.",
+        videoUrl: "Downloads\\\\0101.mp4",
+        glowClass: "shadow-glow-purple"
+    },
+    {
+        id: "video-shadow-igris",
+        nameAr: "فيديو متحرك إيغريس",
+        nameEn: "Igris",
+        price: 300000,
+        reqLevel: 1000,
+        desc: "يشتهر بأسلوبه الأنيق والسريع في استخدام السيف، وولائه المطلق، وهدوئه الشديد.",
+        videoUrl: "Downloads\\\\0404.mp4",
+        glowClass: "shadow-glow-monarch"
+    },
+    {
+        id: "video-shadow-beru",
+        nameAr:" فيديو متحرك بيرو",
+        nameEn: "Beru",
+        price: 500000,
+        reqLevel: 1500,
+        desc: "ملك النمل المرعب وقائد جيش الظلال المخيف. يمتلك طاقة أرجوانية مدمرة وسرعة خاطفة، وولاءه للمونارك مطلق ولا حدود له.",
+        videoUrl: "Downloads\\\\47.mp4",
+        glowClass: "shadow-glow-monarch"
+    },
     {
         id: "shadow-Tank",
-        nameAr: "تانك",
+        nameAr: "ملصق تانك",
         nameEn: "Tank",
         price: 5000,
         reqLevel: 100,
         desc:" زعيم الدببة الجليدية المخيف الذي واجهه جين وو في البوابة الحمراء. يتميز بالقوة البدنية العالية والجسد المغطى بالدروع الجليدية القاسية.",
-        imgUrl: "01010202.png", // رابط تعبيري كمثال (استبدله برابط صورتك المفضلة)
+        imgUrl: "Downloads\\01010202.png", // رابط تعبيري كمثال (استبدله برابط صورتك المفضلة)
         glowClass: "shadow-glow-cyan"
     },
     {
         id: "shadow-Iron",
-        nameAr:" آيرون",
+        nameAr:" ملصق آيرون",
         nameEn: "Iron",
         price: 20000,
         reqLevel: 450,
         desc: "يتميز ببنيته الضخمة، واستخدامه للمطرقة والدروع، وقدرته على استفزاز الأعداء وجذب هجماتهم إليه.",
-        imgUrl: "0101.png",
+        imgUrl: "Downloads\\0101.png",
         glowClass: "shadow-glow-purple"
     },
     {
         id: "shadow-Igris",
-        nameAr: "إيغريس",
+        nameAr: "ملصق إيغريس",
         nameEn: "Igris",
         price: 75000,
         reqLevel: 600,
         desc: " يشتهر بأسلوبه الأنيق والسريع في استخدام السيف، وولائه المطلق، وهدوئه الشديد.",
-        imgUrl: "0404.png",
+        imgUrl: "Downloads\\0404.png",
         glowClass: "shadow-glow-monarch"
     },
      {
         id: "shadow-Beru",
-        nameAr: "بيرو",
+        nameAr: "ملصق بيرو ",
         nameEn: "Beru",
         price: 95000,
         reqLevel: 800,
         desc: "المستوى المطلق للسيادة. ظهور حاكم الظلال بكامل طاقته وعيونه المتوهجة باللون الأزرق النيون الفاخر.",
-        imgUrl: "47.png",
+        imgUrl: "Downloads\\47.png",
         glowClass: "shadow-glow-monarch"
-    }
+    },
+    
 ];
 
 const SOVEREIGN_TITLES_DATA = [
@@ -1448,6 +1611,75 @@ ShopSystem.renderShadows = function(searchQuery = "") {
     const filtered = SOVEREIGN_SHADOWS_DATA.filter(s => 
         s.nameAr.includes(searchQuery) || s.nameEn.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    ShopSystem.renderShadows = function(searchQuery = "") {
+    const container = document.getElementById('shadows-grid');
+    if (!container) return;
+    container.innerHTML = "";
+
+    // جلب البيانات المخزنة في النظام
+    let purchasedShadows = JSON.parse(localStorage.getItem('purchased_shadows') || '[]');
+    let equippedShadow = localStorage.getItem('equipped_shadow_companion') || "";
+    
+    const currentGold = this.playerData.gold || 0;
+    const currentLevel = this.playerData.level || 1;
+
+    // تصفية البحث
+    const filtered = SOVEREIGN_SHADOWS_DATAT.filter(s => 
+        s.nameAr.includes(searchQuery) || s.nameEn.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    filtered.forEach(item => {
+        let btnHtml = "";
+        const isPurchased = purchasedShadows.includes(item.id);
+        const isEquipped = equippedShadow === item.id;
+
+        // إدارة منطق الأزرار (مجهز، مشتري، متاح للشراء، مغلق)
+        if (isEquipped) {
+            btnHtml = `<button class="w-full text-xs font-black py-2 px-3 rounded border border-sys-purple bg-sys-purple/20 text-sys-purple shadow-[0_0_12px_rgba(176,38,255,0.4)] select-none">🔮 مستدعى حالياً</button>`;
+        } else if (isPurchased) {
+            btnHtml = `<button onclick="ShopSystem.equipShadow('${item.id}', '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-cyan bg-sys-cyan/10 text-sys-cyan hover:bg-sys-cyan hover:text-black transition duration-300">⚡ استدعاء للجبهة</button>`;
+        } else {
+            // تطبيق نظام الخصومات الخاص بلوحة تحكمك عند بلوغ المستوى المطلوب
+            const hasLevel = currentLevel >= item.reqLevel;
+            const finalPrice = hasLevel ? Math.floor(item.price * 0.1) : item.price; 
+
+            if (currentGold >= finalPrice) {
+                btnHtml = `<button onclick="ShopSystem.buyShadow('${item.id}', ${finalPrice}, '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-green bg-sys-green/10 text-sys-green hover:bg-sys-green hover:text-black transition duration-300">🪙 فتح البوابة (${finalPrice.toLocaleString()} G)</button>`;
+            } else {
+                btnHtml = `<button class="w-full text-xs font-bold py-2 px-3 rounded border-slate-850 bg-slate-900 text-slate-600 cursor-not-allowed" disabled>🔒 مغلق (تحتاج ${finalPrice.toLocaleString()} G)</button>`;
+            }
+        }
+
+        // توليد الكرت برمجياً مع مشغل الفيديو السينمائي الفاخر
+        container.innerHTML += `
+            <div class="shop-card rounded-xl p-5 border border-white/5 flex flex-col justify-between relative bg-gradient-to-b from-black/40 to-slate-950/80 group">
+                <div class="text-center pb-3 mb-3 border-b border-white/5">
+                    
+                    <!-- حاوية عرض واستعراض الفيديو الشخصي للظل -->
+                    <div class="w-32 h-36 mx-auto mb-4 bg-black/80 rounded-lg border border-white/5 flex items-end justify-center overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-t from-sys-purple/10 to-transparent pointer-events-none z-10"></div>
+                        
+                        <!-- مشغل الفيديو الذكي المدمج بالفلاتر وهالات النيون -->
+                        <video autoplay 
+                               loop 
+                               muted 
+                               playsinline 
+                               class="max-w-full max-h-full object-contain transform group-hover:scale-110 transition duration-500 relative z-0"
+                               style="mix-blend-mode: screen; filter: brightness(1.6) contrast(1.2) drop-shadow(0 0 10px rgba(176,38,255,0.3));">
+                            <source src="${item.videoUrl}" type="video/mp4">
+                            متصفحك لا يدعم تشغيل طاقة الظلال.
+                        </video>
+                    </div>
+                    
+                    <span class="block text-[9px] font-mono font-black text-sys-purple tracking-widest uppercase">${item.nameEn}</span>
+                    <h3 class="text-base font-black text-white mt-0.5 font-cairo">${item.nameAr}</h3>
+                    <span class="inline-block text-[9px] px-2 py-0.5 mt-1 rounded font-mono bg-sys-purple/5 text-sys-purple border border-sys-purple/10">MINIMUM LVL: ${item.reqLevel}</span>
+                </div>
+                <p class="text-[11px] text-slate-400 text-center leading-relaxed mb-4 h-16 overflow-y-auto font-cairo">${item.desc}</p>
+                <div>${btnHtml}</div>
+            </div>`;
+    });
+};
 
     filtered.forEach(item => {
         let btnHtml = "";
@@ -1808,12 +2040,109 @@ this.playerData.equippedAura = parsed.equippedAura || "";
     },
 
     renderShop() {
-    this.renderSecretLinks();
-    this.renderTitles();
-    this.renderConsumables();
-    this.renderVouchers();
-    this.renderAuras();
-},
+        this.renderSecretLinks();
+        this.renderTitles();
+        this.renderConsumables();
+        this.renderVouchers();
+        this.renderAuras();
+        this.renderAiModels(); // <--- ضَع هذا السطر هنا لتفعيل العرض التلقائي المباشر
+    },
+// ==========================================
+    // AI MODELS CORE SYSTEM FUNCTIONS
+    // ==========================================
+    renderAiModels(searchQuery = "") {
+        const container = document.getElementById('ai-models-grid');
+        if (!container) return;
+        container.innerHTML = "";
+
+        // جلب البيانات المخزنة من نظام المحرك الموحد أو الـ LocalStorage
+        let purchasedAi = JSON.parse(localStorage.getItem('purchased_ai_cores') || '[]');
+        let equippedAi = localStorage.getItem('equipped_ai_core') || "";
+        
+        const currentGold = this.playerData.gold || 0;
+        const currentLevel = this.playerData.level || 1;
+
+        // تصفية نتائج البحث الفوري
+        const filtered = SOVEREIGN_AI_MODELS_DATA.filter(model => 
+            model.nameAr.includes(searchQuery) || model.nameEn.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        filtered.forEach(item => {
+            let btnHtml = "";
+            const isPurchased = purchasedAi.includes(item.id);
+            const isEquipped = equippedAi === item.id;
+
+            // حساب السعر بناءً على مستوى اللاعب (شرط عتبة الـ 450 فما فوق خصم 90%)
+            const hasLevelThreshold = currentLevel >= item.reqLevel;
+            const finalPrice = hasLevelThreshold ? Math.floor(item.basePrice * 0.1) : item.basePrice;
+
+            if (isEquipped) {
+                btnHtml = `<button class="w-full text-xs font-black py-2 px-3 rounded border border-sys-cyan bg-sys-cyan/20 text-sys-cyan shadow-[0_0_12px_rgba(0,240,255,0.4)] select-none">⚡ النواة نشطة حالياً</button>`;
+            } else if (isPurchased) {
+                btnHtml = `<button onclick="ShopSystem.equipAiModel('${item.id}', '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-purple bg-sys-purple/10 text-sys-purple hover:bg-sys-purple hover:text-black transition duration-300">🧬 استدعاء النواة للوعي</button>`;
+            } else {
+                if (currentGold >= finalPrice) {
+                    btnHtml = `<button onclick="ShopSystem.buyAiModel('${item.id}', ${finalPrice}, '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-green bg-sys-green/10 text-sys-green hover:bg-sys-green hover:text-black transition duration-300">🪙 فك تشفير النواة (${finalPrice.toLocaleString()} G) ${hasLevelThreshold ? '🔥 خصم 90%' : ''}</button>`;
+                } else {
+                    btnHtml = `<button class="w-full text-xs font-bold py-2 px-3 rounded border-slate-850 bg-slate-900 text-slate-600 cursor-not-allowed" disabled>🔒 الرصيد غير كافٍ (${finalPrice.toLocaleString()} G)</button>`;
+                }
+            }
+
+            container.innerHTML += `
+                <div class="shop-card rounded-xl p-5 border flex flex-col justify-between relative bg-gradient-to-b from-black/60 to-slate-950/90 group ${item.glowClass}">
+                    <div class="text-center pb-3 mb-3 border-b border-white/5 relative">
+                        <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-black/80 border border-white/10 flex items-center justify-center text-3xl group-hover:scale-110 transition duration-300">
+                            ${item.icon}
+                        </div>
+                        <span class="block text-[9px] font-mono font-black text-sys-cyan tracking-widest uppercase">${item.nameEn}</span>
+                        <h3 class="text-sm font-black text-white mt-1 font-cairo">${item.nameAr}</h3>
+                        <span class="inline-block text-[9px] px-2 py-0.5 mt-2 rounded font-mono ${hasLevelThreshold ? 'bg-sys-green/10 text-sys-green border border-sys-green/20' : 'bg-sys-rose/10 text-sys-rose border border-sys-rose/20'}">
+                            ${hasLevelThreshold ? '🔥 تم تفعيل خصم النخبة لقهر الأسعار' : `🔒 خصم العواهل يفتح بمستوى: ${item.reqLevel}`}
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 text-center leading-relaxed mb-5 h-12 overflow-y-auto font-cairo">${item.desc}</p>
+                    <div>${btnHtml}</div>
+                </div>`;
+        });
+    },
+
+    filterAiModels(val) {
+        this.renderAiModels(val);
+    },
+
+    buyAiModel(id, price, nameAr) {
+        if (this.playerData.gold < price) return;
+        
+        // خصم الذهب وتحديث الواجهة المالية للـ Dashboard
+        this.playerData.gold -= price;
+        
+        let purchasedAi = JSON.parse(localStorage.getItem('purchased_ai_cores') || '[]');
+        purchasedAi.push(id);
+        localStorage.setItem('purchased_ai_cores', JSON.stringify(purchasedAi));
+        
+        // المزامنة التامة مع دالة الحفظ المركزية لنظام لوسيان للإصلاح الشامل
+        this.saveState();
+        
+        if (typeof confetti !== 'undefined') { 
+            confetti({ particleCount: 100, spread: 70, colors: ['#00f0ff', '#ffd700', '#b026ff'] }); 
+        }
+        
+        this.showAlert("🧠 تم استدعاء النواة الفائقة", `تم شراء ودمج ${nameAr} بنجاح داخل وعي النظام التكتيكي.`, "sys-green");
+        this.renderAiModels();
+    },
+
+    equipAiModel(id, nameAr) {
+        localStorage.setItem('equipped_ai_core', id);
+        
+        // إرسال إشعار عبر قنوات البث المتزامنة للواجهات الأخرى إذا وجدت
+        if (typeof BroadcastChannel !== 'undefined') {
+            const bc = new BroadcastChannel('sovereign_sync');
+            bc.postMessage({ type: 'AI_CORE_EQUIPPED', coreId: id });
+        }
+        
+        this.showAlert("🧬 تم تنشيط العقل الاصطناعي", `نواة ${nameAr} تفرض هيمنتها الاستشارية الآن على نوافذ حوار Monarch AI.`, "sys-cyan");
+        this.renderAiModels();
+    },
     renderSecretLinks() {
         const container = document.getElementById('links-grid');
         container.innerHTML = "";
