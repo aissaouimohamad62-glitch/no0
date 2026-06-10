@@ -1189,131 +1189,353 @@
                 const query = input.toLowerCase().replace(/أ/g, 'ا').replace(/إ/g, 'ا').replace(/ة/g, 'ه');
                 const checkMatch = (keywords) => keywords.some(kw => query.includes(kw));
 
-                if (checkMatch(['كتله', 'الكتله النشطه', 'الوقت'])) {
-                    const now = new Date();
-                    return this.getCurrentBlockAnalysis({
-                        dayIndex: now.getDay(), dayName: Utils.getDayName(now.getDay()),
-                        currentTime: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`
-                    });
-                }
-                if (checkMatch([
-    // --- 1. نصيحة التطوير (Development Advice) ---
-    'نصيحه', 'تطور', 'تطوير', 'ارشاد', 'توجيه', 'ترقية', 'ارتقاء', 'نصائح', 'دليل_النمو', 'كيف_اتطور', 'طريقة_التقدم', 'رفع_المستوى', 'زيادة_الخبرة',
-    'advice', 'development', 'upgrade', 'progression', 'levelup', 'growth', 'guide', 'evolve', 'improvement', 'how_to_grow', 'advance', 'tips'
-])) {
-    return this.getDevelopmentAdvice(PlayerSync.data.level, ProgramManager.activeProgramId);
-}
+               // =====================================================================================
+// المحرك المعرفي المطور لتطوير الذات العقلية — ULTIMATE COGNITIVE DEVELOPMENT ENGINE
+// =====================================================================================
 
+// --- [1] إرشاد التطوير الفكري وعقلية النمو (Mindset & Intellectual Growth) ---
 if (checkMatch([
-    // --- 2. تقييم الوضع الحالي (Status Evaluation) ---
-    'وضعي', 'تقييم', 'حالي', 'تقرير', 'فحص', 'مستواي', 'الوضعية', 'تشخيص', 'بروفايل', 'حالتcurrent', 'وضعي_الحالي', 'كيف_احوالي',
-    'evaluation', 'status', 'profile', 'assessment', 'report', 'audit', 'my_state', 'condition', 'checkup', 'my_status', 'analyze_me'
-])) {
-    return this.getStatusEvaluation({ stats: PlayerSync.data.stats });
-}
-
-if (checkMatch([
-    // --- 3. قانون وولف للعظام (Wolff's Law) ---
-    'وولف', 'عظام', 'قانون', 'ولف', 'الهيكل_العظمي', 'كثافة', 'جهد_العظام', 'تكيف_العظام', 'قانون_وولف', 'صلابة_العظام', 'تحميل_ميكانيكي',
-    'wolff', 'bone', 'density', 'skeletal', 'remodeling', 'wolffs_law', 'adaptation', 'calcification', 'bone_strength', 'orthopedic', 'load'
-])) {
-    return this.getWolffLawExplanation();
-}
-
-if (checkMatch([
-    // --- 4. وحدة المهام النشطة (Active Quests) ---
-    'مهام', 'مهمه', 'نشط', 'تاسك', 'مهمات', 'واجبات', 'تحديات', 'العمليات', 'الأهداف_اليومية', 'جدول_اليوم', 'المهمة_النشطة', 'تاسكات', 'كويست',
-    'quest', 'quests', 'task', 'tasks', 'mission', 'missions', 'active', 'daily_objectives', 'todo', 'current_missions', 'target_today', 'active_quest'
-])) {
-    return `<b>[وحدة المهام النشطة — ACTIVE QUESTS] ⚔️</b><br><br>هذه الواجهة هي غرفة العمليات لإدارة أهدافك اليومية. تتكون من تتبع تقدمك مع مؤقت تنازلي، ونظام المكافآت والعقوبات الشامل. إكمال المهمة يمنحك الذهب والخبرة.`;
-}
-
-if (checkMatch([
-    // --- 5. زنازين التدريب العقلي (Mental Dungeons) ---
-    'زنزان', 'دنجن', 'شطرنج', 'هانوي', 'لعب', 'زنازين', 'لعبة', 'لغز', 'الغاز', 'متاهة', 'أبراج_هانوي', 'تحدي_عقلي', 'ذكاء_اصطناعي', 'لعب_شطرنج',
-    'dungeon', 'dungeons', 'chess', 'hanoi', 'puzzle', 'puzzles', 'minigame', 'mental_training', 'game', 'brain_games', 'tower_of_hanoi', 'tactical'
-])) {
-    return `<b>[زنازين التدريب العقلي — MENTAL DUNGEONS] 🌋</b><br><br>هذا القسم مخصص لاختبار حدود ذكائك التكتيكي عبر الشطرنج المتطور ضد الذكاء الاصطناعي أو لغز أبراج هانوي الرياضي متعدد الأقراص.`;
-}
-
-if (checkMatch([
-    // --- 6. التوجيه الروحاني (Spiritual Advice) ---
-    'صلاه', 'قران', 'مصحف', 'روح', 'صلوات', 'أذكار', 'عبادة', 'روحاني', 'القرآن', 'إيماني', 'جانب_روحي', 'الذكر', 'المصحف_الشريف', 'تقرب',
-    'prayer', 'quran', 'spiritual', 'soul', 'faith', 'dhikr', 'worship', 'spirituality', 'islamic', 'koran', 'prayers', 'inner_peace'
-])) {
-    return this.getSpiritualAdvice(PlayerSync.data.level);
-}
-
-if (checkMatch([
-    // --- 7. إحصائيات العقل والجسم (Brain & Body Stats) ---
-    'احصاء', 'عقل', 'سمات', 'خصائص', 'إحصائيات', 'السمات_السيادية', 'القدرات', 'ارقام', 'مؤشرات', 'مستوى_الذكاء', 'الخصائص_الخمسة', 'البنية',
-    'brain', 'stats', 'attributes', 'statistics', 'int', 'sen', 'str', 'vit', 'agi', 'capabilities', 'parameters', 'core_stats', 'stat_analysis'
-])) {
-    return `<b>[وحدة إحصائيات العقل والجسم — BRAIN STATS] 🧠</b><br><br>واجهة تحليلية متقدمة تراقب تطور السمات السيادية الخمس (INT, SEN, STR, VIT, AGI) مع محلل تلقائي لتحديد نمط الشخصية السائد بناءً على مجهودك.`;
-}
-// ==========================================
-// وحدة تطوير الذات والقدرات العقلية — MENTAL DEVELOPMENT MATRIX
-// ==========================================
-
-if (checkMatch([
-    // --- 1. نصائح التطوير الفكري وعقلية النمو (Mindset & Growth Advice) ---
-    'نصيحه', 'تطور', 'تطوير', 'ارشاد', 'توجيه', 'ترقية', 'ارتقاء', 'نصائح', 'تثقيف', 'توسيع_المدارك', 'عقلية_النمو', 'تطوير_الذكاء', 'ترقية_الفكر', 'بناء_العقل', 'تحسين_التفكير', 'كيف_اتطور', 'استراتيجية_الفكر',
-    'advice', 'development', 'upgrade', 'progression', 'growth', 'guide', 'evolve', 'improvement', 'mindset_growth', 'cognitive_upgrade', 'intellectual_advancement', 'brain_coaching', 'how_to_think', 'mental_evolution'
+    'نصيحه', 'تطور', 'تطوير', 'ارشاد', 'توجيه', 'ترقية', 'ارتقاء', 'نصائح', 'تثقيف', 'توسيع_المدارك', 'عقلية_النمو', 'تطوير_الذكاء', 'ترقية_الفكر', 'بناء_العقل', 'تحسين_التفكير', 'كيف_اتطور', 'استراتيجية_الفكر', 'ارشادات', 'توجيهات', 'نصيحة_اليوم', 'طريقة_التطوير', 'خطوات_النمو', 'تنمية_فكرية', 'كوتشينج_عقلي', 'نصيحه_ذكاء', 'تحديث_العقل', 'تطوير_ذاتي', 'تطوير_الذات', 'تنمية_بشرية', 'توسيع_الفكر', 'حكمة_اليوم', 'مسار_النمو', 'توجيه_فكري', 'نصائح_مستقبلية', 'كيف_انمو', 'رفع_الكفاءة', 'تحسين_ذاتي', 'توسيع_الوعي', 'منهجية_التفكير', 'تطوير_عقلي',
+    'advice', 'development', 'upgrade', 'progression', 'growth', 'guide', 'evolve', 'improvement', 'mindset_growth', 'cognitive_upgrade', 'intellectual_advancement', 'brain_coaching', 'how_to_think', 'mental_evolution', 'self_improvement', 'personal_growth', 'mindset_shift', 'mental_upgrade', 'intellectual_growth', 'mentorship', 'coaching_tips', 'growth_hacks', 'brain_expansion', 'self_actualization', 'metacognition_tips', 'cognitive_booster', 'actionable_advice', 'masterclass', 'brain_hacks', 'daily_wisdom', 'intellect_evolution', 'mind_hacking'
 ])) {
     return this.getMentalGrowthAdvice(PlayerSync.data.level, ProgramManager.activeProgramId);
 }
 
+// --- [2] تشخيص وتحليل الوضع الذهني اللحظي (Real-Time Cognitive Status & Focus Audit) ---
 if (checkMatch([
-    // --- 2. تقييم الوضع الذهني ومستوى التركيز الحالي (Cognitive Status & Focus Evaluation) ---
-    'وضعي', 'تقييم', 'حالي', 'تقرير', 'فحص', 'مستواي', 'تشخيص', 'الوضعية', 'حالة_الانتباه', 'مستوى_التركيز', 'فحص_الوعي', 'تشتت_ذهني', 'تقرير_عقلي', 'وضعي_الفكري', 'مستوى_اليقظة', 'تحليل_الاداء_الذهني',
-    'evaluation', 'status', 'profile', 'assessment', 'report', 'audit', 'my_state', 'condition', 'checkup', 'cognitive_audit', 'focus_check', 'mental_clarity_status', 'attention_span', 'brain_fog_check', 'mind_state'
+    'وضعي', 'تقييم', 'حالي', 'تقرير', 'فحص', 'مستواي', 'تشخيص', 'الوضعية', 'حالة_الانتباه', 'مستوى_التركيز', 'فحص_الوعي', 'تشتت_ذهني', 'تقرير_عقلي', 'وضعي_الفكري', 'مستوى_اليقظة', 'تحليل_الاداء_الذهني', 'وضعي_الحالي', 'كيف_احوالي', 'تقييم_مستواي', 'فحص_دماغي', 'وضعية_التركيز', 'اختبار_التركيز', 'تقرير_الانتباه', 'مستواى', 'حالتنا_الذهنية', 'تحليل_الوعي', 'مستواي_الحالي', 'شيك_اب_عقلي', 'رادار_التركيز', 'مؤشر_التشتت', 'حالة_الدماغ_الآن', 'فحص_الانتاجية', 'تقييم_ادائي', 'مراجعة_ذهنية', 'مستوى_استيعابي', 'هل_انا_مشتت',
+    'evaluation', 'status', 'profile', 'assessment', 'report', 'audit', 'my_state', 'condition', 'checkup', 'cognitive_audit', 'focus_check', 'mental_clarity_status', 'attention_span', 'brain_fog_check', 'mind_state', 'current_status', 'performance_report', 'mental_efficiency', 'focus_level', 'diagnostic_report', 'my_profile', 'cognitive_assessment', 'am_i_focused', 'clarity_check', 'productivity_audit', 'distraction_score', 'alertness_level', 'real_time_status', 'brain_health_status', 'cognitive_efficiency'
 ])) {
     return this.getMentalStatusEvaluation({ stats: PlayerSync.data.stats });
 }
 
+// --- [3] فسيولوجيا الدماغ وقانون التكيف تحت الضغط (Neuroplasticity & Overload Law) ---
 if (checkMatch([
-    // --- 3. قانون المرونة العصبية والتكيف العقلي (Neuroplasticity & Cognitive Friction) ---
-    // (تم تحويل قانون وولف هنا إلى النسخة العقلية: تكيف الدماغ مع الجهد الفكري)
-    'وولف', 'عظام', 'قانون', 'ولف', 'مرونة_عصبية', 'تكييف_العقل', 'الجهد_الذهني', 'تحمل_عقلي', 'بناء_المسارات_العصبية', 'المقاومة_الفكرية', 'تكيف_الدماغ', 'المرونة_المعرفية', 'الجهد_المعرفي',
-    'wolff', 'bone', 'neuroplasticity', 'cognitive_friction', 'mental_wolff_law', 'brain_rewiring', 'synaptic_plasticity', 'mental_load', 'cognitive_adaptation', 'brain_malleability', 'neural_growth', 'mental_friction'
+    'وولف', 'عظام', 'قانون', 'ولف', 'مرونة_عصبية', 'تكييف_العقل', 'الجهد_الذهني', 'تحمل_عقلي', 'بناء_المسارات_العصبية', 'المقاومة_الفكرية', 'تكيف_الدماغ', 'المرونة_المعرفية', 'الجهد_المعرفي', 'قانون_وولف', 'تكيف_عصبي', 'الضغط_الذهني', 'تحمل_معرفي', 'مرونه_عصبيه', 'اعادة_تأسيس_العقل', 'قانون_الجهد', 'المقاومة_العقلية', 'الجهد_العصبي', 'خلايا_عصبية', 'نمو_المشابك', 'نظرية_التكيف', 'اجهاد_عقلي', 'قانون_التكيف', 'كيف_يتكيف_الدماغ', 'ديناميكية_العقل', 'توسيع_الروابط_العصبية',
+    'wolff', 'bone', 'neuroplasticity', 'cognitive_friction', 'mental_wolff_law', 'brain_rewiring', 'synaptic_plasticity', 'mental_load', 'cognitive_adaptation', 'brain_malleability', 'neural_growth', 'mental_friction', 'neuroplastic_adaptation', 'mental_resistance', 'cognitive_load', 'synaptic_growth', 'brain_plasticity', 'neural_pathways', 'cognitive_flexibility', 'mental_endurance_law', 'brain_molding', 'hebbian_learning', 'mental_adaptation_theory', 'neurogenesis'
 ])) {
-    return this.getNeuroplasticityExplanation(); // دالة تفسير المرونة العصبية والتكيف مع الضغط الذهني
+    return this.getNeuroplasticityExplanation();
 }
 
+// --- [4] المهام الفكرية وتحديات الانضباط المعرفي (Cognitive Quests & Execution Drills) ---
 if (checkMatch([
-    // --- 4. المهام الذهنية والتحديات المعرفية اليومية (Cognitive Quests & Daily Drills) ---
-    'مهام', 'مهمه', 'نشط', 'تاسك', 'مهمات', 'واجبات', 'تحديات', 'الأهداف_اليومية', 'جدول_اليوم', 'المهمة_النشطة', 'تاسكات_عقلية', 'مهمة_تركيز', 'تمارين_ذهنية_نشطة', 'كويست_فكري', 'انجاز_معرفي',
-    'quest', 'quests', 'task', 'tasks', 'mission', 'missions', 'active', 'daily_objectives', 'todo', 'mental_quests', 'cognitive_drills', 'focus_tasks', 'daily_brain_targets', 'intellectual_missions', 'active_quest'
+    'مهام', 'مهمه', 'نشط', 'تاسك', 'مهمات', 'واجبات', 'تحديات', 'الأهداف_اليومية', 'جدول_اليوم', 'المهمة_النشطة', 'تاسكات_عقلية', 'مهمة_تركيز', 'تمارين_ذهنية_نشطة', 'كويست_فكري', 'انجاز_معرفي', 'مهمات_اليوم', 'تاسكاتي', 'قائمة_المهام', 'مهمتي_النشطة', 'التحدي_اليومي', 'تارغت_اليوم', 'اهداف_يومية', 'تحديات_ذهنية', 'المهمه_النشطه', 'المهام_المطلوبة', 'جدول_التحديات', 'كويستات', 'لستة_المهام', 'ماذا_افعل_الآن', 'تاسك_اليوم', 'اجندة_العقل', 'المهام_الذهنية',
+    'quest', 'quests', 'task', 'tasks', 'mission', 'missions', 'active', 'daily_objectives', 'todo', 'mental_quests', 'cognitive_drills', 'focus_tasks', 'daily_brain_targets', 'intellectual_missions', 'active_quest', 'todo_list', 'daily_challenges', 'active_missions', 'cognitive_tasks', 'brain_drills', 'focus_drills', 'mental_workout', 'daily_routine', 'executive_tasks', 'objective_list', 'current_targets', 'task_manager', 'grind_today', 'focus_blueprint'
 ])) {
     return `<b>[وحدة المهام الذهنية النشطة — COGNITIVE QUESTS] ⚔️</b><br><br>هذه الواجهة هي غرفة العمليات لإدارة تمارينك الفكرية اليومية. تتكون من تتبع تقدمك المعرفي مع مؤقت لتركيزك العميق (Deep Work)، ونظام المكافآت لزيادة الانضباط. إكمال المهام يرفع من خبرتك العقلية.`;
 }
 
+// --- [5] زنازين المنطق ومحاكاة الذكاء الاستراتيجي (Strategic Logic & Tactical Dungeons) ---
 if (checkMatch([
-    // --- 5. زنازين التفكير الاستراتيجي والذكاء المنطقي (Strategic & Tactical Dungeons) ---
-    'زنزان', 'دنجن', 'شطرنج', 'هانوي', 'لعب', 'زنازين', 'لعبة', 'لغز', 'الغاز', 'متاهة', 'أبراج_هانوي', 'تحدي_عقلي', 'ذكاء_اصطناعي', 'لعب_شطرنج_منطقي', 'محاكاة_المنطق', 'ميدان_التكتيك',
-    'dungeon', 'dungeons', 'chess', 'hanoi', 'puzzle', 'puzzles', 'minigame', 'mental_training', 'game', 'brain_games', 'tower_of_hanoi', 'tactical_dungeons', 'logic_puzzles', 'strategic_chess', 'cognitive_arena'
+    'زنزان', 'دنجن', 'شطرنج', 'هانوي', 'لعب', 'زنازين', 'لعبة', 'لغز', 'الغاز', 'متاهة', 'أبراج_هانوي', 'تحدي_عقلي', 'ذكاء_اصطناعي', 'لعب_شطرنج_منطقي', 'محاكاة_المنطق', 'ميدان_التكتيك', 'دنجنات', 'متاهات_عقلية', 'لعبة_الشطرنج', 'لعبة_هانوي', 'حل_الغاز', 'العاب_ذكاء', 'تدريب_تكتيكي', 'تحديات_الذكاء', 'زنزانة_الذكاء', 'العاب_منطقية', 'غرف_الالغاز', 'اختبار_تكتيكي', 'محاكاة_ستراتيجية', 'دنجن_المنطق', 'الغاز_رياضية', 'تحدي_شطرنج',
+    'dungeon', 'dungeons', 'chess', 'hanoi', 'puzzle', 'puzzles', 'minigame', 'mental_training', 'game', 'brain_games', 'tower_of_hanoi', 'tactical_dungeons', 'logic_puzzles', 'strategic_chess', 'cognitive_arena', 'mind_games', 'chess_ai', 'puzzle_solving', 'tactical_arena', 'logic_games', 'strategic_dungeon', 'problem_solving_arena', 'chess_match', 'hanoi_tower', 'riddle', 'riddles', 'brainTeasers', 'algorithmic_puzzles'
 ])) {
     return `<b>[زنازين التدريب التكتيكي — MENTAL DUNGEONS] 🌋</b><br><br>هذا القسم مصمم خصيصاً لاختبار وتوسيع حدود ذكائك التكتيكي والاستراتيجي عبر الشطرنج المتقدم ضد خوارزميات الذكاء الاصطناعي، أو لغز أبراج هانوي الرياضي المعقد لبناء قدرات حل المشكلات.`;
 }
 
+// --- [6] اليقظة الذهنية والصفاء الروحي وتقليل الضجيج (Mindfulness & Neuro-Serenity) ---
 if (checkMatch([
-    // --- 6. الصفاء العقلي واليقظة الذهنية والروحية (Mental Serenity & Mindfulness) ---
-    'صلاه', 'قران', 'مصحف', 'روح', 'صلوات', 'أذكار', 'عبادة', 'روحاني', 'القرآن', 'إيماني', 'صفاء_ذهني', 'تدبر', 'تركيز_روحي', 'هدوء_عقلي', 'سلام_داخلي', 'يقظة_عقلية', 'تأمل_إيماني',
-    'prayer', 'quran', 'spiritual', 'soul', 'faith', 'dhikr', 'worship', 'spirituality', 'inner_peace', 'mindfulness', 'mental_serenity', 'spiritual_focus', 'cognitive_calm', 'meditative_state'
+    'صلاه', 'قران', 'مصحف', 'روح', 'صلوات', 'أذكار', 'عبادة', 'روحاني', 'القرآن', 'إيماني', 'صفاء_ذهني', 'تدبر', 'تركيز_روحي', 'هدوء_عقلي', 'سلام_داخلي', 'يقظة_عقلية', 'تأمل_إيماني', 'اذكار', 'سلام_نفسي', 'هدوء_نفسي', 'سكينة', 'طمأنينة', 'تأمل_روحي', 'تخفيف_التوتر', 'القران_الكريم', 'تصفية_الذهن', 'الروحانيات', 'صفاء_العقل', 'شحن_روحي', 'ازالة_القلق', 'سكون_نفسي', 'تركيز_عميق_روحي', 'توازن_نفسي', 'تأمل_عقلي', 'تخفيض_الضوضاء', 'استرخاء_ذهني',
+    'prayer', 'quran', 'spiritual', 'soul', 'faith', 'dhikr', 'worship', 'spirituality', 'inner_peace', 'mindfulness', 'mental_serenity', 'spiritual_focus', 'cognitive_calm', 'meditative_state', 'serenity', 'soul_healing', 'calmness', 'mental_peace', 'spirit_upgrade', 'faith_booster', 'anxiety_relief', 'stress_reduction', 'meditation', 'deep_calm', 'divine_connection', 'emotional_balance', 'mental_decompress', 'stoic_calm'
 ])) {
     return this.getSpiritualMentalAdvice(PlayerSync.data.level);
 }
 
+// --- [7] مصفوفة الإحصائيات الحيوية والسمات المعرفية السيادية (Core Attributes & Cognitive Metrics) ---
 if (checkMatch([
-    // --- 7. إحصائيات وسمات العقل السيادية (Core Cognitive Attributes & Brain Stats) ---
-    'احصاء', 'عقل', 'سمات', 'خصائص', 'إحصائيات', 'السمات_السيادية', 'القدرات', 'ارقام', 'مؤشرات', 'مستوى_الذكاء', 'الخصائص_الخمسة', 'البنية_المعرفية', 'سمات_الذكاء', 'إحصائيات_الدماغ', 'تحليل_النمط_المعرفي',
-    'brain', 'stats', 'attributes', 'statistics', 'int', 'sen', 'str', 'vit', 'agi', 'capabilities', 'parameters', 'core_stats', 'stat_analysis', 'cognitive_attributes', 'brain_stats', 'intellectual_metrics'
+    'احصاء', 'عقل', 'سمات', 'خصائص', 'إحصائيات', 'السمات_السيادية', 'القدرات', 'ارقام', 'مؤشرات', 'مستوى_الذكاء', 'الخصائص_الخمسة', 'البنية_المعرفية', 'سمات_الذكاء', 'إحصائيات_الدماغ', 'تحليل_النمط_المعرفي', 'احصائيات', 'ستاتس', 'ارقامي', 'مؤشراتي', 'خصائص_العقل', 'السمات_الخمسة', 'تحليل_السمات', 'بياناتي_العقلية', 'لوحة_التحكم_العقلية', 'مؤشرات_الأداء', 'سماتي', 'نقاط_القوة', 'ارقام_الذكاء', 'رادار_السمات', 'لوحة_الاحصائيات', 'مستويات_السمات', 'نقاط_الخصائص', 'بيانات_المعالجة',
+    'brain', 'stats', 'attributes', 'statistics', 'int', 'sen', 'str', 'vit', 'agi', 'capabilities', 'parameters', 'core_stats', 'stat_analysis', 'cognitive_attributes', 'brain_stats', 'intellectual_metrics', 'cognitive_profile', 'mind_metrics', 'ability_scores', 'performance_stats', 'attribute_points', 'neuro_stats', 'mental_parameters', 'stat_dashboard', 'skill_tree_stats', 'cognitive_inventory'
 ])) {
     return `<b>[وحدة إحصائيات المعالجة العقلية — BRAIN STATS] 🧠</b><br><br>واجهة تحليلية متقدمة تراقب تطور السمات السيادية الخمس من منظور عقلي (الذكاء INT، الاستشعار والتركيز SEN، الإرادة الذهنية STR، مرونة التحمل النفسي VIT، وسرعة البديهة AGI) لتحديد نمط تفكيرك السائد.`;
 }
+// =====================================================================================
+// الدفعة الأولى: توسعة الأنظمة الإدراكية — COGNITIVE SUBSYSTEMS (BATCH 1/10)
+// =====================================================================================
 
-return `عذراً يا <b>${this.userName || 'المفكر'}</b>، لم أتمكن من العثور على المفهوم بدقة في نظام التطوير العقلي. يرجى صياغة سؤالك بوضوح مستخدماً مصطلحات الأقسام العقلية (تطوير، تقييم، مرونة عصبية، مهام، زنازين، صفاء، إحصائيات).`;
- },
+// --- [8] نظام ترقية الذاكرة والتخزين طويل المدى (Memory & Retention Upgrade) ---
+if (checkMatch([
+    'ذاكرة', 'تذكر', 'حفظ', 'استرجاع', 'قصر_المدى', 'طويل_المدى', 'نسيان', 'تقوية_الذاكرة', 'عقل_مظلم', 'قصر_الذاكرة', 'مخرن_المعلومات', 'ارتباط_صوري', 'تثبيت_الحفظ', 'تقنيات_التذكر', 'نسيت', 'ضعف_الذاكرة', 'تخزين_معرفي',
+    'memory', 'retention', 'mnemonics', 'recall', 'long_term_memory', 'short_term_memory', 'memorization', 'forgetting', 'memory_palace', 'spaced_repetition', 'information_storage', 'cognitive_retrieval', 'working_memory'
+])) {
+    return this.getMemoryTrainingProtocol();
+}
+
+// --- [9] معالجة المعلومات وسرعة البديهة اللحظية (Information Processing Speed) ---
+if (checkMatch([
+    'بديهة', 'بديهية', 'سرعة_المعالجة', 'فهم_سريع', 'استيعاب_لمحي', 'رد_فعل_عقلي', 'سرعة_الفهم', 'لقط', 'نباهة', 'النباهة', 'تحليل_سريع', 'المعالجة_الذهنية', 'سرعة_الدماغ', 'البديهه', 'سرعه_المعالجه', 'استجابة_فورية',
+    'processing_speed', 'cognitive_speed', 'quick_wit', 'mental_reflexes', 'rapid_comprehension', 'brain_throughput', 'reaction_time', 'information_processing', 'fast_thinking', 'mental_agility_speed', 'instant_processing'
+])) {
+    return this.getProcessingSpeedDrills();
+}
+
+// --- [10] التفكير النقدي ورصد المغالطات المنطقية (Critical Thinking & Fallacy Detection) ---
+if (checkMatch([
+    'نقدي', 'تفكير_نقدي', 'مغالطة', 'مغالطات', 'منطق', 'تحليل_منطقي', 'فحص_الافكار', 'كشف_التضليل', 'مغالطه_منطقيه', 'تحيز', 'تحيزات_معرفية', 'فلكرة_الاراء', 'تفكير_موضوعي', 'تمحيص', 'تفنيد', 'تفكير_منهجي',
+    'critical_thinking', 'fallacy', 'logical_fallacy', 'fallacies', 'cognitive_bias', 'objectivity', 'analytical_thinking', 'fact_checking', 'argument_analysis', 'debiasing', 'mental_filtering', 'rational_thinking'
+])) {
+    return this.getCriticalThinkingMetrics();
+}
+
+// --- [11] المرونة النفسية وإدارة الضغوط المعرفية (Mental Resilience & Stress Tolerance) ---
+if (checkMatch([
+    'مرونة', 'تحمل_الضغوط', 'صمود_عقلي', 'مقاومة_الانهيار', 'احباط', 'توتر_معرفي', 'مرونه_نفسيه', 'صلابة_ذهنية', 'ادارة_الازمات_العقلية', 'التحكم_بالقلق', 'ثبات_انفعالي', 'مواجهة_الضغط', 'استنزاف_عقلي', 'امتصاص_الصدمات',
+    'resilience', 'mental_toughness', 'stress_tolerance', 'cognitive_resilience', 'burnout_prevention', 'coping_mechanisms', 'emotional_regulation', 'grit', 'mental_fortitude', 'pressure_handling', 'stoicism_practice'
+])) {
+    return this.getStressToleranceMatrix();
+}
+
+// --- [12] هندسة القرارات الاستراتيجية وحل المشكلات (Strategic Decision Making) ---
+if (checkMatch([
+    'قرار', 'اتخاذ_قرار', 'قرارات', 'حل_مشكلة', 'خيارات', 'تخطيط_استراتيجي', 'صنع_القرار', 'حل_المشكلات', 'شجرة_القرارات', 'مفاضلة', 'عواقب', 'حسم', 'تردد_فكري', 'تحليل_المخاطر', 'بدائل_ذكية', 'حلول_جذرية',
+    'decision_making', 'problem_solving', 'strategic_choices', 'decision_tree', 'risk_analysis', 'problem_resolution', 'decisiveness', 'choice_architecture', 'weighted_decisions', 'analytical_solutions'
+])) {
+    return this.getStrategicDecisionProtocol();
+}
+
+// --- [13] القراءة السريعة واستيعاب النصوص الفائق (Speed Reading & Meta-Comprehension) ---
+if (checkMatch([
+    'قراءة', 'قراءه_سريعه', 'قراءة_سريعة', 'استيعاب_النصوص', 'تصفح_سريع', 'التقاط_الكلمات', 'قراءة_ذكية', 'تحليل_الكتب', 'معدل_القراءة', 'كلمة_في_الدقيقة', 'فهم_المقروء', 'قراءه_ذكيه', 'تطوير_القراءة', 'السرعة_القرائية',
+    'speed_reading', 'comprehension_rate', 'skimming', 'scanning_text', 'words_per_minute', 'wpm', 'meta_reading', 'photo_reading', 'text_processing', 'book_absorption', 'deep_reading_skills'
+])) {
+    return this.getSpeedReadingAnalytics();
+}
+
+// --- [14] التفكير الإبداعي والجانبي خارج الصندوق (Creativity & Lateral Thinking) ---
+if (checkMatch([
+    'ابداع', 'إبداع', 'خارج_الصندوق', 'تفكير_جانبي', 'ابتكار', 'توليد_افكار', 'افكار_جديدة', 'عصف_ذهني', 'خيال_فكري', 'ابتكاري', 'تفكير_ابداعي', 'افكار_خلاقة', 'المرونة_الابداعية', 'اصالة_الفكر', 'ذكاء_ابداعي',
+    'creativity', 'lateral_thinking', 'innovation', 'brainstorming', 'ideation', 'divergent_thinking', 'outside_the_box', 'creative_intelligence', 'originality', 'insight_generation', 'imagination_drills'
+])) {
+    return this.getLateralThinkingSandbox();
+}
+
+// --- [15] إدارة الوقت الفكري والتنظيم المعرفي (Cognitive Time & Energy Management) ---
+if (checkMatch([
+    'وقت_عقلي', 'تنظيم_الوقت', 'المصفوفة_الزمنية', 'إنتاجية_الوقت', 'بومودورو', 'ساعة_بيولوجية', 'ترتيب_الاولويات', 'ادارة_الطاقة_الذهنية', 'توفير_الجهد', 'جدولة_العقل', 'استغلال_اليوم', 'تنظيم_الفكر_الزمني',
+    'chronothinking', 'time_blocking', 'pomodoro_mental', 'cognitive_pacing', 'energy_management', 'priority_matrix', 'productivity_hacking', 'mental_schedule', 'circadian_alignment', 'time_efficiency'
+])) {
+    return this.getChronoThinkingSchedule();
+}
+
+// --- [16] التلعيب العقلي وبناء العادات الذهنية (Cognitive Gamification & Habit Loop) ---
+if (checkMatch([
+    'عادة_عقلية', 'بناء_العادات', 'روتين_ذهني', 'تلعيب_العقل', 'حلقة_العادة', 'انضباط_ذاتي', 'عادات_الناجحين', 'تثبيت_العادات', 'التخلص_من_البرود', 'محفز_عقلي', 'سلوك_معرفي', 'الالتزام_الذاتي', 'بناء_روتين',
+    'gamification', 'habit_loop', 'routine_building', 'neuro_habits', 'self_discipline', 'habit_stacking', 'cue_craving_response', 'behavioral_design', 'consistency_booster', 'willpower_drills'
+])) {
+    return this.getCognitiveHabitLoop();
+}
+
+// --- [17] الفضول المعرفي وآلية التعلم الذاتي المستمر (Epistemic Curiosity & Autodidactism) ---
+if (checkMatch([
+    'فضول', 'تعلم_ذاتي', 'شغف_المعرفة', 'حب_الاستطلاع', 'البحث_العلمي', 'تثقيف_ذاتي', 'المتعلم_الذاتي', 'نهم_القراءة', 'فضول_معرفي', 'تعلم_كيف_تتعلم', 'اكتساب_مهارات', 'استكشاف_فكري', 'عقلية_المستكشف',
+    'curiosity', 'autodidactism', 'self_education', 'epistemic_curiosity', 'learning_how_to_learn', 'skill_acquisition', 'knowledge_seeking', 'lifelong_learning', 'intellectual_exploration', 'meta_learning'
+])) {
+    return this.getContinuousLearningPath();
+}
+// =====================================================================================
+// الدفعة الثانية: الأنظمة المعرفية المتقدمة — ADVANCED COGNITIVE MATRIX (BATCH 2/10)
+// =====================================================================================
+
+// --- [18] الذكاء العاطفي والتنظيم الوجداني الإدراكي (Emotional Intelligence & Affective Regulation) ---
+if (checkMatch([
+    'ذكاء_عاطفي', 'تنظيم_المشاعر', 'وعي_ذاتي', 'تعاطف', 'إدارة_الانفعالات', 'اتزان_وجداني', 'تفكير_عاطفي', 'عواطف_العقل', 'التحكم_بالمشاعر', 'فهم_الذات_العاطفية', 'ذكاء_وجداني', 'النضج_العاطفي', 'الادراك_العاطفي',
+    'emotional_intelligence', 'eq', 'emotional_regulation', 'self_awareness', 'empathy', 'emotional_processing', 'affective_cognition', 'emotional_maturity', 'mood_management', 'intrapersonal_skills', 'impulse_control'
+])) {
+    return this.getEmotionalIntelligenceProtocol();
+}
+
+// --- [19] الميتا-معرفة والتفكير في آلية التفكير (Metacognition & Cognitive Monitoring) ---
+if (checkMatch([
+    'ميتا_معرفة', 'تفكير_في_التفكير', 'مراقبة_الذات', 'الوعي_بالمعرفة', 'تقييم_الفهم', 'مراقبة_الافكار', 'الميتا_معرفة', 'وعي_فوق_معرفي', 'تحليل_آلية_تفكيري', 'كيف_افكر', 'رصد_الوعي', 'الهندسة_العكسية_للفكر',
+    'metacognition', 'meta_cognition', 'thinking_about_thinking', 'cognitive_monitoring', 'self_reflection_cognition', 'cognitive_control', 'meta_analysis_mind', 'reflective_thinking', 'mental_self_regulation'
+])) {
+    return this.getMetacognitionAnalysis();
+}
+
+// --- [20] النمذجة العقلية والأطر الفكرية الاستراتيجية (Mental Models & Frameworks) ---
+if (checkMatch([
+    'نماذج_عقلية', 'نموذج_عقلي', 'اطر_فكرية', 'المبادئ_الأولى', 'منطق_الأنظمة', 'النمذجة_العقلية', 'اطر_ذهنية', 'نظريات_التفكير', 'مصفوفات_ذهنية', 'نموذج_فكري', 'هيكلة_المفاهيم', 'ادوات_التفكير',
+    'mental_models', 'mental_framework', 'first_principles', 'systems_thinking', 'cognitive_models', 'conceptual_frameworks', 'thought_frameworks', 'inversion_principle', 'second_order_thinking'
+])) {
+    return this.getMentalModelsSandbox();
+}
+
+// --- [21] التركيز الفائق وحالة التدفق الذهني العميق (Hyper-Focus & Flow State Blueprint) ---
+if (checkMatch([
+    'تدفق_ذهني', 'تركيز_فائق', 'حالة_التدفق', 'اندماج_كامل', 'استغراق_عقلي', 'التركيز_العميق', 'زون_ذهني', 'الاندماج_المعرفي', 'التحليق_العقلي', 'الانغماس_الذهني', 'الانتاجية_القصوى', 'قمة_التركيز',
+    'flow_state', 'hyper_focus', 'hyperfocus', 'deep_flow', 'optimal_experience', 'mental_immersion', 'zone_state', 'deep_work_state', 'cognitive_absorption', 'peak_focus_flow'
+])) {
+    return this.getFlowStateBlueprint();
+}
+
+// --- [22] اتساع المدى المعرفي والشمولية الموسوعية (Cognitive Span & Intellectual Depth) ---
+if (checkMatch([
+    'مدى_معرفي', 'عمق_فكري', 'اتساع_المدارك', 'ثقافة_عميقة', 'شمولية_التفكير', 'معرفة_موسوعية', 'تعددية_المواهب', 'توسيع_الافق', 'افق_ذهني', 'العمق_المعرفي', 'التفكير_الموسوعي', 'تعدد_الاهتمامات_الفكرية',
+    'cognitive_span', 'intellectual_depth', 'intellectual_breadth', 'encyclopedic_mind', 'cognitive_horizon', 'mental_scope', 'polymathy', 'generalist_mind', 'deep_knowledge_span'
+])) {
+    return this.getIntellectualDepthMatrix();
+}
+
+// --- [23] المرونة الإدراكية والتخلي عن القناعات البالية (Cognitive Flexibility & Unlearning) ---
+if (checkMatch([
+    'تخلي_عن_المعرفة', 'الغاء_التعلم', 'مرونة_ادراكية', 'تغيير_القناعات', 'فك_الارتباط_الذهني', 'تبديل_النماذج', 'تحديث_الافكار', 'التحرر_الفكري', 'تعديل_الاراء', 'الهدم_المعرفي_البناء', 'تفكيك_المفاهيم',
+    'unlearning', 'unlearn', 'cognitive_flexibility_shift', 'paradigm_shift', 'cognitive_rewiring_beliefs', 'belief_updating', 'intellectual_adaptability', 'reframing_cognition', 'concept_deconstruction'
+])) {
+    return this.getUnlearningProtocol();
+}
+
+// --- [24] الذاكرة العاملة وإدارة التحميل الذهني المؤقت (Working Memory & Cognitive Load) ---
+if (checkMatch([
+    'ذاكرة_عاملة', 'تحميل_ذهني', 'اجهاد_المعالجة', 'السعة_المؤقتة', 'تخزين_مؤقت', 'مساحة_العمل_الذهنية', 'تحميل_معرفي_زائد', 'معالجة_البيانات_اللحظية', 'تشتت_الذاكرة_العاملة', 'ذاكرة_مؤقتة',
+    'working_memory_capacity', 'cognitive_load_theory', 'mental_buffer', 'short_term_buffer', 'cognitive_overload_prevention', 'working_memory_drills', 'mental_bandwidth', 'information_holding'
+])) {
+    return this.getWorkingMemoryOptimizer();
+}
+
+// --- [25] التفكير التجريدي والمنطق الرياضي غير المادي (Abstract Thinking & Symbolic Reasoning) ---
+if (checkMatch([
+    'تفكير_تجريدي', 'تجريد', 'منطق_رياضي', 'مفاهيم_لامادية', 'تفكير_رمزي', 'بناء_الافتراضات', 'تجريد_الافكار', 'المنطق_المجرد', 'فلسفة_الرموز', 'تفكير_لا_مادي', 'التخيل_الرمزي',
+    'abstract_thinking', 'abstraction', 'mathematical_logic', 'symbolic_reasoning', 'conceptual_thinking', 'non_concrete_logic', 'theoretical_reasoning', 'formal_logic', 'hypothetical_thinking'
+])) {
+    return this.getAbstractThinkingSandbox();
+}
+
+// --- [26] اليقظة الإدراكية ورصد الأوهام الحسية (Perceptual Vigilance & Illusion Shattering) ---
+if (checkMatch([
+    'يقظة_ادراكية', 'خداع_بصري', 'خداع_عقلي', 'أوهام_الحواس', 'وعي_حسي', 'رصد_الاوهام', 'يقظه_ادراكيه', 'انحياز_الادراك', 'الوعي_البيئي', 'فحص_المدخلات_الحسية', 'اوهام_العقل', 'حقيقة_الادراك',
+    'perceptual_vigilance', 'cognitive_illusion', 'optical_illusion_detection', 'sensory_awareness', 'perception_bias', 'illusion_shattering', 'perceptual_acuity', 'sensory_discernment', 'reality_testing'
+])) {
+    return this.getPerceptualVigilanceMetrics();
+}
+
+// --- [27] هندسة المحادثة والمنطق الحواري السقراطي (Conversational Logic & Dialectics) ---
+if (checkMatch([
+    'منطق_حواري', 'جدلية', 'هندسة_المحادثة', 'حوار_منطقي', 'اقناع', 'تفكير_حججي', 'مناظرة_ذهنية', 'المنهج_السقراطي', 'بناء_الحجج', 'تفكيك_النقاش', 'بلاغة_ذهنية', 'دحض_الحجج',
+    'dialectics', 'conversational_logic', 'argumentation_theory', 'rhetoric_cognition', 'persuasive_logic', 'socratic_dialogue', 'debate_intelligence', 'discourse_analysis', 'argument_mapping'
+])) {
+    return this.getConversationalLogicProtocol();
+}
+// =====================================================================================
+// الدفعة الثالثة: أنظمة المعالجة والطاقة الذهنية — COGNITIVE ENERGETICS (BATCH 3/10)
+// =====================================================================================
+
+// --- [28] التحمل المعرفي المستدام وعتبة الإجهاد (Cognitive Endurance & Fatigue Threshold) ---
+if (checkMatch([
+    'تحمل_ذهني', 'عتبة_الإجهاد', 'لياقة_الدماغ', 'استدامة_التركيز', 'تعب_عقلي', 'اجهاد_الدماغ', 'طاقة_المعالجة', 'صمود_معرفي', 'مقاومة_التعب', 'مجهود_فكري_طويل', 'لياقه_الدماغ', 'اجهاد_ذهني',
+    'cognitive_endurance', 'mental_stamina', 'fatigue_threshold', 'brain_fitness', 'sustained_attention', 'mental_exhaustion', 'cognitive_stamina', 'brain_endurance', 'intellectual_fatigue'
+])) {
+    return this.getCognitiveEnduranceProtocol();
+}
+
+// --- [29] التعرف على الأنماط والاستدلال الاستقرائي (Pattern Recognition & Inductive Reasoning) ---
+if (checkMatch([
+    'التعرف_على_الأنماط', 'نمط', 'أنماط', 'استقراء', 'استدلال_استقرائي', 'ربط_الاحداث', 'مهارة_الربط', 'كشف_التكرار', 'استكشاف_الأنماط', 'انماط', 'فك_الشفيرة_السلوكية', 'رصد_التكرار',
+    'pattern_recognition', 'inductive_reasoning', 'pattern_matching', 'trend_analysis', 'sequence_detection', 'inductive_logic', 'pattern_discernment', 'behavioral_patterns', 'clue_linking'
+])) {
+    return this.getPatternRecognitionMetrics();
+}
+
+// --- [30] الارتجاع العصبي وتحسين موجات الدماغ (Neurofeedback & Brainwave Optimization) ---
+if (checkMatch([
+    'ارتجاع_عصبي', 'موجات_الدماغ', 'الفا', 'بيتا', 'ثيتا', 'تحفيز_الدماغ', 'ترددات_موجات_الدماغ', 'تنظيم_عصبي', 'ترددات_العقل', 'موجات_ألفا', 'رسم_المخ_البرمجي', 'تحسين_موجات_العقل',
+    'neurofeedback', 'brainwaves', 'alpha_waves', 'beta_waves', 'theta_waves', 'eeg_training', 'brainwave_entrainment', 'neuroregulation', 'gamma_waves', 'brain_frequency_tuning'
+])) {
+    return this.getBrainwaveOptimizationSandbox();
+}
+
+// --- [31] التخيل الصوري والمحاكاة الذهنية للمواقف (Creative Visualization & Mental Simulation) ---
+if (checkMatch([
+    'تخيل_صوري', 'محاكاة_ذهنية', 'رؤية_عقلية', 'تجسيد_الافكار', 'تخيل_ابداعي', 'عين_العقل', 'محاكاة_المواقف', 'سيناريو_ذهني', 'رسم_ذهني', 'التخيل_الموجه', 'توقع_بصري_عقلي',
+    'visualization', 'mental_simulation', 'mind_eye', 'creative_imagery', 'guided_imagery', 'mental_rehearsal', 'scenario_planning', 'cognitive_mapping_vis', 'internal_theater'
+])) {
+    return this.getMentalSimulationBlueprint();
+}
+
+// =====================================================================================
+// الدفعة الثالثة: أنظمة المعالجة والطاقة الذهنية — COGNITIVE ENERGETICS (BATCH 3/10)
+// =====================================================================================
+
+// --- [28] التحمل المعرفي المستدام وعتبة الإجهاد (Cognitive Endurance & Fatigue Threshold) ---
+if (checkMatch([
+    'تحمل_ذهني', 'عتبة_الإجهاد', 'لياقة_الدماغ', 'استدامة_التركيز', 'تعب_عقلي', 'اجهاد_الدماغ', 'طاقة_المعالجة', 'صمود_معرفي', 'مقاومة_التعب', 'مجهود_فكري_طويل', 'لياقه_الدماغ', 'اجهاد_ذهني',
+    'cognitive_endurance', 'mental_stamina', 'fatigue_threshold', 'brain_fitness', 'sustained_attention', 'mental_exhaustion', 'cognitive_stamina', 'brain_endurance', 'intellectual_fatigue'
+])) {
+    return this.getCognitiveEnduranceProtocol();
+}
+
+// --- [29] التعرف على الأنماط والاستدلال الاستقرائي (Pattern Recognition & Inductive Reasoning) ---
+if (checkMatch([
+    'التعرف_على_الأنماط', 'نمط', 'أنماط', 'استقراء', 'استدلال_استقرائي', 'ربط_الاحداث', 'مهارة_الربط', 'كشف_التكرار', 'استكشاف_الأنماط', 'انماط', 'فك_الشفيرة_السلوكية', 'رصد_التكرار',
+    'pattern_recognition', 'inductive_reasoning', 'pattern_matching', 'trend_analysis', 'sequence_detection', 'inductive_logic', 'pattern_discernment', 'behavioral_patterns', 'clue_linking'
+])) {
+    return this.getPatternRecognitionMetrics();
+}
+
+// --- [30] الارتجاع العصبي وتحسين موجات الدماغ (Neurofeedback & Brainwave Optimization) ---
+if (checkMatch([
+    'ارتجاع_عصبي', 'موجات_الدماغ', 'الفا', 'بيتا', 'ثيتا', 'تحفيز_الدماغ', 'ترددات_موجات_الدماغ', 'تنظيم_عصبي', 'ترددات_العقل', 'موجات_ألفا', 'رسم_المخ_البرمجي', 'تحسين_موجات_العقل',
+    'neurofeedback', 'brainwaves', 'alpha_waves', 'beta_waves', 'theta_waves', 'eeg_training', 'brainwave_entrainment', 'neuroregulation', 'gamma_waves', 'brain_frequency_tuning'
+])) {
+    return this.getBrainwaveOptimizationSandbox();
+}
+
+// --- [31] التخيل الصوري والمحاكاة الذهنية للمواقف (Creative Visualization & Mental Simulation) ---
+if (checkMatch([
+    'تخيل_صوري', 'محاكاة_ذهنية', 'رؤية_عقلية', 'تجسيد_الافكار', 'تخيل_ابداعي', 'عين_العقل', 'محاكاة_المواقف', 'سيناريو_ذهني', 'رسم_ذهني', 'التخيل_الموجه', 'توقع_بصري_عقلي',
+    'visualization', 'mental_simulation', 'mind_eye', 'creative_imagery', 'guided_imagery', 'mental_rehearsal', 'scenario_planning', 'cognitive_mapping_vis', 'internal_theater'
+])) {
+    return this.getMentalSimulationBlueprint();
+}
+
+// --- [32] الذكاء اللغوي والتركيب الدلالي المعقد (Linguistic Intelligence & Semantic Processing) ---
+if (checkMatch([
+    'ذكاء_لغوي', 'مرونة_لغوية', 'تعلم_اللغات', 'تركيب_دلالي', 'بلاغة_الفاظ', 'استيعاب_لغوي', 'اللغويات', 'صياغة_المفاهيم', 'ثروة_لفظية', 'فصاحة_ذهنية', 'ذكاء_لفظي',
+    'linguistic_intelligence', 'polyglotism', 'language_acquisition', 'semantic_processing', 'verbal_fluency', 'philology', 'linguistic_flexibility', 'vocabulary_span', 'syntax_cognition'
+])) {
+    return this.getLinguisticIntelligenceMatrix();
+}
+
+// --- [33] فلترة المعلومات وهندسة الانتباه الانتقائي (Information Filtering & Selective Attention) ---
+if (checkMatch([
+    'فلترة_المعلومات', 'تصفية_الضجيج', 'غربلة_المعرفة', 'هندسة_الانتباه', 'تقليل_المدخلات', 'حمية_المعلومات', 'انتقاء_البيانات', 'انتباه_انتقائي', 'تقليص_الازدحام_المعرفي', 'فلتر_العقل',
+    'information_filtering', 'signal_to_noise', 'attention_engineering', 'information_diet', 'data_curation', 'cognitive_clutter_relief', 'selective_attention', 'noise_reduction_mind'
+])) {
+    return this.getInformationFilteringSystem();
+}
+
+// --- [34] الذكاء الحدسي ومعالجة العقل الباطن (Intuitive Intelligence & Subconscious Processing) ---
+if (checkMatch([
+    'حدس', 'ذكاء_لاواعي', 'عقل_باطن', 'تفكير_تلقائي', 'حدس_عقلي', 'الالهام', 'شعور_داخلي', 'معالجة_خفية', 'ذكاء_حدسي', 'العقل_اللاواعي', 'ادراك_خفي', 'الهام_مفاجئ',
+    'intuition_optimization', 'subconscious_processing', 'gut_feeling', 'implicit_learning', 'unconscious_cognition', 'intuitive_insight', 'heuristics_intuition', 'subconscious_drift'
+])) {
+    return this.getIntuitiveIntelligenceProtocol();
+}
+
+// --- [35] الاستدلال بالقياس والتفكير التماثلي (Analogical Reasoning & Metaphorical Thinking) ---
+if (checkMatch([
+    'استدلال_بالقياس', 'تفكير_تماثلي', 'مجاز', 'استعارة_مفاهيمية', 'ربط_المفاهيم_المتباعدة', 'القياس_المنطقي', 'تفكير_مجازي', 'اسقاط_المفاهيم', 'تشابه_بنيوي', 'مقاربة_منطقية',
+    'analogical_reasoning', 'metaphorical_thinking', 'analogy_mapping', 'conceptual_blending', 'metaphor_cognition', 'structural_alignment_mind', 'comparative_logic'
+])) {
+    return this.getAnalogicalReasoningSandbox();
+}
+
+// --- [36] الذكاء الكمي والحس العددي الفائق (Quantitative Cognition & Numerical Literacy) ---
+if (checkMatch([
+    'ذكاء_كمي', 'حس_عددي', 'تفكير_رياضياتي', 'تحليل_بيانات_رقمية', 'ارقام_واحصاء', 'عقلية_رقمية', 'منطق_رقمي', 'الحس_العددي', 'التحليل_الكمي_الذهني', 'رياضيات_ذهنية',
+    'quantitative_cognition', 'numerical_literacy', 'innumeracy_cure', 'mathematical_fluency', 'statistical_thinking', 'number_sense', 'quantitative_reasoning', 'mental_math_skills'
+])) {
+    return this.getQuantitativeCognitionMetrics();
+}
+
+// --- [37] البيئة المعرفية وتقنين التشتت الرقمي (Cognitive Ergonomics & Digital Detox) ---
+if (checkMatch([
+    'بيئة_معرفية', 'تشتت_رقمي', 'ديتوكس_رقمي', 'سموم_التكنولوجيا', 'هندسة_بيئة_العمل', 'راحة_العقل', 'صيام_الدوپامين', 'صيام_الدوبامين', 'تقنين_الشاشات', 'حماية_الانتباه_الرقمي',
+    'cognitive_ergonomics', 'digital_detox', 'dopamine_fasting', 'technological_distraction', 'mindful_tech', 'attention_economy_shield', 'digital_overload_fix', 'cyber_serenity'
+])) {
+    return this.getCognitiveErgonomicsMatrix();
+}
+
+// --- استجابة النظام الافتراضية في حال عدم المطابقة ---
+return `عذراً يا <b>${this.userName || 'المفكر'}</b>، لم يتم رصد الكلمات المفتاحية في مصفوفة الإدخال. يرجى استخدام مصطلحات الأقسام العقلية بوضوح (نصائح التطوير، تقييم الوضع، المرونة العصبية، المهام اليومية، زنازين المنطق، الصفاء الروحي، لوحة الإحصائيات).`;},
             
 
 
