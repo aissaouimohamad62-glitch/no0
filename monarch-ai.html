@@ -1196,29 +1196,64 @@
                         currentTime: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`
                     });
                 }
-                if (checkMatch(['نصيحه', 'تطور', 'تطوير'])) {
-                    return this.getDevelopmentAdvice(PlayerSync.data.level, ProgramManager.activeProgramId);
-                }
-                if (checkMatch(['وضعي', 'تقييم', 'السمات'])) {
-                    return this.getStatusEvaluation({ stats: PlayerSync.data.stats });
-                }
-                if (checkMatch(['وولف', 'عظام', 'قانون'])) {
-                    return this.getWolffLawExplanation();
-                }
-                if (checkMatch(['مهام', 'مهمه', 'نشط', 'تاسك', 'quest'])) {
-                    return `<b>[وحدة المهام النشطة — ACTIVE QUESTS] ⚔️</b><br><br>هذه الواجهة هي غرفة العمليات لإدارة أهدافك اليومية. تتكون من تتبع تقدمك مع مؤقت تنازلي، ونظام المكافآت والعقوبات الشامل. إكمال المهمة يمنحك الذهب والخبرة.`;
-                }
-                if (checkMatch(['زنزان', 'دنجن', 'شطرنج', 'هانوي', 'لعب', 'dungeon'])) {
-                    return `<b>[زنازين التدريب العقلي — MENTAL DUNGEONS] 🌋</b><br><br>هذا القسم مخصص لاختبار حدود ذكائك التكتيكي عبر الشطرنج المتطور ضد الذكاء الاصطناعي أو لغز أبراج هانوي الرياضي متعدد الأقراص.`;
-                }
-                if (checkMatch(['صلاه', 'قران', 'مصحف', 'روح', 'prayer', 'quran'])) {
-                    return this.getSpiritualAdvice(PlayerSync.data.level);
-                }
-                if (checkMatch(['احصاء', 'عقل', 'سمات', 'brain', 'stats'])) {
-                    return `<b>[وحدة إحصائيات العقل والجسم — BRAIN STATS] 🧠</b><br><br>واجهة تحليلية متقدمة تراقب تطور السمات السيادية الخمس (INT, SEN, STR, VIT, AGI) مع محلل تلقائي لتحديد نمط الشخصية السائد بناءً على مجهودك.`;
-                }
-                return `عذراً يا <b>${this.userName || 'العاهل'}</b>، لم أتمكن من العثور على المفهوم بدقة في قاعدة بيانات المحاكاة المحلية. يمكنك صياغة سؤالك بذكر اسم القسم بوضوح (الكتلة، زنازين، إحصائيات، المهام، قانون وولف).`;
-            },
+                if (checkMatch([
+    // --- 1. نصيحة التطوير (Development Advice) ---
+    'نصيحه', 'تطور', 'تطوير', 'ارشاد', 'توجيه', 'ترقية', 'ارتقاء', 'نصائح', 'دليل_النمو', 'كيف_اتطور', 'طريقة_التقدم', 'رفع_المستوى', 'زيادة_الخبرة',
+    'advice', 'development', 'upgrade', 'progression', 'levelup', 'growth', 'guide', 'evolve', 'improvement', 'how_to_grow', 'advance', 'tips'
+])) {
+    return this.getDevelopmentAdvice(PlayerSync.data.level, ProgramManager.activeProgramId);
+}
+
+if (checkMatch([
+    // --- 2. تقييم الوضع الحالي (Status Evaluation) ---
+    'وضعي', 'تقييم', 'حالي', 'تقرير', 'فحص', 'مستواي', 'الوضعية', 'تشخيص', 'بروفايل', 'حالتcurrent', 'وضعي_الحالي', 'كيف_احوالي',
+    'evaluation', 'status', 'profile', 'assessment', 'report', 'audit', 'my_state', 'condition', 'checkup', 'my_status', 'analyze_me'
+])) {
+    return this.getStatusEvaluation({ stats: PlayerSync.data.stats });
+}
+
+if (checkMatch([
+    // --- 3. قانون وولف للعظام (Wolff's Law) ---
+    'وولف', 'عظام', 'قانون', 'ولف', 'الهيكل_العظمي', 'كثافة', 'جهد_العظام', 'تكيف_العظام', 'قانون_وولف', 'صلابة_العظام', 'تحميل_ميكانيكي',
+    'wolff', 'bone', 'density', 'skeletal', 'remodeling', 'wolffs_law', 'adaptation', 'calcification', 'bone_strength', 'orthopedic', 'load'
+])) {
+    return this.getWolffLawExplanation();
+}
+
+if (checkMatch([
+    // --- 4. وحدة المهام النشطة (Active Quests) ---
+    'مهام', 'مهمه', 'نشط', 'تاسك', 'مهمات', 'واجبات', 'تحديات', 'العمليات', 'الأهداف_اليومية', 'جدول_اليوم', 'المهمة_النشطة', 'تاسكات', 'كويست',
+    'quest', 'quests', 'task', 'tasks', 'mission', 'missions', 'active', 'daily_objectives', 'todo', 'current_missions', 'target_today', 'active_quest'
+])) {
+    return `<b>[وحدة المهام النشطة — ACTIVE QUESTS] ⚔️</b><br><br>هذه الواجهة هي غرفة العمليات لإدارة أهدافك اليومية. تتكون من تتبع تقدمك مع مؤقت تنازلي، ونظام المكافآت والعقوبات الشامل. إكمال المهمة يمنحك الذهب والخبرة.`;
+}
+
+if (checkMatch([
+    // --- 5. زنازين التدريب العقلي (Mental Dungeons) ---
+    'زنزان', 'دنجن', 'شطرنج', 'هانوي', 'لعب', 'زنازين', 'لعبة', 'لغز', 'الغاز', 'متاهة', 'أبراج_هانوي', 'تحدي_عقلي', 'ذكاء_اصطناعي', 'لعب_شطرنج',
+    'dungeon', 'dungeons', 'chess', 'hanoi', 'puzzle', 'puzzles', 'minigame', 'mental_training', 'game', 'brain_games', 'tower_of_hanoi', 'tactical'
+])) {
+    return `<b>[زنازين التدريب العقلي — MENTAL DUNGEONS] 🌋</b><br><br>هذا القسم مخصص لاختبار حدود ذكائك التكتيكي عبر الشطرنج المتطور ضد الذكاء الاصطناعي أو لغز أبراج هانوي الرياضي متعدد الأقراص.`;
+}
+
+if (checkMatch([
+    // --- 6. التوجيه الروحاني (Spiritual Advice) ---
+    'صلاه', 'قران', 'مصحف', 'روح', 'صلوات', 'أذكار', 'عبادة', 'روحاني', 'القرآن', 'إيماني', 'جانب_روحي', 'الذكر', 'المصحف_الشريف', 'تقرب',
+    'prayer', 'quran', 'spiritual', 'soul', 'faith', 'dhikr', 'worship', 'spirituality', 'islamic', 'koran', 'prayers', 'inner_peace'
+])) {
+    return this.getSpiritualAdvice(PlayerSync.data.level);
+}
+
+if (checkMatch([
+    // --- 7. إحصائيات العقل والجسم (Brain & Body Stats) ---
+    'احصاء', 'عقل', 'سمات', 'خصائص', 'إحصائيات', 'السمات_السيادية', 'القدرات', 'ارقام', 'مؤشرات', 'مستوى_الذكاء', 'الخصائص_الخمسة', 'البنية',
+    'brain', 'stats', 'attributes', 'statistics', 'int', 'sen', 'str', 'vit', 'agi', 'capabilities', 'parameters', 'core_stats', 'stat_analysis'
+])) {
+    return `<b>[وحدة إحصائيات العقل والجسم — BRAIN STATS] 🧠</b><br><br>واجهة تحليلية متقدمة تراقب تطور السمات السيادية الخمس (INT, SEN, STR, VIT, AGI) مع محلل تلقائي لتحديد نمط الشخصية السائد بناءً على مجهودك.`;
+}
+
+return `عذراً يا <b>${this.userName || 'العاهل'}</b>، لم أتمكن من العثور على المفهوم بدقة في قاعدة بيانات المحاكاة المحلية. يمكنك صياغة سؤالك بذكر اسم القسم بوضوح (تطوير، تقييم، قانون وولف، المهام، زنازين، الصلاة، إحصائيات). علماً أنه يتوفر في المتجر نماذج ذكاء اصطناعي متنوعة.`; },
+           
             addMessage(text, sender, isRealAI = false, appendMenu = false) {
                 const screen = document.getElementById('chatScreen'); if (!screen) return;
                 const div = document.createElement('div');
