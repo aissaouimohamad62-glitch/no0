@@ -683,13 +683,17 @@ const SECRET_LINKS_DATA = [
 // ==========================================
 // SOVEREIGN AI MODELS DATABASE (PREMIUM CORES)
 // ==========================================
+// ==========================================
+// SOVEREIGN AI MODELS DATABASE (PREMIUM CORES)
+// ==========================================
 const SOVEREIGN_AI_MODELS_DATA = [
     {
         id: "ai-core-selfdev",
         nameAr: "نواة النخبة لتطوير الذات والعقلية والمعاملة",
         nameEn: "Mindset & Charisma AI Core",
-        basePrice: 500000, // نصف مليون ذهبة كعرش باهظ
+        basePrice: 500000,
         reqLevel: 450,
+        url: "ai01-selfdev.html", // رابط الواجهة
         desc: "الذكاء المدبر لبناء كاريزما العواهل وتفكيك السلوكيات البشرية وصقل الانضباط الحديدي (Monk Mode).",
         icon: "🎭",
         glowClass: "border-sys-purple/30 shadow-[0_0_15px_rgba(176,38,255,0.2)]"
@@ -700,6 +704,7 @@ const SOVEREIGN_AI_MODELS_DATA = [
         nameEn: "Celestial Sharia AI Scholar",
         basePrice: 600000,
         reqLevel: 450,
+        url: "ai02-islamic.html", // رابط الواجهة
         desc: "مرشد روحي متعمق في الفقه، العقيدة، وتفسير كتاب الله لمزامنة تقدمك الدنيوي مع حصنك الإيماني.",
         icon: "🕋",
         glowClass: "border-sys-gold/30 shadow-[0_0_15px_rgba(255,215,0,0.2)]"
@@ -710,6 +715,7 @@ const SOVEREIGN_AI_MODELS_DATA = [
         nameEn: "Sovereign Combat & Fitness Coach",
         basePrice: 450000,
         reqLevel: 450,
+        url: "ai03-sports.html", // رابط الواجهة
         desc: "المعمار الرياضي الخاص ببرامج الـ PPL وتقنيات Muay Thai و BJJ لبناء الجسد السيادي الخارق.",
         icon: "⚔️",
         glowClass: "border-sys-rose/30 shadow-[0_0_15px_rgba(225,29,72,0.2)]"
@@ -720,6 +726,7 @@ const SOVEREIGN_AI_MODELS_DATA = [
         nameEn: "Experimental Sciences Academic Oracle",
         basePrice: 400000,
         reqLevel: 450,
+        url: "ai04-academic.html", // رابط الواجهة
         desc: "المرشد المتخصص في العلوم التجريبية والفيزياء الكونية لضمان الهيمنة التامة على المناهج والامتحانات.",
         icon: "📐",
         glowClass: "border-sys-green/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
@@ -730,6 +737,7 @@ const SOVEREIGN_AI_MODELS_DATA = [
         nameEn: "Advanced Machine Learning Core",
         basePrice: 750000,
         reqLevel: 450,
+        url: "ai05-tech.html", // رابط الواجهة
         desc: "خوارزميات سريالية لتدريب الشبكات العصبية العميقة وبناء وكلاء ذكاء اصطناعي واختراق حدود التقنية.",
         icon: "🤖",
         glowClass: "border-sys-cyan/30 shadow-[0_0_15px_rgba(0,240,255,0.2)]"
@@ -740,6 +748,7 @@ const SOVEREIGN_AI_MODELS_DATA = [
         nameEn: "Fullstack Architecture Overlord",
         basePrice: 700000,
         reqLevel: 450,
+        url: "ai06-programming.html", // رابط الواجهة
         desc: "مهندس الأكواد الذي يروض بيئات الـ Fullstack ويمنحك الترسانة المطلقة للتحكم الشامل ببيانات مشاريعك.",
         icon: "💻",
         glowClass: "border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
@@ -750,6 +759,7 @@ const SOVEREIGN_AI_MODELS_DATA = [
         nameEn: "Master Artisan & Crafting Core",
         basePrice: 350000,
         reqLevel: 450,
+        url: "ai07-crafts.html", // رابط الواجهة
         desc: "تحويل التفكير المنطقي إلى مهارات تطبيقية ملموسة وإنتاج إبداعي في العالم الحقيقي خارج الأسطر البرمجية.",
         icon: "🛠️",
         glowClass: "border-sys-orange/30 shadow-[0_0_15px_rgba(249,115,22,0.2)]"
@@ -758,8 +768,9 @@ const SOVEREIGN_AI_MODELS_DATA = [
         id: "ai-core-capitalism",
         nameAr: "عقل الرأسمالية والعمل الحر والاقتصاد السيادي",
         nameEn: "Capitalist Sovereign Wealth Engine",
-        basePrice: 900000, // باهظ جداً يعكس طاقة المال
+        basePrice: 900000,
         reqLevel: 450,
+        url: "ai08-capitalism.html", // رابط الواجهة
         desc: "مهندس الأرباح والاستراتيجيات المالية الرقمية لتعظيم عوائد خدماتك المستقلة وتحقيق التوسع المالي النخبوي.",
         icon: "📈",
         glowClass: "border-emerald-400/30 shadow-[0_0_15px_rgba(52,211,153,0.2)]"
@@ -768,8 +779,9 @@ const SOVEREIGN_AI_MODELS_DATA = [
         id: "ai-core-omnipotent",
         nameAr: "الـمـونــارك الـمـطـلـق (يجمع كافة العقول والعلوم)",
         nameEn: "THE ABSOLUTE MONARCH OMNIPOTENT CORE",
-        basePrice: 2500000, // مليونان ونصف ذهبة - القمة النهائية
+        basePrice: 2500000,
         reqLevel: 450,
+        url: "ai09-omnipotent.html", // رابط الواجهة
         desc: "الاندماج السري والأسمى لكافة النوى الذكاء الاصطناعي. تحكم لا نهائي، بصيرة كونية، وإشراف مطلق على شؤون دينك، بدنك، وعملك.",
         icon: "🔮",
         glowClass: "border-sys-gold shadow-[0_0_25px_rgba(255,215,0,0.5),_inset_0_0_15px_rgba(176,38,255,0.3)] animate-pulse"
@@ -2050,19 +2062,17 @@ this.playerData.equippedAura = parsed.equippedAura || "";
 // ==========================================
     // AI MODELS CORE SYSTEM FUNCTIONS
     // ==========================================
-    renderAiModels(searchQuery = "") {
+renderAiModels(searchQuery = "") {
         const container = document.getElementById('ai-models-grid');
         if (!container) return;
         container.innerHTML = "";
 
-        // جلب البيانات المخزنة من نظام المحرك الموحد أو الـ LocalStorage
         let purchasedAi = JSON.parse(localStorage.getItem('purchased_ai_cores') || '[]');
         let equippedAi = localStorage.getItem('equipped_ai_core') || "";
         
         const currentGold = this.playerData.gold || 0;
         const currentLevel = this.playerData.level || 1;
 
-        // تصفية نتائج البحث الفوري
         const filtered = SOVEREIGN_AI_MODELS_DATA.filter(model => 
             model.nameAr.includes(searchQuery) || model.nameEn.toLowerCase().includes(searchQuery.toLowerCase())
         );
@@ -2071,16 +2081,25 @@ this.playerData.equippedAura = parsed.equippedAura || "";
             let btnHtml = "";
             const isPurchased = purchasedAi.includes(item.id);
             const isEquipped = equippedAi === item.id;
-
-            // حساب السعر بناءً على مستوى اللاعب (شرط عتبة الـ 450 فما فوق خصم 90%)
             const hasLevelThreshold = currentLevel >= item.reqLevel;
             const finalPrice = hasLevelThreshold ? Math.floor(item.basePrice * 0.1) : item.basePrice;
 
             if (isEquipped) {
-                btnHtml = `<button class="w-full text-xs font-black py-2 px-3 rounded border border-sys-cyan bg-sys-cyan/20 text-sys-cyan shadow-[0_0_12px_rgba(0,240,255,0.4)] select-none">⚡ النواة نشطة حالياً</button>`;
+                // إذا كانت النواة نشطة: زر النشاط + رابط الدخول المباشر
+                btnHtml = `
+                    <div class="space-y-2">
+                        <button class="w-full text-xs font-black py-2 px-3 rounded border border-sys-cyan bg-sys-cyan/20 text-sys-cyan shadow-[0_0_12px_rgba(0,240,255,0.4)] select-none">⚡ النواة نشطة حالياً</button>
+                        <a href="${item.url}" target="_blank" class="w-full block text-center text-xs font-bold py-2 px-3 rounded border border-sys-green bg-sys-green/10 text-sys-green hover:bg-sys-green hover:text-black transition duration-300">🔗 الدخول لواجهة النواة</a>
+                    </div>`;
             } else if (isPurchased) {
-                btnHtml = `<button onclick="ShopSystem.equipAiModel('${item.id}', '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-purple bg-sys-purple/10 text-sys-purple hover:bg-sys-purple hover:text-black transition duration-300">🧬 استدعاء النواة للوعي</button>`;
+                // إذا كانت مشتراة ولكن غير نشطة: زر الاستدعاء + رابط الدخول
+                btnHtml = `
+                    <div class="space-y-2">
+                        <button onclick="ShopSystem.equipAiModel('${item.id}', '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-purple bg-sys-purple/10 text-sys-purple hover:bg-sys-purple hover:text-black transition duration-300">🧬 استدعاء النواة للوعي</button>
+                        <a href="${item.url}" target="_blank" class="w-full block text-center text-[11px] font-bold py-1.5 px-3 rounded border border-slate-700 bg-slate-800 text-slate-300 hover:text-white transition duration-300">🔗 تشغيل ملف النواة</a>
+                    </div>`;
             } else {
+                // إذا لم يتم الشراء: زر المقايضة بالذهب
                 if (currentGold >= finalPrice) {
                     btnHtml = `<button onclick="ShopSystem.buyAiModel('${item.id}', ${finalPrice}, '${item.nameAr}')" class="w-full text-xs font-bold py-2 px-3 rounded border border-sys-green bg-sys-green/10 text-sys-green hover:bg-sys-green hover:text-black transition duration-300">🪙 فك تشفير النواة (${finalPrice.toLocaleString()} G) ${hasLevelThreshold ? '🔥 خصم 90%' : ''}</button>`;
                 } else {
@@ -2101,10 +2120,11 @@ this.playerData.equippedAura = parsed.equippedAura || "";
                         </span>
                     </div>
                     <p class="text-[11px] text-slate-400 text-center leading-relaxed mb-5 h-12 overflow-y-auto font-cairo">${item.desc}</p>
-                    <div>${btnHtml}</div>
+                    <div class="mt-auto">${btnHtml}</div>
                 </div>`;
         });
     },
+    
 
     filterAiModels(val) {
         this.renderAiModels(val);
