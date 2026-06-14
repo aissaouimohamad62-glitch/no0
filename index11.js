@@ -437,7 +437,7 @@ const PlayerState = {
         level: 1,
         xp: 0,
         gold: 0,
-        title: "[مبتدئ الكتل]",
+        title: "[???]",
         avatar: "", 
         stats: { str: 10, vit: 10, agi: 10, int: 10, sen: 10 },
         inventory: [] 
