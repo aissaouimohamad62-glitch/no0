@@ -437,7 +437,7 @@ const PlayerState = {
         level: 1,
         xp: 0,
         gold: 0,
-        title: "[???]",
+        title: "[مبتدئ الكتل]",
         avatar: "", 
         stats: { str: 10, vit: 10, agi: 10, int: 10, sen: 10 },
         inventory: [] 
@@ -566,51 +566,21 @@ const PlayerState = {
         }
     },
 
-    updateUI() {
+updateUI() {
         if(document.getElementById('player-level')) document.getElementById('player-level').textContent = this.data.level;
-        if(document.getElementById('currentLevel')) document.getElementById('currentLevel').textContent = this.data.level;
-        if(document.getElementById('player-gold')) document.getElementById('player-gold').textContent = this.data.gold;
-        if(document.getElementById('playerGold')) document.getElementById('playerGold').textContent = this.data.gold;
-        
-        const barEl = document.getElementById('player-xp-bar');
-        if (barEl) {
-            let xpNeeded = this.data.level * 100;
-            let percentage = Math.min((this.data.xp / xpNeeded) * 100, 100);
-            barEl.style.width = `${percentage}%`;
-        }
-        const xpBarEl = document.getElementById('xpBar');
-        const xpTextEl = document.getElementById('xpText');
-        if (xpBarEl && xpTextEl) {
-            let xpNeeded = this.data.level * 100;
-            let percentage = Math.min((this.data.xp / xpNeeded) * 100, 100);
-            xpBarEl.style.width = `${percentage}%`;
-            xpTextEl.textContent = `${this.data.xp} / ${xpNeeded}`;
-        }
-
-        const titleBadge = document.getElementById('monarch-title-badge');
-        if (titleBadge) {
-            titleBadge.textContent = this.data.title || "[العاهل المستيقظ]";
-        }
-        const activeTitle = document.getElementById('monarch-active-title');
-        if (activeTitle) {
-            activeTitle.textContent = this.data.title || "";
-            activeTitle.style.display = this.data.title ? 'inline-block' : 'none';
-        }
-
-        if (this.data.avatar && document.getElementById('monarch-avatar-display')) {
-            document.getElementById('monarch-avatar-display').src = this.data.avatar;
-        }
-
-        if(document.getElementById('stat-str-val')) document.getElementById('stat-str-val').textContent = this.data.stats.str;
-        if(document.getElementById('stat-vit-val')) document.getElementById('stat-vit-val').textContent = this.data.stats.vit;
-        if(document.getElementById('stat-agi-val')) document.getElementById('stat-agi-val').textContent = this.data.stats.agi;
-        if(document.getElementById('stat-int-val')) document.getElementById('stat-int-val').textContent = this.data.stats.int;
+        // ... (الكود السابق كما هو) ...
         if(document.getElementById('stat-sen-val')) document.getElementById('stat-sen-val').textContent = this.data.stats.sen;
+        
         if(document.getElementById('stat-str')) document.getElementById('stat-str').textContent = this.data.stats.str;
         if(document.getElementById('stat-vit')) document.getElementById('stat-vit').textContent = this.data.stats.vit;
         if(document.getElementById('stat-agi')) document.getElementById('stat-agi').textContent = this.data.stats.agi;
         if(document.getElementById('stat-int')) document.getElementById('stat-int').textContent = this.data.stats.int;
         if(document.getElementById('stat-sen')) document.getElementById('stat-sen').textContent = this.data.stats.sen;
+
+        // 👇 أضف هذه الأسطر الثلاثة لعرض نقاط الـ AP و السلطة بعد التحديث أو إعادة التحميل 👇
+        if(document.getElementById('availablePoints')) document.getElementById('availablePoints').textContent = this.data.authority || 0;
+        if(document.getElementById('stat-authority')) document.getElementById('stat-authority').textContent = this.data.authority || 0;
+        if(document.getElementById('stat-lethality')) document.getElementById('stat-lethality').textContent = (this.data.lethality || 0) + '%';
     }
 };
 
@@ -1260,7 +1230,7 @@ const SovereignEngine = {
         get playerLevel() { return PlayerState.data.level || 1; },
         get playerXP() { return PlayerState.data.xp || 0; },
         get playerGold() { return PlayerState.data.gold || 0; },
-        activeTitle: localStorage.getItem('sovereign_title') || "[مبتدئ الكتل]",
+        activeTitle: localStorage.getItem('sovereign_title') || "[???]",
         activeQuest: JSON.parse(localStorage.getItem('sovereign_active_quest')) || null
     },
     config: { 
@@ -1590,8 +1560,11 @@ function initTitleSync() {
         const bc = new BroadcastChannel('sovereign_sync');
         bc.onmessage = (event) => {
             if (event.data.type === 'TITLE_EQUIPPED') {
-                console.log('[Sovereign Sync] تم تجهيز لقب جديد من المتجر');
                 loadMonarchTitle();
+            }
+            // 👇 استقبال تحديثات النظام من صفحة القرآن 👇
+            if (event.data.type === 'SYSTEM_DATA_UPDATED') {
+                if (typeof PlayerState !== 'undefined') PlayerState.init();
             }
         };
     }
@@ -1656,6 +1629,8 @@ window.addEventListener('storage', (e) => {
     }
     if (e.key === 'monarch_system_data') {
         if (typeof loadMonarchTitle === 'function') loadMonarchTitle();
+        // 👇 إجبار الواجهة على التحديث الفوري إذا تغيرت البيانات في المتصفح 👇
+        if (typeof PlayerState !== 'undefined') PlayerState.init();
     }
 });
 
