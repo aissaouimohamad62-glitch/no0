@@ -430,7 +430,7 @@ const AnimePopup = {
 };
 
 // ==========================================
-// SYSTEM PLAYER STATE ENGINE (ANTI-OVERWRITE SHIELD)
+// SYSTEM PLAYER STATE ENGINE (ANTI-OVERWRITE SHIELD) - UPDATED & MATCHED
 // ==========================================
 const PlayerState = {
     data: {
@@ -566,25 +566,38 @@ const PlayerState = {
         }
     },
 
-updateUI() {
+    updateUI() {
+        // 1. تحديث المستويات المتطابقة مع HTML
         if(document.getElementById('player-level')) document.getElementById('player-level').textContent = this.data.level;
-        // ... (الكود السابق كما هو) ...
-        if(document.getElementById('stat-sen-val')) document.getElementById('stat-sen-val').textContent = this.data.stats.sen;
+        if(document.getElementById('currentLevel')) document.getElementById('currentLevel').textContent = this.data.level;
         
+        // 2. تحديث السمات البدنية والروحية
+        if(document.getElementById('stat-sen-val')) document.getElementById('stat-sen-val').textContent = this.data.stats.sen;
         if(document.getElementById('stat-str')) document.getElementById('stat-str').textContent = this.data.stats.str;
         if(document.getElementById('stat-vit')) document.getElementById('stat-vit').textContent = this.data.stats.vit;
         if(document.getElementById('stat-agi')) document.getElementById('stat-agi').textContent = this.data.stats.agi;
         if(document.getElementById('stat-int')) document.getElementById('stat-int').textContent = this.data.stats.int;
         if(document.getElementById('stat-sen')) document.getElementById('stat-sen').textContent = this.data.stats.sen;
 
-        // 👇 أضف هذه الأسطر الثلاثة لعرض نقاط الـ AP و السلطة بعد التحديث أو إعادة التحميل 👇
+        // 3. تحديث العملات التكتيكية، الفتك، والذهب الإضافي المتطابق مع شاشة المراقبة
+        if(document.getElementById('playerGold')) document.getElementById('playerGold').textContent = this.data.gold;
         if(document.getElementById('availablePoints')) document.getElementById('availablePoints').textContent = this.data.authority || 0;
         if(document.getElementById('stat-authority')) document.getElementById('stat-authority').textContent = this.data.authority || 0;
         if(document.getElementById('stat-lethality')) document.getElementById('stat-lethality').textContent = (this.data.lethality || 0) + '%';
-        if(document.getElementById('player-level')) document.getElementById('player-level').textContent = this.data.level;
-    
-    // إضافة تحديث للعنصر ذو المعرف currentLevel (لحل مشكلة الصفحة الحالية)
-    if(document.getElementById('currentLevel')) document.getElementById('currentLevel').textContent = this.data.level;
+        
+        // 4. دمج وتصحيح نظام نقاط الخبرة (XP) ومطابقتها بصرياً مع عناصر النيون في الواجهة
+        const xpNeeded = this.data.level * 100;
+        
+        // تحديث النص الرقمي الداخلي لشريط الهالة (مثال: 45 / 100)
+        if(document.getElementById('xpText')) {
+            document.getElementById('xpText').textContent = `${this.data.xp} / ${xpNeeded}`;
+        }
+        
+        // حساب النسبة المئوية الدقيقة وعكسها حركياً على شريط الحالة الزمردي
+        if(document.getElementById('xpBar')) {
+            const percentage = Math.min((this.data.xp / xpNeeded) * 100, 100);
+            document.getElementById('xpBar').style.width = `${percentage}%`;
+        }
     }
 };
 
@@ -1674,3 +1687,5 @@ window.addEventListener('storage', (e) => {
         updateSovereignCompanion();
     }
 });
+// دالة لجلب اللقب وتحديث الواجهة
+
