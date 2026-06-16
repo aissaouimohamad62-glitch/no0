@@ -581,6 +581,10 @@ updateUI() {
         if(document.getElementById('availablePoints')) document.getElementById('availablePoints').textContent = this.data.authority || 0;
         if(document.getElementById('stat-authority')) document.getElementById('stat-authority').textContent = this.data.authority || 0;
         if(document.getElementById('stat-lethality')) document.getElementById('stat-lethality').textContent = (this.data.lethality || 0) + '%';
+        if(document.getElementById('player-level')) document.getElementById('player-level').textContent = this.data.level;
+    
+    // إضافة تحديث للعنصر ذو المعرف currentLevel (لحل مشكلة الصفحة الحالية)
+    if(document.getElementById('currentLevel')) document.getElementById('currentLevel').textContent = this.data.level;
     }
 };
 
