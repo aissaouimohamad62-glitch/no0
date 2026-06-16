@@ -84,13 +84,14 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        .rank-badge {
-            background: linear-gradient(135deg, #fbbf24, #d97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
-        }
+       .rank-badge {
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+}
 
         .quran-text {
             font-family: 'Amiri', serif;
@@ -950,26 +951,63 @@
         }
 
         // ==================== DATA MANAGEMENT ====================
-        function loadData() {
-            const savedData = localStorage.getItem('soloLevelingQuran');
-            if (savedData) {
-                const parsed = JSON.parse(savedData);
-                player = { ...player, ...parsed };
-                if (!player.bookmarks) player.bookmarks = [];
-                if (!player.settings) player.settings = { fontSize: 1.6, defaultReciter: 'Alafasy_128kbps', defaultTafsir: 'ibn-kathir', defaultTranslation: 'en.sahih', defaultRawi: 'hafs' };
-            }
-            currentRawi = player.settings.defaultRawi || 'hafs';
-            updateUI();
-            renderSurahs();
-            renderReciters();
-            renderBookmarks();
-            updateSidebarStats();
-            populateSettings();
-        }
+        // ==================== DATA MANAGEMENT ====================
+function loadData() {
+    // 1. تحميل بيانات المصحف الخاصة (الإعدادات، العلامات المرجعية، إلخ)
+    const savedData = localStorage.getItem('soloLevelingQuran');
+    if (savedData) {
+        const parsed = JSON.parse(savedData);
+        player = { ...player, ...parsed };
+        if (!player.bookmarks) player.bookmarks = [];
+        if (!player.settings) player.settings = { fontSize: 1.6, defaultReciter: 'Alafasy_128kbps', defaultTafsir: 'ibn-kathir', defaultTranslation: 'en.sahih', defaultRawi: 'hafs' };
+    }
 
-        function saveData() {
-            localStorage.setItem('soloLevelingQuran', JSON.stringify(player));
-        }
+    // 2. 🔗 [الربط مع النظام الرئيسي - سحب المستوى والخبرة والذهب] 🔗
+    const monarchData = localStorage.getItem('monarch_system_data');
+    if (monarchData) {
+        try {
+            const parsedMonarch = JSON.parse(monarchData);
+            player.level = parsedMonarch.level || player.level;
+            player.xp = parsedMonarch.xp || player.xp;
+            player.gold = parsedMonarch.gold || player.gold;
+        } catch (e) { console.error("Error parsing monarch data", e); }
+    }
+
+    currentRawi = player.settings.defaultRawi || 'hafs';
+    updateUI();
+    renderSurahs();
+    renderReciters();
+    renderBookmarks();
+    updateSidebarStats();
+    populateSettings();
+}
+
+function saveData() {
+    // 1. حفظ بيانات المصحف المستقلة
+    localStorage.setItem('soloLevelingQuran', JSON.stringify(player));
+
+    // 2. 🔗 [مزامنة التقدم مع لوحة التحكم الرئيسية دون مسح نقاط العناصر والمهارات] 🔗
+    let monarchData = {};
+    const savedMonarch = localStorage.getItem('monarch_system_data');
+    if (savedMonarch) {
+        try {
+            monarchData = JSON.parse(savedMonarch);
+        } catch (e) {}
+    }
+    
+    // تحديث القيم المشتركة فقط
+    monarchData.level = player.level;
+    monarchData.xp = player.xp;
+    monarchData.gold = player.gold;
+
+    localStorage.setItem('monarch_system_data', JSON.stringify(monarchData));
+
+    // 3. إرسال إشارة للوحة الرئيسية لتحديث واجهتها فوراً إذا كانت مفتوحة في نافذة أخرى
+    if (typeof BroadcastChannel !== 'undefined') {
+        const bc = new BroadcastChannel('sovereign_sync');
+        bc.postMessage({ type: 'SYSTEM_DATA_UPDATED' });
+    }
+}
 
         function resetData() {
             if(confirm("هل أنت متأكد من تصفير جميع بياناتك والعودة للمستوى 1؟")) {
@@ -1820,6 +1858,11 @@
             document.getElementById('translation-select').value = player.settings.defaultTranslation;
             document.getElementById('reader-rawi').value = player.settings.defaultRawi;
         };
+        window.addEventListener('storage', (e) => {
+    if (e.key === 'monarch_system_data') {
+        loadData(); // إعادة تحميل البيانات إذا تغيرت في اللوحة الرئيسية
+    }
+});
     </script>
 </body>
 </html>
