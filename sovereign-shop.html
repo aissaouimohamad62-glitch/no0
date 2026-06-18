@@ -375,6 +375,26 @@
             <div class="mt-8">
     <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
         <div class="flex items-center gap-2">
+            <span class="text-2xl">🖼️</span>
+            <h2 class="text-lg font-black text-white font-cairo">إطارات وشارات البروفايل السيادية</h2>
+        </div>
+        <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-gold/10 text-sys-gold rounded border border-sys-gold/20">AVATAR BORDERS</span>
+    </div>
+    
+    <div class="mb-4">
+        <input type="text" 
+               id="borders-search" 
+               placeholder="🔍 ابحث عن إطار أو شارة ظل..." 
+               class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-gold focus:outline-none transition-colors"
+               oninput="ShopSystem.filterBorders(this.value)">
+    </div>
+    
+    <div id="borders-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        </div>
+</div>
+            <div class="mt-8">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+        <div class="flex items-center gap-2">
             <span class="text-2xl">🔮</span>
             <h2 class="text-lg font-black text-white font-cairo">بوابات استدعاء جنود الظلال</h2>
         </div>
@@ -419,27 +439,7 @@
     <div id="ai-models-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         </div>
 </div>
-             <!-- AURAS -->
-              <div class="mt-8">
-    <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
-        <div class="flex items-center gap-2">
-            <span class="text-2xl">🖼️</span>
-            <h2 class="text-lg font-black text-white font-cairo">إطارات وشارات البروفايل السيادية</h2>
-        </div>
-        <span class="text-[10px] font-mono px-2 py-0.5 bg-sys-gold/10 text-sys-gold rounded border border-sys-gold/20">AVATAR BORDERS</span>
-    </div>
-    
-    <div class="mb-4">
-        <input type="text" 
-               id="borders-search" 
-               placeholder="🔍 ابحث عن إطار أو شارة ظل..." 
-               class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:border-sys-gold focus:outline-none transition-colors"
-               oninput="ShopSystem.filterBorders(this.value)">
-    </div>
-    
-    <div id="borders-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        </div>
-</div>
+           
 <!-- CONSUMABLES -->
 <div class="mt-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 pb-2 border-b border-white/10 gap-4">
