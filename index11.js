@@ -1,4 +1,5 @@
 // ==========================================
+
 // LOADING SCREEN SYSTEM
 // ==========================================
 window.addEventListener('load', () => {
@@ -43,6 +44,7 @@ window.addEventListener('storage', (e) => {
         applyEquippedAvatarBorder();
     }
 });
+
 
 // ==========================================
 // UTILITIES & UI
@@ -559,10 +561,17 @@ const PlayerState = {
         this.addGold(goldAmount);
     },
 
-    updateNameDisplay() {
+updateNameDisplay() {
+        // 1. تحديث اسم اللاعب
         const nameEl = document.getElementById('playerNameDisplay');
         if (nameEl && this.data.name) {
             nameEl.textContent = this.data.name;
+        }
+
+        // 2. تحديث اللقب (JOB) - الكود الذي كان مفقوداً
+        const titleEl = document.getElementById('monarch-active-title');
+        if (titleEl && this.data.title) {
+            titleEl.textContent = this.data.title;
         }
     },
 
@@ -1688,4 +1697,3 @@ window.addEventListener('storage', (e) => {
     }
 });
 // دالة لجلب اللقب وتحديث الواجهة
-
